@@ -554,3 +554,51 @@ Improper write operations may overwrite existing data.
 Relative paths improve portability and deployment flexibility.
 
 ---
+
+## 77. Ignoring Thread Safety
+
+Shared resources may produce inconsistent results.
+
+---
+
+## 78. Creating Too Many Threads
+
+Too many threads may reduce backend performance.
+
+---
+
+## 79. Forgetting Synchronization
+
+Unsynchronized shared data may cause race conditions.
+
+---
+
+## 80. Misusing sleep() for Coordination
+
+sleep() is not reliable synchronization mechanism.
+
+---
+
+## 81. Ignoring Race Conditions
+
+Concurrent modification may produce unpredictable results.
+
+---
+
+## 82. Accessing Shared Mutable State Improperly
+
+Improper shared state handling creates concurrency bugs.
+
+---
+
+## 83. Blocking Main Thread Unnecessarily
+
+Improper joins/sleeps may reduce responsiveness.
+
+---
+
+## 84. Assuming Thread Execution Order
+
+Thread execution order is not guaranteed.
+
+---

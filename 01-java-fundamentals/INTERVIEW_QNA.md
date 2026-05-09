@@ -772,3 +772,74 @@ File handling is used for:
 - configuration files
 
 ---
+
+## Q101. What is multithreading in Java?
+
+Multithreading allows concurrent execution of multiple threads.
+
+---
+
+## Q102. What is a thread?
+
+A thread is a lightweight unit of execution inside a process.
+
+---
+
+## Q103. Difference between Thread and Runnable?
+
+Thread:
+Class-based approach.
+
+Runnable:
+Interface-based approach and preferred design.
+
+---
+
+## Q104. Why is Runnable preferred?
+
+Runnable supports better design because Java supports single inheritance.
+
+---
+
+## Q105. What is race condition?
+
+Race condition occurs when multiple threads modify shared data simultaneously.
+
+---
+
+## Q106. What is synchronization?
+
+Synchronization controls access to shared resources for thread safety.
+
+---
+
+## Q107. What is Thread.sleep()?
+
+sleep() pauses thread execution temporarily.
+
+---
+
+## Q108. What is Thread.join()?
+
+join() waits for another thread to complete.
+
+---
+
+## Q109. Why are too many threads dangerous?
+
+Too many threads may cause:
+- memory overhead
+- CPU overhead
+- context switching issues
+
+---
+
+## Q110. Why is multithreading important in backend engineering?
+
+Multithreading is important for:
+- concurrent APIs
+- async processing
+- scalability
+- background jobs
+
+---
