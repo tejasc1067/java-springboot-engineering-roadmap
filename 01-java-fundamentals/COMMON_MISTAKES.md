@@ -310,3 +310,145 @@ catch(Exception e) {}
 Resources should be properly closed using finally block.
 
 ---
+
+## 40. Using Wrong Collection Type
+
+Choose collection based on use case.
+
+---
+
+## 41. Ignoring Duplicate Behavior in Set
+
+Set automatically removes duplicates.
+
+---
+
+## 42. Forgetting Null Checks During Retrieval
+
+Map retrieval may return null.
+
+---
+
+## 43. Concurrent Modification During Iteration
+
+Modifying collection during iteration may throw exceptions.
+
+---
+
+## 44. Using Primitive Types in Collections
+
+Collections require wrapper classes.
+
+Incorrect:
+ArrayList<int>
+
+Correct:
+ArrayList<Integer>
+
+---
+
+## 45. Forgetting Null Checks in HashMap
+
+map.get() may return null.
+
+---
+
+## 46. Modifying Collection During Iteration
+
+Improper modification may cause ConcurrentModificationException.
+
+---
+
+## 47. Confusing Ordered and Unordered Collections
+
+HashSet and HashMap do not guarantee ordering.
+
+---
+
+## 48. Choosing Wrong Collection Type
+
+Wrong collection choice may reduce performance and scalability.
+
+---
+
+## 49. Using == Instead of equals() in Collections
+
+String/object comparison inside collections should usually use equals().
+
+---
+
+## 50. Ignoring Generics
+
+Using raw collections reduces type safety.
+
+Incorrect:
+
+ArrayList list = new ArrayList();
+
+Correct:
+
+ArrayList<String> list = new ArrayList<>();
+
+---
+
+## 51. Excessive Nested Loops on Collections
+
+Poor iteration logic may reduce backend performance.
+
+---
+
+## 52. Removing Elements Improperly During for-each Loop
+
+This may cause ConcurrentModificationException.
+
+Use Iterator instead.
+
+---
+
+## 53. Ignoring Collection Performance
+
+Wrong collection selection may reduce backend scalability.
+
+---
+
+## 54. Not Using Iterator for Safe Removal
+
+Direct removal during iteration may cause ConcurrentModificationException.
+
+---
+
+## 55. Ignoring Immutability Concepts
+
+Improper mutable object handling may create backend bugs.
+
+---
+
+## 56. Overusing Static Variables
+
+Excessive static usage may create memory and testing issues.
+
+---
+
+## 57. Hardcoding Values Instead of Constants
+
+Hardcoded values reduce maintainability.
+
+---
+
+## 58. Poor Package Organization
+
+Improper package structure creates maintainability problems in large backend applications.
+
+---
+
+## 59. Ignoring Exception Propagation
+
+Improper exception handling hides real backend issues.
+
+---
+
+## 60. Using Raw Collections
+
+Raw collections reduce type safety and increase runtime risks.
+
+---

@@ -410,3 +410,220 @@ finally block always executes whether exception occurs or not.
 A user-defined exception created by extending Exception class.
 
 ---
+
+## Q56. What is Java Collections Framework?
+
+Collections Framework provides ready-made data structures for storing and processing data.
+
+---
+
+## Q57. Difference between ArrayList and LinkedList?
+
+ArrayList:
+Fast random access.
+
+LinkedList:
+Fast insertion/deletion.
+
+---
+
+## Q58. Difference between List and Set?
+
+List:
+Allows duplicates.
+
+Set:
+Does not allow duplicates.
+
+---
+
+## Q59. What is HashMap?
+
+HashMap stores data in key-value pairs.
+
+---
+
+## Q60. Difference between Queue and Stack?
+
+Queue:
+FIFO
+
+Stack:
+LIFO
+
+---
+
+## Q61. Difference between Array and ArrayList?
+
+Array:
+Fixed size.
+
+ArrayList:
+Dynamic size.
+
+---
+
+## Q62. Why do collections use wrapper classes?
+
+Collections store objects, not primitive data types.
+
+---
+
+## Q63. What causes ConcurrentModificationException?
+
+Improper modification of collection during iteration.
+
+---
+
+## Q64. Difference between HashMap and HashSet?
+
+HashMap:
+Stores key-value pairs.
+
+HashSet:
+Stores unique values only.
+
+---
+
+## Q65. Why is HashMap lookup fast?
+
+HashMap uses hashing for fast data retrieval.
+
+---
+
+## Q66. What is Iterator in Java?
+
+Iterator is used for safe traversal of collections.
+
+---
+
+## Q67. Why are Generics important in collections?
+
+Generics provide:
+- type safety
+- compile-time checking
+- cleaner code
+
+---
+
+## Q68. What is the difference between fail-fast and fail-safe collections?
+
+Fail-fast:
+Throws exception during concurrent modification.
+
+Fail-safe:
+Works on cloned collection copy.
+
+(Beginner-level awareness only)
+
+---
+
+## Q69. What are wrapper classes in Java?
+
+Wrapper classes convert primitive data types into objects.
+
+Example:
+int → Integer
+
+---
+
+## Q70. Why are collections important in backend engineering?
+
+Collections are used heavily for:
+- API processing
+- database handling
+- caching
+- request processing
+- data management
+
+---
+
+## Q71. Difference between checked and unchecked exceptions?
+
+Checked exceptions are checked at compile time.
+
+Unchecked exceptions occur at runtime.
+
+---
+
+## Q72. What is NullPointerException?
+
+It occurs when accessing methods or variables using null reference.
+
+---
+
+## Q73. Why are Strings immutable important for backend systems?
+
+Immutability improves:
+- security
+- thread safety
+- memory optimization
+
+---
+
+## Q74. Why should variables usually be private?
+
+Private variables improve:
+- encapsulation
+- security
+- maintainability
+
+---
+
+## Q75. Why is Iterator safer for removal operations?
+
+Iterator safely removes elements during traversal without causing ConcurrentModificationException.
+
+---
+
+## Q76. Difference between ArrayList and Vector?
+
+ArrayList:
+Not synchronized.
+
+Vector:
+Synchronized and slower.
+
+(Beginner-level awareness only)
+
+---
+
+## Q77. What is autoboxing in Java?
+
+Automatic conversion of primitive types into wrapper objects.
+
+Example:
+int → Integer
+
+---
+
+## Q78. What is unboxing in Java?
+
+Automatic conversion of wrapper objects into primitive types.
+
+Example:
+Integer → int
+
+---
+
+## Q79. Why should backend developers understand collections performance?
+
+Wrong collection choice may affect:
+- scalability
+- memory usage
+- application performance
+
+---
+
+## Q80. What are utility methods in collections?
+
+Methods like:
+- add()
+- remove()
+- contains()
+- clear()
+- size()
+
+help manage collections efficiently.
+
+---
