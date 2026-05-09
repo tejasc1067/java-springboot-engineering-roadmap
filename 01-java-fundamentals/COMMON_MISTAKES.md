@@ -245,3 +245,23 @@ Static methods cannot directly use `this`.
 `this()` must be first statement inside constructor.
 
 ---
+
+## 30. Making Sensitive Variables Public
+
+Sensitive data should usually remain private.
+
+---
+
+## 31. Confusing protected and default Access
+
+protected allows child class access.
+
+default does not.
+
+---
+
+## 32. Overusing public Variables
+
+Too many public members reduce encapsulation and security.
+
+---

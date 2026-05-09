@@ -292,3 +292,43 @@ Static methods belong to class, not objects.
 `super` refers to parent class object.
 
 ---
+
+## Q41. What are access modifiers in Java?
+
+Access modifiers control visibility and accessibility of class members.
+
+---
+
+## Q42. What are the four access modifiers in Java?
+
+- private
+- default
+- protected
+- public
+
+---
+
+## Q43. Why are private variables recommended?
+
+Private variables improve:
+- encapsulation
+- security
+- maintainability
+
+---
+
+## Q44. Difference between protected and default access?
+
+protected:
+Accessible in child classes.
+
+default:
+Accessible only inside same package.
+
+---
+
+## Q45. Which access modifier provides maximum accessibility?
+
+public access modifier.
+
+---
