@@ -69,3 +69,31 @@ System.out.println(age);
 Correct:
 
 int age = 25;
+
+---
+
+## 8. Using = instead of ==
+
+Incorrect:
+
+if (a = 5)
+
+Correct:
+
+if (a == 5)
+
+---
+
+## 9. Forgetting break in switch
+
+Missing break causes fall-through behavior.
+
+---
+
+## 10. Confusing && and ||
+
+&& → AND
+
+|| → OR
+
+---

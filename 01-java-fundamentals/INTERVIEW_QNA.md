@@ -67,3 +67,25 @@ Heap memory stores:
 - objects
 - arrays
 - application data
+
+---
+
+## Q10. Difference between == and equals()?
+
+`==` compares references for objects.
+
+`equals()` compares actual object values.
+
+---
+
+## Q11. What is short-circuit evaluation?
+
+Logical operators like `&&` and `||` may skip evaluation if result is already determined.
+
+---
+
+## Q12. When should switch be preferred over if-else?
+
+Switch is preferred when checking multiple fixed constant values.
+
+---
