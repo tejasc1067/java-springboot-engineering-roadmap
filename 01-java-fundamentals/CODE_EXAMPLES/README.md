@@ -19,3 +19,19 @@ Key concepts:
 - main() method
 - program execution
 - System.out.println()
+
+## VariablesExample.java
+
+Demonstrates:
+- variables
+- primitive data types
+- console output
+
+---
+
+## PrimitiveVsReference.java
+
+Demonstrates:
+- primitive types
+- reference types
+- memory basics

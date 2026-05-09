@@ -29,3 +29,43 @@ system.out.println()
 
 Correct:
 System.out.println()
+
+## 4. Confusing JDK, JRE, and JVM
+
+JDK:
+Development toolkit
+
+JRE:
+Runtime environment
+
+JVM:
+Executes bytecode
+
+---
+
+## 5. Thinking Java code runs directly
+
+Java code first gets compiled into bytecode before JVM executes it.
+
+---
+
+## 6. Confusing Primitive and Reference Types
+
+Primitive types store actual values.
+
+Reference types store object references.
+
+---
+
+## 7. Forgetting Variable Initialization
+
+Local variables must be initialized before usage.
+
+Incorrect:
+
+int age;
+System.out.println(age);
+
+Correct:
+
+int age = 25;
