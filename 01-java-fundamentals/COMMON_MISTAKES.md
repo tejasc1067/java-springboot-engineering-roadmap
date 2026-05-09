@@ -227,3 +227,21 @@ Too much static usage may create tightly coupled applications.
 Static variables are shared among all objects.
 
 ---
+
+## 27. Forgetting this During Variable Ambiguity
+
+Local variables may hide instance variables.
+
+---
+
+## 28. Using this Inside Static Methods
+
+Static methods cannot directly use `this`.
+
+---
+
+## 29. Incorrect Constructor Chaining
+
+`this()` must be first statement inside constructor.
+
+---

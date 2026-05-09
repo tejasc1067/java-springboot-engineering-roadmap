@@ -255,3 +255,40 @@ Static block executes once when class loads into memory.
 Static members are stored in class memory area managed by JVM.
 
 ---
+
+## Q36. What is this keyword in Java?
+
+The `this` keyword refers to current object of a class.
+
+---
+
+## Q37. Why is this keyword used?
+
+It is used to:
+- resolve variable ambiguity
+- access current object members
+- perform constructor chaining
+
+---
+
+## Q38. What is constructor chaining?
+
+Calling one constructor from another constructor using `this()`.
+
+---
+
+## Q39. Can this keyword be used inside static methods?
+
+No.
+
+Static methods belong to class, not objects.
+
+---
+
+## Q40. Difference between this and super keyword?
+
+`this` refers to current class object.
+
+`super` refers to parent class object.
+
+---
