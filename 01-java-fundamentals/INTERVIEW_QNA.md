@@ -145,3 +145,37 @@ Return type specifies what value a method returns after execution.
 A void method does not return any value.
 
 ---
+
+## Q21. What is an array in Java?
+
+An array is a collection of similar data elements stored in contiguous memory locations.
+
+---
+
+## Q22. What is array indexing?
+
+Array indexing is used to access array elements using position numbers starting from 0.
+
+---
+
+## Q23. Difference between normal for loop and enhanced for loop?
+
+Normal for loop uses index values.
+
+Enhanced for loop directly accesses elements and improves readability.
+
+---
+
+## Q24. Where are arrays stored in memory?
+
+Array objects are stored in heap memory.
+
+References are stored in stack memory.
+
+---
+
+## Q25. What is ArrayIndexOutOfBoundsException?
+
+This exception occurs when accessing invalid array index.
+
+---

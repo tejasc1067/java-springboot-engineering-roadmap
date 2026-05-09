@@ -155,3 +155,29 @@ Parameters are method variables.
 Arguments are actual passed values.
 
 ---
+
+## 18. Accessing Invalid Array Index
+
+Incorrect:
+
+marks[5]
+
+when array size is smaller.
+
+---
+
+## 19. Wrong Loop Condition
+
+Incorrect loop condition may skip elements or exceed array bounds.
+
+---
+
+## 20. Forgetting Array Length
+
+Hardcoding loop limits instead of using `.length` reduces flexibility.
+
+Correct:
+
+for (int i = 0; i < array.length; i++)
+
+---
