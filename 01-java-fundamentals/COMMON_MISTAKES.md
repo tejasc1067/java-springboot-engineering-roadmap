@@ -181,3 +181,31 @@ Correct:
 for (int i = 0; i < array.length; i++)
 
 ---
+
+## 21. Using == for String Comparison
+
+Incorrect:
+
+if (a == b)
+
+Correct:
+
+if (a.equals(b))
+
+---
+
+## 22. Ignoring String Immutability
+
+Methods like concat() create new String objects.
+
+Original String remains unchanged.
+
+---
+
+## 23. Excessive String Concatenation
+
+Using `+` repeatedly inside loops may create performance issues.
+
+Use StringBuilder instead.
+
+---

@@ -179,3 +179,45 @@ References are stored in stack memory.
 This exception occurs when accessing invalid array index.
 
 ---
+
+## Q26. What is String in Java?
+
+String is a sequence of characters used to store text.
+
+---
+
+## Q27. Why are Strings immutable in Java?
+
+Strings are immutable for:
+- security
+- memory optimization
+- thread safety
+
+---
+
+## Q28. Difference between == and equals() in Strings?
+
+`==` compares references.
+
+`equals()` compares actual values.
+
+---
+
+## Q29. Difference between String, StringBuilder, and StringBuffer?
+
+String:
+Immutable.
+
+StringBuilder:
+Mutable and faster, not thread-safe.
+
+StringBuffer:
+Mutable and thread-safe.
+
+---
+
+## Q30. What is StringBuilder used for?
+
+StringBuilder is used for efficient string modification operations.
+
+---
