@@ -506,3 +506,51 @@ Original collection remains unchanged.
 Traditional loops are sometimes simpler and more readable.
 
 ---
+
+## 69. Forgetting to Close File Resources
+
+Improper resource closing may cause memory leaks.
+
+---
+
+## 70. Using Hardcoded File Paths
+
+Hardcoded paths reduce portability.
+
+---
+
+## 71. Ignoring Exception Handling During File Operations
+
+File operations may fail unexpectedly.
+
+---
+
+## 72. Reading Large Files Inefficiently
+
+BufferedReader improves large file reading performance.
+
+---
+
+## 73. Forgetting try-with-resources
+
+Automatic resource handling is safer and cleaner.
+
+---
+
+## 74. Ignoring File Permissions
+
+Applications may fail if permissions are insufficient.
+
+---
+
+## 75. Overwriting Important Files Accidentally
+
+Improper write operations may overwrite existing data.
+
+---
+
+## 76. Ignoring Relative Path Usage
+
+Relative paths improve portability and deployment flexibility.
+
+---

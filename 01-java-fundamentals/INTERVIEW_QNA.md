@@ -698,3 +698,77 @@ Avoid streams when:
 - performance suffers
 
 ---
+
+## Q91. What is file handling in Java?
+
+File handling is used to create, read, write, and manage files.
+
+---
+
+## Q92. What is File class in Java?
+
+File class represents files and directories.
+
+---
+
+## Q93. Difference between FileReader and BufferedReader?
+
+FileReader:
+Reads character-by-character.
+
+BufferedReader:
+Reads efficiently using buffering.
+
+---
+
+## Q94. Why is BufferedReader faster?
+
+BufferedReader reduces I/O operations using internal buffering.
+
+---
+
+## Q95. What is try-with-resources?
+
+try-with-resources automatically closes resources after usage.
+
+---
+
+## Q96. Why is resource closing important?
+
+Improper resource handling may cause:
+- memory leaks
+- file locking issues
+- backend instability
+
+---
+
+## Q97. Difference between FileWriter and BufferedWriter?
+
+BufferedWriter improves writing performance using buffering.
+
+---
+
+## Q98. Why should hardcoded file paths be avoided?
+
+Hardcoded paths reduce portability and scalability.
+
+---
+
+## Q99. What exceptions commonly occur during file handling?
+
+Common exceptions:
+- IOException
+- FileNotFoundException
+
+---
+
+## Q100. Why is file handling important in backend engineering?
+
+File handling is used for:
+- logs
+- reports
+- uploads
+- downloads
+- configuration files
+
+---
