@@ -602,3 +602,53 @@ Improper joins/sleeps may reduce responsiveness.
 Thread execution order is not guaranteed.
 
 ---
+
+## 85. Excessive Object Creation
+
+Too many unnecessary objects increase memory pressure.
+
+---
+
+## 86. Improper Static Variable Usage
+
+Static objects may remain in memory for long duration.
+
+---
+
+## 87. Ignoring Memory Leaks
+
+Unused referenced objects may consume heap memory.
+
+---
+
+## 88. Assuming System.gc() Guarantees GC
+
+System.gc() only requests garbage collection.
+
+---
+
+## 89. Storing Large Data in Memory Unnecessarily
+
+Large collections may increase heap usage.
+
+---
+
+## 90. Ignoring JVM Memory Behavior
+
+Poor memory understanding makes backend debugging difficult.
+
+---
+
+## 91. Holding References Longer Than Needed
+
+Unused references prevent garbage collection.
+
+---
+
+## 92. Confusing Stack and Heap Responsibilities
+
+Stack stores method execution data.
+
+Heap stores objects.
+
+---

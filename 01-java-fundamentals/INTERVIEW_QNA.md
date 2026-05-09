@@ -843,3 +843,73 @@ Multithreading is important for:
 - background jobs
 
 ---
+
+## Q111. What is JVM?
+
+JVM (Java Virtual Machine) executes Java bytecode.
+
+---
+
+## Q112. Difference between Stack and Heap memory?
+
+Stack:
+Stores local variables and method calls.
+
+Heap:
+Stores objects and instance data.
+
+---
+
+## Q113. What is Garbage Collection?
+
+Garbage Collection automatically removes unused objects from memory.
+
+---
+
+## Q114. When does object become eligible for Garbage Collection?
+
+When no active references point to object.
+
+---
+
+## Q115. What is OutOfMemoryError?
+
+Occurs when JVM cannot allocate required heap memory.
+
+---
+
+## Q116. Why is JVM memory understanding important in backend engineering?
+
+It helps developers:
+- debug memory issues
+- optimize applications
+- improve scalability
+
+---
+
+## Q117. What are memory leaks in Java?
+
+Memory leaks occur when unused objects remain referenced unnecessarily.
+
+---
+
+## Q118. Why can static variables create memory issues?
+
+Static objects may remain in memory for long duration.
+
+---
+
+## Q119. What is Method Area?
+
+Method Area stores:
+- class metadata
+- static variables
+- method information
+
+---
+
+## Q120. Why is Garbage Collection important?
+
+Garbage Collection simplifies memory management and improves backend stability.
+
+---
