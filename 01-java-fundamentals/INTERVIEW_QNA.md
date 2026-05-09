@@ -221,3 +221,37 @@ Mutable and thread-safe.
 StringBuilder is used for efficient string modification operations.
 
 ---
+
+## Q31. What is static keyword in Java?
+
+The static keyword makes variable or method belong to class instead of object.
+
+---
+
+## Q32. Why is main() method static?
+
+JVM calls main() without creating object.
+
+Therefore main() must be static.
+
+---
+
+## Q33. Difference between static and non-static members?
+
+Static members belong to class.
+
+Non-static members belong to objects.
+
+---
+
+## Q34. What is static block?
+
+Static block executes once when class loads into memory.
+
+---
+
+## Q35. Where are static members stored?
+
+Static members are stored in class memory area managed by JVM.
+
+---

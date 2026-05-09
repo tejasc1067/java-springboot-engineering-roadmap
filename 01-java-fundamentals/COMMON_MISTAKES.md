@@ -209,3 +209,21 @@ Using `+` repeatedly inside loops may create performance issues.
 Use StringBuilder instead.
 
 ---
+
+## 24. Accessing Non-Static Members from Static Context
+
+Static methods cannot directly access non-static members.
+
+---
+
+## 25. Excessive Static Usage
+
+Too much static usage may create tightly coupled applications.
+
+---
+
+## 26. Confusing Class-Level and Object-Level Data
+
+Static variables are shared among all objects.
+
+---
