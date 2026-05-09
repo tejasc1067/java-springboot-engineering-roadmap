@@ -374,3 +374,39 @@ Package structure helps organize:
   in scalable backend systems.
 
 ---
+
+## Q51. What is exception in Java?
+
+An exception is an unexpected event that disrupts normal program execution.
+
+---
+
+## Q52. What is try-catch block?
+
+try block contains risky code.
+
+catch block handles exceptions.
+
+---
+
+## Q53. Difference between throw and throws?
+
+throw:
+Used to manually throw exception.
+
+throws:
+Used to declare exception at method level.
+
+---
+
+## Q54. What is finally block?
+
+finally block always executes whether exception occurs or not.
+
+---
+
+## Q55. What is custom exception?
+
+A user-defined exception created by extending Exception class.
+
+---

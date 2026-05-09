@@ -283,3 +283,30 @@ Package hierarchy must match folder structure.
 Too many unrelated classes inside one package reduces maintainability.
 
 ---
+
+## 36. Catching Generic Exception Everywhere
+
+Overusing generic Exception reduces debugging clarity.
+
+---
+
+## 37. Ignoring Exception Messages
+
+Exception messages provide important debugging information.
+
+---
+
+## 38. Empty Catch Blocks
+
+Never leave catch blocks empty.
+
+Bad practice:
+catch(Exception e) {}
+
+---
+
+## 39. Forgetting finally for Resource Cleanup
+
+Resources should be properly closed using finally block.
+
+---
