@@ -210,12 +210,7 @@ For each module:
 
 # End Goal
 
-The final goal of this repository is to help learners become:
-
-# backend engineers
-
-not just:
-# framework users
+The final goal of this repository is to help learners become Backend Engineers not just Framework users.
 
 The roadmap emphasizes:
 - engineering fundamentals

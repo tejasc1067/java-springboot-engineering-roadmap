@@ -112,11 +112,11 @@ This repository focuses on:
 # Interview Preparation
 
 `INTERVIEW_QNA.md` contains important Java interview questions covering:
-- core Java
-- collections
+- Core Java
+- Collections
 - Java 8
-- exception handling
-- multithreading
+- Exception Handling
+- Multithreading
 - JVM concepts
 
 ---
