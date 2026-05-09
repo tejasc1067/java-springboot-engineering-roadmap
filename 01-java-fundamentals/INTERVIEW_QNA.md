@@ -332,3 +332,45 @@ Accessible only inside same package.
 public access modifier.
 
 ---
+
+## Q46. What is a package in Java?
+
+A package is a collection of related classes and interfaces used for code organization.
+
+---
+
+## Q47. Why are packages important?
+
+Packages improve:
+- modularity
+- maintainability
+- scalability
+- namespace management
+
+---
+
+## Q48. What is import statement in Java?
+
+Import statement allows using classes from other packages.
+
+---
+
+## Q49. What are built-in packages in Java?
+
+Java provides built-in packages such as:
+- java.util
+- java.io
+- java.lang
+
+---
+
+## Q50. Why is package structure important in backend engineering?
+
+Package structure helps organize:
+- controllers
+- services
+- repositories
+- configurations
+  in scalable backend systems.
+
+---

@@ -265,3 +265,21 @@ default does not.
 Too many public members reduce encapsulation and security.
 
 ---
+
+## 33. Incorrect Package Declaration Position
+
+Package declaration must be first statement in Java file.
+
+---
+
+## 34. Folder Structure Not Matching Package Name
+
+Package hierarchy must match folder structure.
+
+---
+
+## 35. Overcrowding Single Package
+
+Too many unrelated classes inside one package reduces maintainability.
+
+---
