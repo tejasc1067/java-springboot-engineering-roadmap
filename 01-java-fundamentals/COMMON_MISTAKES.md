@@ -97,3 +97,33 @@ Missing break causes fall-through behavior.
 || → OR
 
 ---
+
+## 11. Creating Infinite Loops
+
+Incorrect:
+
+while(true)
+
+without termination condition.
+
+---
+
+## 12. Wrong Loop Condition
+
+Incorrect conditions may:
+- skip execution
+- create infinite loops
+
+---
+
+## 13. Off-by-One Errors
+
+Very common beginner mistake.
+
+Example:
+
+for (int i = 0; i <= length; i++)
+
+may exceed array boundary.
+
+---

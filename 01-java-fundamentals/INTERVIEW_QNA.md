@@ -89,3 +89,25 @@ Logical operators like `&&` and `||` may skip evaluation if result is already de
 Switch is preferred when checking multiple fixed constant values.
 
 ---
+
+## Q13. Difference between while and do-while loop?
+
+while:
+Condition checked before execution.
+
+do-while:
+Executes at least once before checking condition.
+
+---
+
+## Q14. When should for loop be preferred?
+
+For loop is preferred when number of iterations is known.
+
+---
+
+## Q15. What is infinite loop?
+
+A loop that never terminates because condition always remains true.
+
+---
