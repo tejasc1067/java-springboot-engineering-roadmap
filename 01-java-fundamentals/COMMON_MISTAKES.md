@@ -452,3 +452,57 @@ Improper exception handling hides real backend issues.
 Raw collections reduce type safety and increase runtime risks.
 
 ---
+
+## 61. Overusing Streams for Complex Logic
+
+Complex streams reduce readability and debugging capability.
+
+---
+
+## 62. Ignoring Null Safety in Streams
+
+Null values may still cause NullPointerException.
+
+---
+
+## 63. Using Optional Incorrectly
+
+Avoid calling get() without checking presence.
+
+---
+
+## 64. Writing Very Long Stream Chains
+
+Excessive chaining reduces maintainability.
+
+---
+
+## 65. Ignoring Stream Performance
+
+Streams improve readability but may not always improve performance.
+
+---
+
+## 66. Confusing map() and filter()
+
+filter():
+selects data
+
+map():
+transforms data
+
+---
+
+## 67. Forgetting Streams Are Immutable Operations
+
+Streams create new transformed pipelines.
+
+Original collection remains unchanged.
+
+---
+
+## 68. Using Streams for Everything
+
+Traditional loops are sometimes simpler and more readable.
+
+---

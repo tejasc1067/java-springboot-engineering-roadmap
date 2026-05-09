@@ -627,3 +627,74 @@ Methods like:
 help manage collections efficiently.
 
 ---
+
+## Q81. What are Java 8 features?
+
+Important Java 8 features include:
+- lambda expressions
+- streams
+- Optional
+- method references
+- functional interfaces
+
+---
+
+## Q82. What is lambda expression?
+
+Lambda expression provides shorter syntax for functional programming.
+
+---
+
+## Q83. What is functional interface?
+
+A functional interface contains only one abstract method.
+
+---
+
+## Q84. What is Stream API?
+
+Stream API provides functional-style data processing.
+
+---
+
+## Q85. What is filter() in streams?
+
+filter() selects elements matching given condition.
+
+---
+
+## Q86. What is map() in streams?
+
+map() transforms elements into new form.
+
+---
+
+## Q87. What is Optional in Java 8?
+
+Optional helps avoid NullPointerException.
+
+---
+
+## Q88. What is method reference?
+
+Method reference uses `::` syntax for cleaner lambda expressions.
+
+---
+
+## Q89. Why are streams important in backend engineering?
+
+Streams improve:
+- readability
+- data processing
+- collection transformation
+
+---
+
+## Q90. When should streams be avoided?
+
+Avoid streams when:
+- logic becomes too complex
+- debugging becomes difficult
+- performance suffers
+
+---
