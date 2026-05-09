@@ -111,3 +111,37 @@ For loop is preferred when number of iterations is known.
 A loop that never terminates because condition always remains true.
 
 ---
+
+## Q16. What is a method in Java?
+
+A method is a reusable block of code designed to perform a specific task.
+
+---
+
+## Q17. What is method overloading?
+
+Method overloading means creating multiple methods with same name but different parameters.
+
+---
+
+## Q18. Difference between parameters and arguments?
+
+Parameters:
+Variables defined in method declaration.
+
+Arguments:
+Actual values passed during method call.
+
+---
+
+## Q19. What is return type in Java?
+
+Return type specifies what value a method returns after execution.
+
+---
+
+## Q20. What is void method?
+
+A void method does not return any value.
+
+---

@@ -127,3 +127,31 @@ for (int i = 0; i <= length; i++)
 may exceed array boundary.
 
 ---
+
+## 14. Forgetting Method Call
+
+Defining method alone does not execute it.
+
+Method must be called.
+
+---
+
+## 15. Missing Return Statement
+
+Methods with return type must return value.
+
+---
+
+## 16. Wrong Parameter Order
+
+Incorrect parameter order may produce unexpected results.
+
+---
+
+## 17. Confusing Parameters and Arguments
+
+Parameters are method variables.
+
+Arguments are actual passed values.
+
+---
