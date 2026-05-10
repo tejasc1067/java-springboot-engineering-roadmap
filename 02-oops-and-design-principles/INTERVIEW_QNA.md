@@ -973,3 +973,91 @@ Immutable objects are:
 - safer for scalable systems
 
 ---
+
+## Q121. What is immutability in Java?
+
+Immutability means object state cannot change after creation.
+
+---
+
+## Q122. Why are immutable objects important?
+
+Immutable objects are:
+- thread-safe
+- predictable
+- safer
+- easier to debug
+
+---
+
+## Q123. How do you create immutable class?
+
+Common rules:
+- make class final
+- make fields private final
+- initialize via constructor
+- provide only getters
+- avoid setters
+
+---
+
+## Q124. Why is String immutable?
+
+For:
+- security
+- thread safety
+- caching
+- performance
+
+---
+
+## Q125. What is defensive copying?
+
+Creating copies of mutable objects to prevent external modification.
+
+---
+
+## Q126. Why is immutability important in backend engineering?
+
+Immutability improves:
+- thread safety
+- scalability
+- predictable behavior
+
+---
+
+## Q127. Are immutable objects thread-safe?
+
+Yes.
+
+Because state never changes.
+
+---
+
+## Q128. Difference between mutable and immutable objects?
+
+Mutable:
+state can change.
+
+Immutable:
+state cannot change after creation.
+
+---
+
+## Q129. Does final reference guarantee immutability?
+
+No.
+
+Object contents may still change.
+
+---
+
+## Q130. Where is immutability heavily used?
+
+Used in:
+- DTOs
+- configuration objects
+- caching systems
+- distributed systems
+
+---

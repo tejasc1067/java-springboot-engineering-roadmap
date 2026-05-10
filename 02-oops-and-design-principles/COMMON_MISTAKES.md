@@ -611,3 +611,51 @@ Only reference/value restriction occurs.
 Modern backend systems heavily depend on stable immutable design.
 
 ---
+
+## 97. Confusing final Reference with Immutable Object
+
+final reference does not guarantee immutable object state.
+
+---
+
+## 98. Adding Setters in Immutable Class
+
+Immutable classes should avoid setters.
+
+---
+
+## 99. Forgetting Defensive Copying
+
+Mutable internal objects should be protected.
+
+---
+
+## 100. Returning Internal Mutable Objects Directly
+
+This breaks immutability.
+
+---
+
+## 101. Ignoring Thread Safety Benefits
+
+Immutable objects naturally improve thread safety.
+
+---
+
+## 102. Using Shared Mutable State Excessively
+
+Shared mutable state creates concurrency risks.
+
+---
+
+## 103. Forgetting private final Fields
+
+Immutable classes should use private final fields.
+
+---
+
+## 104. Ignoring Enterprise Immutable Design Principles
+
+Modern scalable systems heavily prefer immutable architectures.
+
+---
