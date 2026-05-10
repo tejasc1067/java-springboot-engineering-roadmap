@@ -251,3 +251,59 @@ Using same variable names in parent and child may reduce readability.
 Complex inheritance trees become difficult to maintain.
 
 ---
+
+## 41. Confusing Overloading and Overriding
+
+Overloading:
+Different parameters.
+
+Overriding:
+Same signature with inheritance.
+
+---
+
+## 42. Changing Only Return Type in Overloading
+
+Return type alone cannot overload methods.
+
+---
+
+## 43. Forgetting Inheritance Requirement for Overriding
+
+Overriding requires parent-child relationship.
+
+---
+
+## 44. Incorrect Method Signature in Overriding
+
+Method signature must match parent method.
+
+---
+
+## 45. Ignoring @Override Annotation
+
+Using @Override helps prevent mistakes.
+
+---
+
+## 46. Confusing Compile-Time and Runtime Polymorphism
+
+Overloading:
+Compile-time.
+
+Overriding:
+Runtime.
+
+---
+
+## 47. Overusing Method Overloading
+
+Too many overloaded methods may reduce readability.
+
+---
+
+## 48. Misunderstanding Runtime Dispatch
+
+Actual overridden method is selected during runtime.
+
+---

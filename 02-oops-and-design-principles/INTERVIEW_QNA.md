@@ -405,3 +405,79 @@ Yes.
 But constructor rules must be followed properly.
 
 ---
+
+## Q51. What is method overloading?
+
+Method overloading means multiple methods with same name but different parameters.
+
+---
+
+## Q52. What is method overriding?
+
+Method overriding means child class provides its own implementation of parent method.
+
+---
+
+## Q53. What is compile-time polymorphism?
+
+Method overloading is compile-time polymorphism.
+
+Method resolution happens during compilation.
+
+---
+
+## Q54. What is runtime polymorphism?
+
+Method overriding is runtime polymorphism.
+
+Method resolution happens during runtime.
+
+---
+
+## Q55. Does overloading require inheritance?
+
+No.
+
+Overloading can happen inside same class.
+
+---
+
+## Q56. Does overriding require inheritance?
+
+Yes.
+
+Overriding requires parent-child relationship.
+
+---
+
+## Q57. Can methods be overloaded by changing only return type?
+
+No.
+
+Return type alone is insufficient.
+
+---
+
+## Q58. What is dynamic method dispatch?
+
+JVM deciding actual overridden method execution during runtime.
+
+---
+
+## Q59. Why is @Override annotation important?
+
+It improves:
+- readability
+- safety
+- maintainability
+
+---
+
+## Q60. Why is overriding important in backend engineering?
+
+Overriding enables:
+- framework extensibility
+- runtime flexibility
+- custom implementations
+
+---
