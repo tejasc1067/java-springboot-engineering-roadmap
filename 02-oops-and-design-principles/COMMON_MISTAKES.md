@@ -511,3 +511,55 @@ equals() and hashCode() directly affect HashMap and HashSet behavior.
 Improper equality logic may create severe backend bugs.
 
 ---
+
+## 81. Overusing Inheritance Instead of Composition
+
+Modern systems usually prefer composition.
+
+---
+
+## 82. Confusing Aggregation and Composition
+
+Aggregation:
+weak ownership.
+
+Composition:
+strong ownership.
+
+---
+
+## 83. Ignoring Lifecycle Dependency
+
+Composition child lifecycle depends on parent.
+
+---
+
+## 84. Creating Tightly Coupled Relationships
+
+Poor object relationships reduce scalability.
+
+---
+
+## 85. Misunderstanding HAS-A Relationship
+
+HAS-A relationship represents object containment.
+
+---
+
+## 86. Using Inheritance for Everything
+
+Inheritance should not replace proper composition.
+
+---
+
+## 87. Ignoring Backend Entity Modeling
+
+Proper relationships are critical in backend architecture.
+
+---
+
+## 88. Designing Poor Domain Models
+
+Weak object modeling creates maintainability issues.
+
+---

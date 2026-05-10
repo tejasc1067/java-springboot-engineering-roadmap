@@ -810,3 +810,82 @@ Useful for:
 - monitoring
 
 ---
+
+## Q101. What is association in Java?
+
+Association represents relationship between independent objects.
+
+---
+
+## Q102. What is aggregation?
+
+Aggregation is weak HAS-A relationship.
+
+Child can exist independently.
+
+---
+
+## Q103. What is composition?
+
+Composition is strong HAS-A relationship.
+
+Child lifecycle depends on parent.
+
+---
+
+## Q104. Difference between aggregation and composition?
+
+Aggregation:
+weak ownership.
+
+Composition:
+strong ownership.
+
+---
+
+## Q105. What is HAS-A relationship?
+
+Relationship where object contains another object.
+
+---
+
+## Q106. Difference between inheritance and composition?
+
+Inheritance:
+IS-A relationship.
+
+Composition:
+HAS-A relationship.
+
+---
+
+## Q107. Why do modern backend systems prefer composition?
+
+Composition improves:
+- flexibility
+- maintainability
+- loose coupling
+
+---
+
+## Q108. Where are association and composition used in backend systems?
+
+Used in:
+- JPA entities
+- domain models
+- service architectures
+- microservices
+
+---
+
+## Q109. Why is composition important in scalable systems?
+
+Composition reduces tight coupling and improves extensibility.
+
+---
+
+## Q110. Which is preferred in modern architecture: inheritance or composition?
+
+Modern systems usually prefer composition over inheritance.
+
+---
