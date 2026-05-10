@@ -101,3 +101,51 @@ Methods perform behavior.
 Improper initialization may create unstable backend systems.
 
 ---
+
+## 17. Making All Variables Public
+
+Public variables reduce encapsulation and security.
+
+---
+
+## 18. Using Setters Without Validation
+
+Setters should validate important business rules.
+
+---
+
+## 19. Confusing Encapsulation with Only Getters/Setters
+
+Real encapsulation protects object integrity.
+
+---
+
+## 20. Exposing Sensitive Data Directly
+
+Sensitive information should not be directly modifiable.
+
+---
+
+## 21. Creating Uncontrolled Object State
+
+Objects should always remain in valid state.
+
+---
+
+## 22. Excessive Setter Usage
+
+Too many setters may weaken object safety.
+
+---
+
+## 23. Ignoring Backend Validation Logic
+
+Validation is critical in enterprise systems.
+
+---
+
+## 24. Violating Object Integrity
+
+Objects should not allow invalid updates.
+
+---

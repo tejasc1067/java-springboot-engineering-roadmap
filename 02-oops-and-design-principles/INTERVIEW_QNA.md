@@ -161,3 +161,85 @@ Constructors are heavily used in:
 - entity initialization
 
 ---
+
+## Q21. What is encapsulation?
+
+Encapsulation means:
+- wrapping data and methods together
+- restricting direct access to data
+
+---
+
+## Q22. Why is encapsulation important?
+
+Encapsulation improves:
+- security
+- maintainability
+- controlled access
+- object integrity
+
+---
+
+## Q23. What is data hiding?
+
+Restricting direct access to internal object data.
+
+Usually achieved using private variables.
+
+---
+
+## Q24. Why are variables usually private in Java?
+
+Private variables protect object integrity and prevent invalid modifications.
+
+---
+
+## Q25. What are getters and setters?
+
+Getter:
+Reads data.
+
+Setter:
+Updates data.
+
+---
+
+## Q26. Why are setters useful?
+
+Setters allow validation before updating data.
+
+---
+
+## Q27. Difference between encapsulation and abstraction?
+
+Encapsulation:
+Data protection.
+
+Abstraction:
+Hiding implementation complexity.
+
+---
+
+## Q28. Why is encapsulation important in backend engineering?
+
+Encapsulation protects:
+- backend entities
+- DTOs
+- business rules
+- object validity
+
+---
+
+## Q29. Can encapsulation improve security?
+
+Yes.
+
+Encapsulation prevents unauthorized or invalid data modification.
+
+---
+
+## Q30. What is controlled access?
+
+Allowing access to object data only through defined methods.
+
+---
