@@ -889,3 +889,87 @@ Composition reduces tight coupling and improves extensibility.
 Modern systems usually prefer composition over inheritance.
 
 ---
+
+## Q111. What is final keyword in Java?
+
+The `final` keyword represents restriction/non-modifiable behavior.
+
+---
+
+## Q112. What is final variable?
+
+A variable whose value cannot change after initialization.
+
+---
+
+## Q113. What is final method?
+
+Method that cannot be overridden.
+
+---
+
+## Q114. What is final class?
+
+Class that cannot be inherited.
+
+---
+
+## Q115. Why is String class final?
+
+For:
+- security
+- immutability
+- thread safety
+- performance
+
+---
+
+## Q116. What is final reference variable?
+
+Reference cannot point to another object.
+
+Object contents may still change.
+
+---
+
+## Q117. Difference between final and immutable object?
+
+final:
+reference/value restriction.
+
+Immutable:
+entire object state cannot change.
+
+---
+
+## Q118. Difference between final, finally, and finalize()?
+
+final:
+keyword.
+
+finally:
+exception block.
+
+finalize():
+garbage collection related method.
+
+---
+
+## Q119. Why is final important in backend engineering?
+
+final helps:
+- immutability
+- thread safety
+- stable architecture
+- safer backend systems
+
+---
+
+## Q120. Why are immutable objects important?
+
+Immutable objects are:
+- thread-safe
+- predictable
+- safer for scalable systems
+
+---
