@@ -481,3 +481,81 @@ Overriding enables:
 - custom implementations
 
 ---
+
+## Q61. What is polymorphism in Java?
+
+Polymorphism means one thing taking multiple forms.
+
+---
+
+## Q62. What are types of polymorphism?
+
+- compile-time polymorphism
+- runtime polymorphism
+
+---
+
+## Q63. Which concept provides compile-time polymorphism?
+
+Method overloading.
+
+---
+
+## Q64. Which concept provides runtime polymorphism?
+
+Method overriding.
+
+---
+
+## Q65. What is dynamic method dispatch?
+
+JVM deciding actual overridden method execution during runtime.
+
+---
+
+## Q66. What is parent reference child object?
+
+Example:
+
+```java
+Animal animal = new Dog();
+```
+
+Parent reference points to child object.
+
+---
+
+## Q67. Why is polymorphism important?
+
+Polymorphism improves:
+- flexibility
+- scalability
+- maintainability
+- loose coupling
+
+---
+
+## Q68. What is loose coupling?
+
+Reducing dependency between components.
+
+---
+
+## Q69. Why do frameworks heavily use polymorphism?
+
+Polymorphism enables:
+- extensibility
+- runtime flexibility
+- interchangeable implementations
+
+---
+
+## Q70. Why is polymorphism important in backend engineering?
+
+Modern backend frameworks depend heavily on:
+- interfaces
+- runtime dispatch
+- dependency injection
+- flexible architectures
+
+---

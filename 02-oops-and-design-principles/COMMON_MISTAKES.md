@@ -307,3 +307,53 @@ Too many overloaded methods may reduce readability.
 Actual overridden method is selected during runtime.
 
 ---
+
+## 49. Confusing Inheritance with Polymorphism
+
+Inheritance creates hierarchy.
+
+Polymorphism provides flexible behavior.
+
+---
+
+## 50. Ignoring Parent Reference Child Object Concept
+
+This is foundational for runtime polymorphism.
+
+---
+
+## 51. Assuming Parent Reference Can Access All Child Members
+
+Parent reference accesses only parent-visible members.
+
+---
+
+## 52. Misunderstanding Dynamic Dispatch
+
+Actual overridden method is selected during runtime.
+
+---
+
+## 53. Creating Tightly Coupled Systems
+
+Without polymorphism systems become rigid.
+
+---
+
+## 54. Ignoring Loose Coupling Principles
+
+Loose coupling improves scalability and maintainability.
+
+---
+
+## 55. Overusing Concrete Implementations
+
+Programming directly to implementations reduces flexibility.
+
+---
+
+## 56. Ignoring Interface-Driven Design
+
+Modern backend systems heavily depend on abstractions and polymorphism.
+
+---
