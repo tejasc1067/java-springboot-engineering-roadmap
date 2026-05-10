@@ -149,3 +149,53 @@ Validation is critical in enterprise systems.
 Objects should not allow invalid updates.
 
 ---
+
+## 25. Overusing Inheritance
+
+Too much inheritance creates tightly coupled systems.
+
+---
+
+## 26. Creating Deep Inheritance Hierarchies
+
+Deep inheritance trees reduce maintainability.
+
+---
+
+## 27. Confusing IS-A and HAS-A Relationships
+
+Inheritance represents IS-A relationship.
+
+Composition represents HAS-A relationship.
+
+---
+
+## 28. Misusing Inheritance for Code Reuse Only
+
+Inheritance should model logical hierarchy, not just reuse.
+
+---
+
+## 29. Ignoring Composition
+
+Modern backend systems often prefer composition over inheritance.
+
+---
+
+## 30. Accessing Inherited Members Incorrectly
+
+Child objects can access inherited public/protected members only.
+
+---
+
+## 31. Expecting Multiple Inheritance with Classes
+
+Java does not support multiple inheritance using classes.
+
+---
+
+## 32. Creating Rigid Architectures
+
+Poor inheritance design reduces scalability and flexibility.
+
+---

@@ -243,3 +243,79 @@ Encapsulation prevents unauthorized or invalid data modification.
 Allowing access to object data only through defined methods.
 
 ---
+
+## Q31. What is inheritance in Java?
+
+Inheritance allows one class to acquire properties and behavior of another class.
+
+---
+
+## Q32. Which keyword is used for inheritance?
+
+`extends`
+
+---
+
+## Q33. What is parent class?
+
+Class whose properties are inherited by another class.
+
+Also called superclass/base class.
+
+---
+
+## Q34. What is child class?
+
+Class that inherits from parent class.
+
+Also called subclass/derived class.
+
+---
+
+## Q35. What is IS-A relationship?
+
+Inheritance represents IS-A relationship.
+
+Example:
+Dog IS-A Animal.
+
+---
+
+## Q36. What are advantages of inheritance?
+
+- code reuse
+- hierarchy creation
+- maintainability
+- extensibility
+
+---
+
+## Q37. What are disadvantages of inheritance?
+
+- tight coupling
+- rigid design
+- maintainability problems if overused
+
+---
+
+## Q38. Does Java support multiple inheritance using classes?
+
+No.
+
+Java supports multiple inheritance using interfaces only.
+
+---
+
+## Q39. What are types of inheritance in Java?
+
+- single inheritance
+- multilevel inheritance
+- hierarchical inheritance
+
+---
+
+## Q40. Why do modern backend systems avoid excessive inheritance?
+
+Because deep inheritance creates tightly coupled and difficult-to-maintain systems.
+
+---
