@@ -659,3 +659,51 @@ Immutable classes should use private final fields.
 Modern scalable systems heavily prefer immutable architectures.
 
 ---
+
+## 105. Creating God Classes
+
+One class handling too many responsibilities violates SRP.
+
+---
+
+## 106. Modifying Stable Code Repeatedly
+
+Violates Open/Closed Principle.
+
+---
+
+## 107. Designing Unsafe Inheritance Hierarchies
+
+Violates Liskov Substitution Principle.
+
+---
+
+## 108. Creating Giant Interfaces
+
+Violates Interface Segregation Principle.
+
+---
+
+## 109. Depending Directly on Concrete Implementations
+
+Violates Dependency Inversion Principle.
+
+---
+
+## 110. Creating Tightly Coupled Services
+
+Tightly coupled systems are difficult to scale and maintain.
+
+---
+
+## 111. Ignoring Abstractions
+
+Abstractions improve flexibility and maintainability.
+
+---
+
+## 112. Ignoring Clean Architecture Principles
+
+Modern backend systems heavily depend on SOLID-driven architecture.
+
+---

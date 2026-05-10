@@ -1061,3 +1061,74 @@ Used in:
 - distributed systems
 
 ---
+
+## Q131. What are SOLID principles?
+
+SOLID is a set of object-oriented design principles for scalable and maintainable systems.
+
+---
+
+## Q132. What is Single Responsibility Principle (SRP)?
+
+One class should have only one reason to change.
+
+---
+
+## Q133. What is Open/Closed Principle (OCP)?
+
+Systems should be open for extension but closed for modification.
+
+---
+
+## Q134. What is Liskov Substitution Principle (LSP)?
+
+Child classes should safely replace parent classes.
+
+---
+
+## Q135. What is Interface Segregation Principle (ISP)?
+
+Clients should not depend on methods they do not use.
+
+---
+
+## Q136. What is Dependency Inversion Principle (DIP)?
+
+Depend on abstractions instead of concrete implementations.
+
+---
+
+## Q137. Why are SOLID principles important?
+
+SOLID improves:
+- scalability
+- maintainability
+- flexibility
+- testability
+
+---
+
+## Q138. Which SOLID principle powers dependency injection?
+
+Dependency Inversion Principle (DIP).
+
+---
+
+## Q139. Why do modern backend systems heavily follow SOLID?
+
+SOLID helps build:
+- scalable systems
+- loosely coupled architectures
+- maintainable codebases
+
+---
+
+## Q140. Why are SOLID principles important in Spring Framework?
+
+Spring heavily depends on:
+- abstractions
+- dependency injection
+- loose coupling
+- extensible architecture
+
+---
