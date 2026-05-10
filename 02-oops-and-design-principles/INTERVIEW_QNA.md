@@ -319,3 +319,89 @@ Java supports multiple inheritance using interfaces only.
 Because deep inheritance creates tightly coupled and difficult-to-maintain systems.
 
 ---
+
+## Q41. What is super keyword in Java?
+
+`super` refers to immediate parent class object.
+
+---
+
+## Q42. Why is super keyword used?
+
+It is used to:
+- access parent variables
+- access parent methods
+- call parent constructors
+
+---
+
+## Q43. How do you call parent constructor?
+
+Using:
+
+```java
+super();
+```
+
+---
+
+## Q44. What is difference between this and super?
+
+this:
+Current class object.
+
+super:
+Parent class object.
+
+---
+
+## Q45. Can super access private parent members?
+
+No.
+
+Private members are not directly accessible.
+
+---
+
+## Q46. When does parent constructor execute?
+
+Parent constructor executes before child constructor.
+
+---
+
+## Q47. Why must super() be first statement?
+
+Because parent initialization must happen before child initialization.
+
+---
+
+## Q48. Can super call parent methods?
+
+Yes.
+
+Example:
+
+```java
+super.display();
+```
+
+---
+
+## Q49. Is super keyword important in backend engineering?
+
+Yes.
+
+It is heavily used in:
+- framework extension
+- enterprise inheritance
+- reusable architectures
+
+---
+
+## Q50. Can super and this be used together?
+
+Yes.
+
+But constructor rules must be followed properly.
+
+---

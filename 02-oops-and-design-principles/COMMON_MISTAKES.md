@@ -199,3 +199,55 @@ Java does not support multiple inheritance using classes.
 Poor inheritance design reduces scalability and flexibility.
 
 ---
+
+## 33. Confusing this and super
+
+this:
+Current object.
+
+super:
+Parent object.
+
+---
+
+## 34. Calling super() Incorrectly
+
+`super()` must be first statement inside constructor.
+
+---
+
+## 35. Assuming super Accesses Private Members
+
+Private parent members cannot be directly accessed.
+
+---
+
+## 36. Forgetting Parent Constructor Execution Order
+
+Parent constructor executes before child constructor.
+
+---
+
+## 37. Overusing Inheritance with super
+
+Excessive inheritance creates rigid architectures.
+
+---
+
+## 38. Ignoring Constructor Chaining Behavior
+
+Improper constructor chaining may create invalid initialization flow.
+
+---
+
+## 39. Shadowing Variables Unnecessarily
+
+Using same variable names in parent and child may reduce readability.
+
+---
+
+## 40. Creating Complex Inheritance Hierarchies
+
+Complex inheritance trees become difficult to maintain.
+
+---
