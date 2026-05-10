@@ -407,3 +407,55 @@ Abstraction should simplify system usage.
 Modern frameworks heavily depend on abstraction-driven architecture.
 
 ---
+
+## 65. Confusing Interface and Abstract Class
+
+Interface:
+behavior contract.
+
+Abstract class:
+partial implementation.
+
+---
+
+## 66. Forgetting to Implement Interface Methods
+
+Implementation classes must implement required methods.
+
+---
+
+## 67. Ignoring Loose Coupling Principles
+
+Interfaces help reduce tight coupling.
+
+---
+
+## 68. Programming Directly to Implementations
+
+Programming to interfaces improves flexibility.
+
+---
+
+## 69. Overusing Concrete Classes
+
+Concrete-only architecture becomes rigid.
+
+---
+
+## 70. Ignoring Dependency Injection Benefits
+
+Interfaces are foundational for dependency injection.
+
+---
+
+## 71. Misunderstanding Multiple Inheritance
+
+Java supports multiple inheritance using interfaces only.
+
+---
+
+## 72. Creating Tightly Coupled Backend Services
+
+Without interfaces systems become difficult to scale and maintain.
+
+---

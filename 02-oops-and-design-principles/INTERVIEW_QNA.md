@@ -644,3 +644,87 @@ Modern backend systems use abstraction heavily for:
 - framework design
 
 ---
+
+## Q81. What is interface in Java?
+
+Interface is blueprint of behavior.
+
+It defines what should happen, not implementation details.
+
+---
+
+## Q82. Which keyword is used to implement interface?
+
+`implements`
+
+---
+
+## Q83. Why are interfaces important?
+
+Interfaces improve:
+- loose coupling
+- flexibility
+- maintainability
+- scalability
+
+---
+
+## Q84. Can Java support multiple inheritance using interfaces?
+
+Yes.
+
+Java supports multiple inheritance using interfaces.
+
+---
+
+## Q85. Difference between interface and abstract class?
+
+Interface:
+behavior contract.
+
+Abstract class:
+partial implementation.
+
+---
+
+## Q86. Why do modern backend systems heavily use interfaces?
+
+Interfaces enable:
+- dependency injection
+- interchangeable implementations
+- scalability
+- testability
+
+---
+
+## Q87. What is loose coupling?
+
+Reducing dependency between components using abstractions.
+
+---
+
+## Q88. Why is programming to interfaces important?
+
+It improves:
+- flexibility
+- maintainability
+- scalability
+
+---
+
+## Q89. Can interface contain implemented methods?
+
+Modern Java supports:
+- default methods
+- static methods
+
+---
+
+## Q90. Why are interfaces important in Spring Framework?
+
+Spring heavily depends on interfaces for:
+- dependency injection
+- service abstraction
+- repository abstraction
+
+---
