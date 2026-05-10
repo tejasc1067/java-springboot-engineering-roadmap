@@ -559,3 +559,88 @@ Modern backend frameworks depend heavily on:
 - flexible architectures
 
 ---
+
+## Q71. What is abstraction in Java?
+
+Abstraction means hiding implementation complexity and exposing essential behavior only.
+
+---
+
+## Q72. What is abstract class?
+
+Abstract class is incomplete class that cannot be instantiated directly.
+
+---
+
+## Q73. What is abstract method?
+
+Method without implementation.
+
+Child classes must implement it.
+
+---
+
+## Q74. Can abstract class contain normal methods?
+
+Yes.
+
+Abstract classes may contain:
+- abstract methods
+- implemented methods
+
+---
+
+## Q75. Can we create object of abstract class?
+
+No.
+
+Abstract classes cannot be instantiated directly.
+
+---
+
+## Q76. What is partial abstraction?
+
+Abstract classes providing both:
+- implemented methods
+- abstract methods
+
+---
+
+## Q77. Difference between abstraction and encapsulation?
+
+Encapsulation:
+protects data.
+
+Abstraction:
+hides complexity.
+
+---
+
+## Q78. Why is abstraction important?
+
+Abstraction improves:
+- maintainability
+- scalability
+- loose coupling
+- flexibility
+
+---
+
+## Q79. Why do frameworks heavily use abstraction?
+
+Abstraction enables:
+- extensibility
+- interchangeable implementations
+- hidden complexity
+
+---
+
+## Q80. Why is abstraction important in backend engineering?
+
+Modern backend systems use abstraction heavily for:
+- service layers
+- repositories
+- scalable architectures
+- framework design
+
+---
