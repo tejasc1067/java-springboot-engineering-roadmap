@@ -91,3 +91,73 @@ OOP is programming paradigm based on:
 
 ---
 
+## Q11. What is a constructor in Java?
+
+A constructor is a special method used to initialize objects.
+
+---
+
+## Q12. What are the rules of constructors?
+
+- same name as class
+- no return type
+- automatically executed
+
+---
+
+## Q13. What is default constructor?
+
+If no constructor is defined,
+Java provides default constructor automatically.
+
+---
+
+## Q14. What is parameterized constructor?
+
+Constructor that accepts parameters for object initialization.
+
+---
+
+## Q15. What is constructor overloading?
+
+Creating multiple constructors with different parameter lists.
+
+---
+
+## Q16. What is constructor chaining?
+
+Calling one constructor from another using `this()`.
+
+---
+
+## Q17. What is the purpose of constructors?
+
+Constructors initialize valid object state.
+
+---
+
+## Q18. Difference between constructor and method?
+
+Constructors initialize objects.
+
+Methods perform operations.
+
+---
+
+## Q19. Can constructor have return type?
+
+No.
+
+Constructors cannot have return type.
+
+---
+
+## Q20. Why are constructors important in backend engineering?
+
+Constructors are heavily used in:
+- dependency injection
+- DTO creation
+- immutable objects
+- entity initialization
+
+---
