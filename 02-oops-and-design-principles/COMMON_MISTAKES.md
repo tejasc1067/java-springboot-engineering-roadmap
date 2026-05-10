@@ -459,3 +459,55 @@ Java supports multiple inheritance using interfaces only.
 Without interfaces systems become difficult to scale and maintain.
 
 ---
+
+## 73. Confusing == and equals()
+
+==:
+reference comparison.
+
+equals():
+logical comparison.
+
+---
+
+## 74. Overriding equals() Without hashCode()
+
+This breaks collection behavior.
+
+---
+
+## 75. Breaking equals() and hashCode() Contract
+
+Equal objects must have same hashCode.
+
+---
+
+## 76. Ignoring toString() Override
+
+Readable object output improves debugging and logging.
+
+---
+
+## 77. Using Mutable Fields in hashCode() Incorrectly
+
+Mutable fields may create inconsistent hashing behavior.
+
+---
+
+## 78. Incorrect Type Casting in equals()
+
+Unsafe casting may cause runtime exceptions.
+
+---
+
+## 79. Ignoring Collection Behavior Impact
+
+equals() and hashCode() directly affect HashMap and HashSet behavior.
+
+---
+
+## 80. Poor Entity Equality Design
+
+Improper equality logic may create severe backend bugs.
+
+---

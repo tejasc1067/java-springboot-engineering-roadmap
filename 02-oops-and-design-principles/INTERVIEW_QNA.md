@@ -728,3 +728,85 @@ Spring heavily depends on interfaces for:
 - repository abstraction
 
 ---
+
+## Q91. What is Object class in Java?
+
+Object class is parent class of all Java classes.
+
+---
+
+## Q92. Why is Object class important?
+
+It provides common methods like:
+- toString()
+- equals()
+- hashCode()
+
+---
+
+## Q93. What is toString() method?
+
+Used to provide string representation of object.
+
+---
+
+## Q94. What is equals() method?
+
+Used for logical equality comparison.
+
+---
+
+## Q95. Difference between == and equals()?
+
+==:
+reference comparison.
+
+equals():
+logical/content comparison.
+
+---
+
+## Q96. What is hashCode() method?
+
+Used for hashing-based collections.
+
+Examples:
+- HashMap
+- HashSet
+
+---
+
+## Q97. What is equals() and hashCode() contract?
+
+If equals() returns true,
+hashCode() must be same.
+
+---
+
+## Q98. Why are equals() and hashCode() important in backend engineering?
+
+They are heavily used in:
+- collections
+- caching
+- JPA entities
+- Hibernate
+
+---
+
+## Q99. What happens if hashCode() contract is broken?
+
+It may create:
+- collection bugs
+- caching issues
+- inconsistent behavior
+
+---
+
+## Q100. Why is toString() useful?
+
+Useful for:
+- logging
+- debugging
+- monitoring
+
+---
