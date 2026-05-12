@@ -237,3 +237,51 @@ Collections are designed around reusable interfaces.
 Collections are foundational backend engineering structures.
 
 ---
+
+## 41. Assuming All ArrayList Operations Are Fast
+
+Middle insertion and deletion are expensive.
+
+---
+
+## 42. Ignoring Resizing Overhead
+
+Frequent resizing impacts performance.
+
+---
+
+## 43. Using ArrayList for Frequent Middle Insertions
+
+LinkedList may be more suitable in some cases.
+
+---
+
+## 44. Confusing Arrays and ArrayList
+
+They have very different behavior and APIs.
+
+---
+
+## 45. Ignoring Internal Shifting Costs
+
+Insertion and deletion may shift many elements.
+
+---
+
+## 46. Overusing ArrayList Without Performance Thinking
+
+Collection selection impacts scalability.
+
+---
+
+## 47. Misusing Iterators
+
+Incorrect iterator usage may cause runtime issues.
+
+---
+
+## 48. Treating ArrayList as Unlimited Free Memory
+
+Large collections impact memory consumption.
+
+---

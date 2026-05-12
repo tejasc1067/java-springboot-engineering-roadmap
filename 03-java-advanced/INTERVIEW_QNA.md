@@ -390,3 +390,73 @@ Used in:
 - microservices
 
 ---
+
+## Q51. What is List in Java?
+
+List is ordered collection that allows duplicates.
+
+---
+
+## Q52. What is ArrayList?
+
+ArrayList is resizable array implementation of List.
+
+---
+
+## Q53. Why is ArrayList fast for access operations?
+
+Because internally it uses array indexing.
+
+---
+
+## Q54. What is internal structure of ArrayList?
+
+ArrayList internally uses dynamic array.
+
+---
+
+## Q55. What happens during ArrayList resizing?
+
+Larger array is created and elements are copied.
+
+---
+
+## Q56. Why is insertion in middle expensive in ArrayList?
+
+Because internal shifting occurs.
+
+---
+
+## Q57. Difference between Array and ArrayList?
+
+Array:
+fixed size.
+
+ArrayList:
+dynamic size.
+
+---
+
+## Q58. What are common iteration methods in ArrayList?
+
+- for loop
+- enhanced for loop
+- iterator
+
+---
+
+## Q59. What is time complexity of ArrayList access?
+
+Approximate O(1).
+
+---
+
+## Q60. Where is ArrayList heavily used in backend systems?
+
+Used in:
+- API responses
+- repositories
+- DTO processing
+- service layers
+
+---
