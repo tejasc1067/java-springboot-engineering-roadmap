@@ -888,3 +888,70 @@ Background service threads.
 Improves scalability and concurrent request handling.
 
 ---
+
+## Q121. What is race condition?
+
+Race condition occurs when multiple threads modify shared data simultaneously.
+
+---
+
+## Q122. What is synchronization in Java?
+
+Synchronization controls concurrent access to shared resources.
+
+---
+
+## Q123. What is critical section?
+
+Code accessing shared mutable resource.
+
+---
+
+## Q124. What does synchronized keyword do?
+
+Allows only one thread to access protected section at a time.
+
+---
+
+## Q125. What is object-level locking?
+
+Locking based on object monitor.
+
+---
+
+## Q126. What is class-level locking?
+
+Locking based on Class object using static synchronized methods.
+
+---
+
+## Q127. Why are synchronized blocks useful?
+
+Provide granular locking and better scalability.
+
+---
+
+## Q128. What is visibility problem in concurrency?
+
+Threads may not immediately see shared updates.
+
+---
+
+## Q129. What are disadvantages of synchronization?
+
+- blocking
+- scalability overhead
+- reduced parallelism
+
+---
+
+## Q130. Where is synchronization heavily used in backend systems?
+
+Used in:
+- banking systems
+- inventory systems
+- payment systems
+- counters
+- caches
+
+---

@@ -573,3 +573,51 @@ Modern backend systems are highly concurrent.
 Concurrency introduces complex runtime behavior.
 
 ---
+
+## 97. Ignoring Race Conditions
+
+Shared mutable data requires proper synchronization.
+
+---
+
+## 98. Over-Synchronizing Entire Methods
+
+Large synchronized sections reduce scalability.
+
+---
+
+## 99. Using Wrong Lock Objects
+
+Incorrect lock selection breaks synchronization guarantees.
+
+---
+
+## 100. Ignoring Visibility Problems
+
+Threads may not immediately see shared updates.
+
+---
+
+## 101. Synchronizing Unnecessary Code
+
+Unnecessary locking reduces performance.
+
+---
+
+## 102. Assuming synchronized Solves All Concurrency Problems
+
+Concurrency requires careful architecture design.
+
+---
+
+## 103. Ignoring Backend Scalability Tradeoffs
+
+Synchronization impacts throughput and latency.
+
+---
+
+## 104. Treating Concurrency Bugs as Easily Reproducible
+
+Concurrency bugs are often unpredictable and difficult to debug.
+
+---
