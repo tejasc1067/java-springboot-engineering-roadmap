@@ -141,3 +141,51 @@ Improper casting may cause runtime failures.
 Generic abstractions should remain clean and reusable.
 
 ---
+
+## 25. Misusing extends and super
+
+Incorrect wildcard usage causes API design problems.
+
+---
+
+## 26. Ignoring PECS Principle
+
+PECS is very important for collections design.
+
+---
+
+## 27. Misunderstanding Type Erasure
+
+Generics mainly exist at compile time.
+
+---
+
+## 28. Trying to Use Primitive Types in Generics
+
+Generics require wrapper classes.
+
+---
+
+## 29. Creating Unsafe Generic APIs
+
+Poor wildcard design reduces type safety.
+
+---
+
+## 30. Overusing Wildcards Everywhere
+
+Unnecessary wildcard usage reduces readability.
+
+---
+
+## 31. Creating Generic Arrays Directly
+
+Generic arrays have runtime limitations.
+
+---
+
+## 32. Confusing Covariance and Contravariance
+
+These concepts are foundational for advanced generics.
+
+---

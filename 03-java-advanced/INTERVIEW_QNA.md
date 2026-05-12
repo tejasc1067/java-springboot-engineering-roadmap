@@ -227,3 +227,79 @@ They improve:
 - maintainability
 
 ---
+
+## Q31. What are bounded types in generics?
+
+Bounded types restrict allowed generic types.
+
+Example:
+<T extends Number>
+
+---
+
+## Q32. What is wildcard in Java generics?
+
+Wildcard (?) represents unknown type.
+
+---
+
+## Q33. What is upper bounded wildcard?
+
+```
+<? extends Type>
+```
+
+Used for safe reading operations.
+
+---
+
+## Q34. What is lower bounded wildcard?
+
+```<? super Type>```
+
+Used for safe insertion operations.
+
+---
+
+## Q35. What is PECS principle?
+
+PECS means:
+Producer Extends Consumer Super.
+
+---
+
+## Q36. What is covariance in Java generics?
+
+Covariance allows safe reading using:
+```<? extends Type>```
+
+---
+
+## Q37. What is contravariance in Java generics?
+
+Contravariance allows safe insertion using:
+```<? super Type>```
+
+---
+
+## Q38. What is type erasure?
+
+Generic type information is mostly removed at runtime.
+
+---
+
+## Q39. Why is type erasure important?
+
+It explains runtime generic limitations.
+
+---
+
+## Q40. Where are advanced generics heavily used?
+
+Used in:
+- Spring Framework
+- collections
+- repositories
+- reusable libraries
+
+---
