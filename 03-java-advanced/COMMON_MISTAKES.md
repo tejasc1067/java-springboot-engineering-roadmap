@@ -45,3 +45,51 @@ Always preserve useful debugging information.
 Production systems should use proper logging instead.
 
 ---
+
+## 9. Overusing Generic Exception
+
+Generic exceptions reduce clarity and maintainability.
+
+---
+
+## 10. Creating Meaningless Custom Exceptions
+
+Exception names should represent real business/domain problems.
+
+---
+
+## 11. Hiding Root Cause During Exception Wrapping
+
+Always preserve original exception cause.
+
+---
+
+## 12. Using Checked Exceptions Everywhere
+
+Not all exceptions should be checked exceptions.
+
+---
+
+## 13. Ignoring Domain-Level Exception Design
+
+Business exceptions improve backend readability.
+
+---
+
+## 14. Logging Same Exception Multiple Times
+
+Duplicate logging creates noisy production logs.
+
+---
+
+## 15. Exposing Sensitive Information in Exception Messages
+
+Never leak internal details to API consumers.
+
+---
+
+## 16. Swallowing Runtime Exceptions Silently
+
+Silent failures make debugging extremely difficult.
+
+---

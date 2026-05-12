@@ -79,3 +79,74 @@ Backend systems constantly face:
 - invalid requests
 
 ---
+
+## Q11. What is custom exception in Java?
+
+Custom exception is user-defined exception class.
+
+---
+
+## Q12. Why are custom exceptions important?
+
+They improve:
+- readability
+- debugging
+- maintainability
+- business clarity
+
+---
+
+## Q13. Difference between checked and unchecked custom exceptions?
+
+Checked:
+extends Exception.
+
+Unchecked:
+extends RuntimeException.
+
+---
+
+## Q14. What is exception chaining?
+
+Wrapping one exception inside another exception.
+
+---
+
+## Q15. Why is exception chaining important?
+
+It preserves root cause for debugging.
+
+---
+
+## Q16. What are business exceptions?
+
+Exceptions representing domain/business failures.
+
+Example:
+UserNotFoundException
+
+---
+
+## Q17. What is fail-fast principle?
+
+Applications should fail early and clearly.
+
+---
+
+## Q18. Why should generic Exception be avoided excessively?
+
+It reduces debugging clarity.
+
+---
+
+## Q19. Why are custom exceptions important in backend systems?
+
+Backend systems require meaningful domain-level error handling.
+
+---
+
+## Q20. What is exception wrapping?
+
+Converting low-level exceptions into business/domain exceptions.
+
+---
