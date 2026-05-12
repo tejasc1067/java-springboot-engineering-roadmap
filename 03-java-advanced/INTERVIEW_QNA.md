@@ -955,3 +955,65 @@ Used in:
 - caches
 
 ---
+
+## Q131. What is thread safety?
+
+Code behaves correctly under concurrent access.
+
+---
+
+## Q132. Why are immutable objects thread-safe?
+
+Their state cannot change after creation.
+
+---
+
+## Q133. What is deadlock?
+
+Threads wait forever for each other’s locks.
+
+---
+
+## Q134. What is starvation?
+
+Some threads never receive CPU/resources.
+
+---
+
+## Q135. What is livelock?
+
+Threads remain active but make no useful progress.
+
+---
+
+## Q136. What is visibility problem in concurrency?
+
+Threads may not immediately see shared updates.
+
+---
+
+## Q137. What does volatile keyword do?
+
+Provides visibility guarantees between threads.
+
+---
+
+## Q138. Does volatile guarantee atomicity?
+
+No.
+
+volatile guarantees visibility only.
+
+---
+
+## Q139. What is atomicity?
+
+Operation executes completely or not at all.
+
+---
+
+## Q140. Why are concurrency bugs difficult to debug?
+
+They occur unpredictably under concurrent execution.
+
+---

@@ -621,3 +621,51 @@ Synchronization impacts throughput and latency.
 Concurrency bugs are often unpredictable and difficult to debug.
 
 ---
+
+## 105. Assuming volatile Solves All Concurrency Problems
+
+volatile does not guarantee atomicity.
+
+---
+
+## 106. Ignoring Deadlock Risks
+
+Improper lock ordering causes deadlocks.
+
+---
+
+## 107. Using Mutable Shared Objects Everywhere
+
+Mutable shared state increases concurrency complexity.
+
+---
+
+## 108. Ignoring Visibility Problems
+
+Threads may cache stale values.
+
+---
+
+## 109. Assuming count++ is Atomic
+
+Increment operations are not atomic.
+
+---
+
+## 110. Underestimating Production Concurrency Bugs
+
+Concurrency bugs are extremely difficult to reproduce.
+
+---
+
+## 111. Overusing Shared Mutable State
+
+Reducing shared state simplifies concurrency.
+
+---
+
+## 112. Ignoring Scalability Effects of Synchronization
+
+Concurrency control impacts throughput heavily.
+
+---
