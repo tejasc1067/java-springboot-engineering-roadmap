@@ -673,3 +673,76 @@ Used in:
 - request processing
 
 ---
+
+## Q91. What is Comparable in Java?
+
+Comparable defines natural ordering of objects.
+
+---
+
+## Q92. What is Comparator in Java?
+
+Comparator defines external/custom sorting logic.
+
+---
+
+## Q93. What is compareTo() method?
+
+compareTo() defines natural ordering.
+
+---
+
+## Q94. What is compare() method?
+
+compare() defines custom comparison logic.
+
+---
+
+## Q95. Difference between Comparable and Comparator?
+
+Comparable:
+natural ordering.
+
+Comparator:
+custom ordering.
+
+---
+
+## Q96. Why is Comparator important?
+
+Supports multiple sorting strategies.
+
+---
+
+## Q97. Why is sorting important in backend systems?
+
+Used in:
+- APIs
+- reports
+- dashboards
+- ranking systems
+- pagination
+
+---
+
+## Q98. What is lambda-based sorting?
+
+Sorting using lambda expressions.
+
+---
+
+## Q99. What is typical sorting complexity?
+
+Approximate O(n log n).
+
+---
+
+## Q100. Where are sorting systems heavily used?
+
+Used in:
+- leaderboards
+- analytics
+- pagination
+- backend reporting
+
+---

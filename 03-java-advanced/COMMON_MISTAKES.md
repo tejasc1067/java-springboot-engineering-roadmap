@@ -429,3 +429,51 @@ Different map implementations behave differently internally.
 Hashing architecture impacts backend performance heavily.
 
 ---
+
+## 73. Confusing Comparable and Comparator
+
+They solve different sorting problems.
+
+---
+
+## 74. Writing Inconsistent compareTo() Logic
+
+Incorrect comparison logic breaks sorting behavior.
+
+---
+
+## 75. Duplicating Sorting Logic Everywhere
+
+Reusable comparators improve maintainability.
+
+---
+
+## 76. Ignoring Sorting Performance
+
+Large-scale sorting impacts scalability.
+
+---
+
+## 77. Overcomplicating Comparator Implementations
+
+Modern lambda syntax simplifies sorting.
+
+---
+
+## 78. Using Natural Ordering for Every Use Case
+
+Many systems require multiple sorting strategies.
+
+---
+
+## 79. Ignoring Backend Pagination Requirements
+
+Sorting is critical for API pagination systems.
+
+---
+
+## 80. Writing Non-Scalable Ranking Logic
+
+Large ranking systems require optimized sorting strategies.
+
+---
