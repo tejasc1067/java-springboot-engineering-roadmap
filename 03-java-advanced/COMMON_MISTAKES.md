@@ -189,3 +189,51 @@ Generic arrays have runtime limitations.
 These concepts are foundational for advanced generics.
 
 ---
+
+## 33. Using Wrong Collection Type
+
+Incorrect collection selection causes performance issues.
+
+---
+
+## 34. Confusing List and Set
+
+List allows duplicates, Set does not.
+
+---
+
+## 35. Ignoring Collection Performance
+
+Different collections have different performance characteristics.
+
+---
+
+## 36. Overusing ArrayList Everywhere
+
+Not every use case requires ArrayList.
+
+---
+
+## 37. Misunderstanding Queue Behavior
+
+Queues are heavily used for processing order management.
+
+---
+
+## 38. Using Map Without Understanding Key Uniqueness
+
+Duplicate keys overwrite previous values.
+
+---
+
+## 39. Ignoring Collections API Design
+
+Collections are designed around reusable interfaces.
+
+---
+
+## 40. Treating Collections as Simple Containers Only
+
+Collections are foundational backend engineering structures.
+
+---

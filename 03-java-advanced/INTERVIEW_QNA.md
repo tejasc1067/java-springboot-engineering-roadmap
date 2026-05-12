@@ -303,3 +303,90 @@ Used in:
 - reusable libraries
 
 ---
+
+## Q41. What is Collections Framework?
+
+Collections Framework is unified architecture for storing and manipulating data.
+
+---
+
+## Q42. Why was Collections Framework introduced?
+
+To improve:
+- dynamic data handling
+- reusable APIs
+- scalability
+- maintainability
+
+---
+
+## Q43. What are main collection interfaces?
+
+Main interfaces:
+- List
+- Set
+- Queue
+- Map
+
+---
+
+## Q44. Difference between List and Set?
+
+List:
+- ordered
+- duplicates allowed
+
+Set:
+- unique elements only
+
+---
+
+## Q45. What is Queue in Java?
+
+Queue manages processing order.
+
+Usually follows FIFO behavior.
+
+---
+
+## Q46. What is Map in Java?
+
+Map stores key-value pairs.
+
+---
+
+## Q47. Difference between Collections and Arrays?
+
+Collections:
+- dynamic size
+- reusable APIs
+
+Arrays:
+- fixed size
+
+---
+
+## Q48. What is Iterable interface?
+
+Iterable supports iteration behavior.
+
+Used internally by for-each loop.
+
+---
+
+## Q49. Why are collections important in backend systems?
+
+Backend systems constantly process large amounts of data.
+
+---
+
+## Q50. Where are collections heavily used?
+
+Used in:
+- APIs
+- repositories
+- caching
+- request processing
+- microservices
+
+---
