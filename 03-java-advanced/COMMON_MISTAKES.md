@@ -525,3 +525,51 @@ Producer-consumer systems require proper queue management.
 Correct architecture still matters heavily.
 
 ---
+
+## 89. Calling run() Instead of start()
+
+run() does not create new thread.
+
+---
+
+## 90. Misunderstanding Thread Lifecycle
+
+Incorrect lifecycle understanding causes debugging issues.
+
+---
+
+## 91. Overusing sleep() for Coordination
+
+sleep() is unreliable for synchronization.
+
+---
+
+## 92. Ignoring Thread Coordination Problems
+
+Poor coordination causes inconsistent behavior.
+
+---
+
+## 93. Assuming Concurrency Means Parallelism
+
+They are different concepts.
+
+---
+
+## 94. Creating Too Many Threads Manually
+
+Excessive threads hurt scalability.
+
+---
+
+## 95. Ignoring Backend Concurrency Requirements
+
+Modern backend systems are highly concurrent.
+
+---
+
+## 96. Treating Multithreading as Simple Sequential Programming
+
+Concurrency introduces complex runtime behavior.
+
+---

@@ -815,3 +815,76 @@ Used in:
 Backend systems process multiple concurrent requests simultaneously.
 
 ---
+
+## Q111. What is thread in Java?
+
+Thread is lightweight execution unit inside process.
+
+---
+
+## Q112. What is multithreading?
+
+Executing multiple threads concurrently.
+
+---
+
+## Q113. Difference between process and thread?
+
+Process:
+independent running program.
+
+Thread:
+execution unit inside process.
+
+---
+
+## Q114. What is Runnable interface?
+
+Runnable represents task executed by thread.
+
+---
+
+## Q115. Difference between start() and run()?
+
+start():
+creates new thread.
+
+run():
+normal method call.
+
+---
+
+## Q116. What is thread lifecycle?
+
+Thread states:
+- NEW
+- RUNNABLE
+- RUNNING
+- WAITING
+- TERMINATED
+
+---
+
+## Q117. What is sleep() in Java?
+
+Temporarily pauses thread execution.
+
+---
+
+## Q118. What is join() method?
+
+Allows one thread to wait for another thread.
+
+---
+
+## Q119. What are daemon threads?
+
+Background service threads.
+
+---
+
+## Q120. Why is multithreading important in backend systems?
+
+Improves scalability and concurrent request handling.
+
+---
