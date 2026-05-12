@@ -93,3 +93,51 @@ Never leak internal details to API consumers.
 Silent failures make debugging extremely difficult.
 
 ---
+
+## 17. Using Raw Types Excessively
+
+Raw types reduce type safety.
+
+---
+
+## 18. Misunderstanding Generic Syntax
+
+Generic syntax confusion is very common among beginners.
+
+---
+
+## 19. Ignoring Compile-Time Type Safety
+
+Generics exist to prevent runtime type errors.
+
+---
+
+## 20. Using Object Instead of Proper Generics
+
+This reduces readability and maintainability.
+
+---
+
+## 21. Overcomplicating Generic Design
+
+Unnecessarily complex generics reduce code clarity.
+
+---
+
+## 22. Ignoring Generics in Collections
+
+Collections should use proper type parameters.
+
+---
+
+## 23. Creating Unsafe Cast Operations
+
+Improper casting may cause runtime failures.
+
+---
+
+## 24. Misusing Generic Interfaces
+
+Generic abstractions should remain clean and reusable.
+
+---

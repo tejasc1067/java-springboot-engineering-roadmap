@@ -150,3 +150,80 @@ Backend systems require meaningful domain-level error handling.
 Converting low-level exceptions into business/domain exceptions.
 
 ---
+
+## Q21. What are generics in Java?
+
+Generics allow parameterized types for type-safe programming.
+
+---
+
+## Q22. Why were generics introduced?
+
+To improve:
+- type safety
+- readability
+- maintainability
+
+---
+
+## Q23. What is type safety?
+
+Compile-time validation of data types.
+
+---
+
+## Q24. What is generic class?
+
+Class that accepts type parameter.
+
+Example:
+class Box<T>
+
+---
+
+## Q25. What is generic method?
+
+Method that works with generic type parameters.
+
+---
+
+## Q26. Why are generics important in collections?
+
+Generics prevent invalid object insertion and explicit casting.
+
+---
+
+## Q27. What are raw types?
+
+Using generic classes without specifying type parameter.
+
+Example:
+List list
+
+---
+
+## Q28. Why should raw types be avoided?
+
+They reduce type safety.
+
+---
+
+## Q29. Where are generics heavily used in backend systems?
+
+Used in:
+- collections
+- repositories
+- DTO wrappers
+- APIs
+- service layers
+
+---
+
+## Q30. Why are generics important in enterprise Java?
+
+They improve:
+- reusable architecture
+- compile-time safety
+- maintainability
+
+---
