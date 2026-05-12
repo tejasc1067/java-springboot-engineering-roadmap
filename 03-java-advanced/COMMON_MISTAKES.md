@@ -285,3 +285,51 @@ Incorrect iterator usage may cause runtime issues.
 Large collections impact memory consumption.
 
 ---
+
+## 49. Assuming LinkedList is Always Faster
+
+LinkedList is slower for random access.
+
+---
+
+## 50. Ignoring LinkedList Memory Overhead
+
+Each node stores extra references.
+
+---
+
+## 51. Using LinkedList Without Understanding Traversal Cost
+
+Traversal impacts scalability.
+
+---
+
+## 52. Overusing Vector in Modern Applications
+
+Modern systems usually prefer better alternatives.
+
+---
+
+## 53. Ignoring Synchronization Overhead in Vector
+
+Synchronization impacts performance.
+
+---
+
+## 54. Using Wrong Collection for Workload Type
+
+Collection choice should depend on access patterns.
+
+---
+
+## 55. Treating All Lists as Identical
+
+Different list implementations behave differently internally.
+
+---
+
+## 56. Ignoring Backend Scalability Implications
+
+Collection performance affects large-scale systems.
+
+---

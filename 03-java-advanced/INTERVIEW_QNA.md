@@ -460,3 +460,77 @@ Used in:
 - service layers
 
 ---
+
+## Q61. What is LinkedList in Java?
+
+LinkedList is doubly linked list implementation of List.
+
+---
+
+## Q62. What is internal structure of LinkedList?
+
+Each node stores:
+- data
+- previous reference
+- next reference
+
+---
+
+## Q63. Why is LinkedList good for insertions?
+
+Insertion does not require large shifting operations.
+
+---
+
+## Q64. Why is LinkedList slower for access operations?
+
+Traversal occurs node-by-node.
+
+---
+
+## Q65. What is Vector in Java?
+
+Vector is synchronized dynamic array.
+
+---
+
+## Q66. Difference between Vector and ArrayList?
+
+Vector:
+synchronized.
+
+ArrayList:
+not synchronized.
+
+---
+
+## Q67. Difference between ArrayList and LinkedList?
+
+ArrayList:
+fast access.
+
+LinkedList:
+better insertion/deletion.
+
+---
+
+## Q68. Why does LinkedList consume more memory?
+
+Each node stores extra references.
+
+---
+
+## Q69. Why is Vector less commonly used today?
+
+Synchronization creates performance overhead.
+
+---
+
+## Q70. Where is LinkedList used in backend systems?
+
+Used in:
+- queues
+- buffering
+- task processing
+
+---
