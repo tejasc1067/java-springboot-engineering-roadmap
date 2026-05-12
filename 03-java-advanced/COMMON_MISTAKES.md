@@ -333,3 +333,51 @@ Different list implementations behave differently internally.
 Collection performance affects large-scale systems.
 
 ---
+
+## 57. Overriding equals() Without hashCode()
+
+This breaks HashSet and HashMap behavior.
+
+---
+
+## 58. Misunderstanding HashSet Uniqueness
+
+HashSet depends on hashing and equality checks.
+
+---
+
+## 59. Ignoring Collision Impacts
+
+Poor hashing can reduce performance.
+
+---
+
+## 60. Using Mutable Fields in hashCode()
+
+Changing hash-relevant fields creates inconsistent behavior.
+
+---
+
+## 61. Confusing Reference Equality and Logical Equality
+
+equals() and == are different concepts.
+
+---
+
+## 62. Assuming HashSet Maintains Order
+
+HashSet does not guarantee insertion order.
+
+---
+
+## 63. Writing Poor hashCode() Implementations
+
+Bad hashing impacts scalability.
+
+---
+
+## 64. Ignoring Backend Lookup Performance
+
+Hashing is foundational for scalable systems.
+
+---

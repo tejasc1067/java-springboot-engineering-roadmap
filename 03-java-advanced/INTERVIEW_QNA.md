@@ -534,3 +534,71 @@ Used in:
 - task processing
 
 ---
+
+## Q71. What is Set in Java?
+
+Set is collection that stores unique elements.
+
+---
+
+## Q72. What is HashSet?
+
+HashSet is hash table based implementation of Set.
+
+---
+
+## Q73. What is hashing?
+
+Hashing converts object into numeric hash value.
+
+---
+
+## Q74. Why is hashing important?
+
+Hashing enables fast lookup and insertion.
+
+---
+
+## Q75. What is hashCode()?
+
+hashCode() generates numeric hash representation of object.
+
+---
+
+## Q76. What is equals() in Java?
+
+equals() determines logical equality.
+
+---
+
+## Q77. Why are hashCode() and equals() important together?
+
+Collections depend on both for correct uniqueness handling.
+
+---
+
+## Q78. What is collision in hashing?
+
+Collision occurs when multiple objects generate same hash.
+
+---
+
+## Q79. What is performance complexity of HashSet?
+
+Approximate O(1) for:
+- add
+- remove
+- contains
+
+---
+
+## Q80. Where is hashing heavily used in backend systems?
+
+Used in:
+- caching
+- indexing
+- authentication
+- duplicate detection
+- scalable lookups
+
+---
