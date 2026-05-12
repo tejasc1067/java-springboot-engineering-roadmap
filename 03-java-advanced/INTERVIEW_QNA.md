@@ -746,3 +746,72 @@ Used in:
 - backend reporting
 
 ---
+
+## Q101. Why are normal collections unsafe in concurrency?
+
+Multiple threads may corrupt shared collection state.
+
+---
+
+## Q102. What are synchronized collections?
+
+Thread-safe wrappers around normal collections.
+
+---
+
+## Q103. What is ConcurrentHashMap?
+
+Highly optimized thread-safe map implementation.
+
+---
+
+## Q104. Why is ConcurrentHashMap preferred over Hashtable?
+
+Better scalability and concurrency performance.
+
+---
+
+## Q105. What is CopyOnWriteArrayList?
+
+Collection that creates copy during modification.
+
+---
+
+## Q106. When is CopyOnWriteArrayList useful?
+
+Useful for read-heavy systems.
+
+---
+
+## Q107. What is BlockingQueue?
+
+Thread-safe queue used in producer-consumer systems.
+
+---
+
+## Q108. Difference between fail-fast and fail-safe iteration?
+
+Fail-fast:
+throws exception.
+
+Fail-safe:
+works on copied structure.
+
+---
+
+## Q109. Where are concurrent collections heavily used?
+
+Used in:
+- caching
+- microservices
+- async processing
+- thread pools
+- distributed systems
+
+---
+
+## Q110. Why are concurrent collections important in backend systems?
+
+Backend systems process multiple concurrent requests simultaneously.
+
+---

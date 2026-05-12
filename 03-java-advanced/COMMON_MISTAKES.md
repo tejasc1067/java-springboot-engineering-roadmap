@@ -477,3 +477,51 @@ Sorting is critical for API pagination systems.
 Large ranking systems require optimized sorting strategies.
 
 ---
+
+## 81. Assuming HashMap is Thread-Safe
+
+HashMap is not safe for concurrent modifications.
+
+---
+
+## 82. Overusing Synchronized Collections
+
+Coarse synchronization hurts scalability.
+
+---
+
+## 83. Using CopyOnWriteArrayList in Write-Heavy Systems
+
+Frequent copying impacts performance.
+
+---
+
+## 84. Ignoring Concurrent Modification Problems
+
+Unsafe iteration causes runtime failures.
+
+---
+
+## 85. Misunderstanding Fail-Fast Behavior
+
+Concurrent modification exceptions are intentional safety checks.
+
+---
+
+## 86. Ignoring Scalability Tradeoffs in Concurrency
+
+Thread safety and scalability must be balanced.
+
+---
+
+## 87. Misusing BlockingQueue
+
+Producer-consumer systems require proper queue management.
+
+---
+
+## 88. Treating Concurrent Collections as Magic Solutions
+
+Correct architecture still matters heavily.
+
+---
