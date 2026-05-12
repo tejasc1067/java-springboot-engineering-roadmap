@@ -381,3 +381,51 @@ Bad hashing impacts scalability.
 Hashing is foundational for scalable systems.
 
 ---
+
+## 65. Writing Poor HashMap Keys
+
+Bad key design causes collisions and performance degradation.
+
+---
+
+## 66. Ignoring hashCode() and equals() Rules
+
+Incorrect implementations break map behavior.
+
+---
+
+## 67. Assuming HashMap Maintains Order
+
+HashMap does not guarantee insertion order.
+
+---
+
+## 68. Ignoring Collision Impacts
+
+Heavy collisions reduce lookup efficiency.
+
+---
+
+## 69. Misunderstanding Load Factor
+
+Load factor affects resizing and performance.
+
+---
+
+## 70. Overusing TreeMap Without Need
+
+Sorting introduces additional overhead.
+
+---
+
+## 71. Treating All Maps as Identical
+
+Different map implementations behave differently internally.
+
+---
+
+## 72. Ignoring Scalability Implications of Hashing
+
+Hashing architecture impacts backend performance heavily.
+
+---

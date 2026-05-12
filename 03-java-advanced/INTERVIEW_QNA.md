@@ -602,3 +602,74 @@ Used in:
 - scalable lookups
 
 ---
+
+## Q81. What is Map in Java?
+
+Map stores key-value pairs.
+
+---
+
+## Q82. What is HashMap?
+
+HashMap is hash table based implementation of Map.
+
+---
+
+## Q83. How does HashMap work internally?
+
+Uses:
+- hashCode()
+- buckets
+- equals()
+- collision handling
+
+---
+
+## Q84. What are buckets in HashMap?
+
+Buckets are internal storage locations.
+
+---
+
+## Q85. What is load factor in HashMap?
+
+Load factor controls resizing threshold.
+
+Default approximately 0.75.
+
+---
+
+## Q86. What is rehashing?
+
+Entries are redistributed into larger structure during resizing.
+
+---
+
+## Q87. What is collision in HashMap?
+
+Multiple keys map to same bucket.
+
+---
+
+## Q88. Difference between HashMap and LinkedHashMap?
+
+LinkedHashMap maintains insertion order.
+
+---
+
+## Q89. Difference between HashMap and TreeMap?
+
+TreeMap stores entries in sorted order.
+
+---
+
+## Q90. Where is HashMap heavily used in backend systems?
+
+Used in:
+- caching
+- session management
+- indexing
+- distributed systems
+- request processing
+
+---
