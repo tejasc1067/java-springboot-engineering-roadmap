@@ -765,3 +765,51 @@ Multiple async tasks require proper orchestration.
 Blocking operations reduce throughput heavily.
 
 ---
+
+## 129. Overusing synchronized Everywhere
+
+Heavy locking reduces scalability.
+
+---
+
+## 130. Ignoring Lock Contention
+
+Too many competing threads reduce throughput.
+
+---
+
+## 131. Forgetting unlock() in ReentrantLock
+
+Always release locks properly.
+
+---
+
+## 132. Misusing ThreadLocal
+
+Improper cleanup may cause memory leaks.
+
+---
+
+## 133. Using ReadWriteLock in Write-Heavy Systems
+
+Benefits reduce when writes dominate.
+
+---
+
+## 134. Ignoring CAS Concepts
+
+Modern concurrency heavily relies on lock-free techniques.
+
+---
+
+## 135. Misconfiguring Semaphores
+
+Incorrect permits affect resource control.
+
+---
+
+## 136. Treating Advanced Concurrency as Simple Synchronization
+
+High-scale systems require deeper concurrency engineering.
+
+---

@@ -1158,3 +1158,66 @@ Used in:
 Improves scalability and responsiveness.
 
 ---
+
+## Q161. What are atomic classes in Java?
+
+Thread-safe lock-free utility classes.
+
+---
+
+## Q162. What is CAS in concurrency?
+
+Compare-And-Set operation used in lock-free concurrency.
+
+---
+
+## Q163. Why are atomic classes scalable?
+
+Avoid heavy locking overhead.
+
+---
+
+## Q164. What is ReentrantLock?
+
+Flexible alternative to synchronized keyword.
+
+---
+
+## Q165. What is ReadWriteLock?
+
+Separates read and write locking.
+
+---
+
+## Q166. When is ReadWriteLock useful?
+
+Useful in read-heavy systems.
+
+---
+
+## Q167. What is Semaphore?
+
+Controls limited concurrent resource access.
+
+---
+
+## Q168. What is ThreadLocal?
+
+Provides thread-specific storage.
+
+---
+
+## Q169. Where is ThreadLocal heavily used?
+
+Used in:
+- request context
+- transaction context
+- security context
+
+---
+
+## Q170. Why is lock contention dangerous?
+
+Reduces throughput and scalability.
+
+---
