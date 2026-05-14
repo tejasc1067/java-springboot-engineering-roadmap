@@ -669,3 +669,51 @@ Reducing shared state simplifies concurrency.
 Concurrency control impacts throughput heavily.
 
 ---
+
+## 113. Creating Threads Manually Everywhere
+
+Executor Framework should manage scalable concurrency.
+
+---
+
+## 114. Forgetting shutdown() on ExecutorService
+
+Causes resource and thread leaks.
+
+---
+
+## 115. Using CachedThreadPool Without Limits
+
+May create excessive threads.
+
+---
+
+## 116. Ignoring Thread Pool Sizing
+
+Incorrect sizing impacts scalability heavily.
+
+---
+
+## 117. Blocking Threads Unnecessarily
+
+Blocked worker threads reduce throughput.
+
+---
+
+## 118. Treating Thread Pools as Unlimited Resources
+
+Threads consume memory and CPU resources.
+
+---
+
+## 119. Ignoring Backend Async Architecture
+
+Modern backend systems heavily depend on async processing.
+
+---
+
+## 120. Misunderstanding Future and Async Results
+
+Async computation handling requires careful design.
+
+---

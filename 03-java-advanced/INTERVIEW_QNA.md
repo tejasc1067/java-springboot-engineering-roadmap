@@ -1017,3 +1017,72 @@ Operation executes completely or not at all.
 They occur unpredictably under concurrent execution.
 
 ---
+
+## Q141. What is Executor Framework?
+
+Framework for scalable thread and task management.
+
+---
+
+## Q142. Why are thread pools important?
+
+Thread reuse improves scalability and resource efficiency.
+
+---
+
+## Q143. What is ExecutorService?
+
+Interface for task execution and thread-pool management.
+
+---
+
+## Q144. What is fixed thread pool?
+
+Thread pool with fixed number of reusable threads.
+
+---
+
+## Q145. What is cached thread pool?
+
+Thread pool that dynamically creates threads.
+
+---
+
+## Q146. What is ScheduledExecutorService?
+
+Executor for delayed and periodic task execution.
+
+---
+
+## Q147. Difference between submit() and execute()?
+
+submit():
+returns Future.
+
+execute():
+does not return result.
+
+---
+
+## Q148. Why is shutdown() important?
+
+Prevents thread and resource leaks.
+
+---
+
+## Q149. What is Future in Java?
+
+Represents asynchronous computation result.
+
+---
+
+## Q150. Where is Executor Framework heavily used?
+
+Used in:
+- async APIs
+- microservices
+- messaging systems
+- web servers
+- distributed systems
+
+---
