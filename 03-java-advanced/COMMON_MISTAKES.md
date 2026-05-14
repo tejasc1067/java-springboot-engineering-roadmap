@@ -813,3 +813,51 @@ Incorrect permits affect resource control.
 High-scale systems require deeper concurrency engineering.
 
 ---
+
+## 137. Assuming Java Prevents All Memory Leaks
+
+Java can still suffer from memory leaks.
+
+---
+
+## 138. Retaining Unused Objects in Static Collections
+
+Objects remain unnecessarily in memory.
+
+---
+
+## 139. Ignoring Heap Growth Problems
+
+Excessive object creation impacts scalability.
+
+---
+
+## 140. Misunderstanding Heap vs Stack Memory
+
+Both serve completely different purposes.
+
+---
+
+## 141. Creating Excessive Temporary Objects
+
+Heavy object creation increases GC pressure.
+
+---
+
+## 142. Ignoring Weak References in Cache Design
+
+Weak references help memory-sensitive systems.
+
+---
+
+## 143. Forgetting ThreadLocal Cleanup
+
+Improper cleanup may cause memory leaks.
+
+---
+
+## 144. Ignoring Production Memory Monitoring
+
+Memory problems often appear only under heavy load.
+
+---

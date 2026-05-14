@@ -1221,3 +1221,69 @@ Used in:
 Reduces throughput and scalability.
 
 ---
+
+## Q171. What is heap memory in Java?
+
+Heap stores objects and shared data.
+
+---
+
+## Q172. What is stack memory in Java?
+
+Stack stores method calls and local variables.
+
+---
+
+## Q173. Difference between heap and stack memory?
+
+Heap:
+stores objects.
+
+Stack:
+stores execution frames and local variables.
+
+---
+
+## Q174. What is object lifecycle in Java?
+
+Objects are created, used, become unreachable and garbage collected.
+
+---
+
+## Q175. What are strong references?
+
+Default Java references preventing immediate garbage collection.
+
+---
+
+## Q176. What are weak references?
+
+References allowing earlier garbage collection.
+
+---
+
+## Q177. Can Java have memory leaks?
+
+Yes.
+
+Unused objects may remain referenced.
+
+---
+
+## Q178. What causes OutOfMemoryError?
+
+JVM cannot allocate required memory.
+
+---
+
+## Q179. What causes StackOverflowError?
+
+Deep or uncontrolled recursion.
+
+---
+
+## Q180. Why is memory management important in backend systems?
+
+Impacts scalability, latency and production stability.
+
+---
