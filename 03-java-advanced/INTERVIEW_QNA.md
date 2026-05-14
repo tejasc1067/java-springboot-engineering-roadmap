@@ -1086,3 +1086,75 @@ Used in:
 - distributed systems
 
 ---
+
+## Q151. What is Callable in Java?
+
+Callable represents async task that returns result.
+
+---
+
+## Q152. Difference between Runnable and Callable?
+
+Runnable:
+does not return result.
+
+Callable:
+returns result and throws exceptions.
+
+---
+
+## Q153. What is Future?
+
+Future represents pending async computation result.
+
+---
+
+## Q154. What is limitation of Future?
+
+Future.get() blocks thread.
+
+---
+
+## Q155. What is CompletableFuture?
+
+Modern API for asynchronous and non-blocking programming.
+
+---
+
+## Q156. Why is CompletableFuture important?
+
+Supports async chaining and composition.
+
+---
+
+## Q157. What is async chaining?
+
+Multiple async steps connected together.
+
+---
+
+## Q158. What is blocking vs non-blocking?
+
+Blocking:
+thread waits idly.
+
+Non-blocking:
+thread continues useful work.
+
+---
+
+## Q159. Where is CompletableFuture heavily used?
+
+Used in:
+- microservices
+- async APIs
+- distributed systems
+- event-driven systems
+
+---
+
+## Q160. Why is async programming important in backend systems?
+
+Improves scalability and responsiveness.
+
+---

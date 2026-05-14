@@ -717,3 +717,51 @@ Modern backend systems heavily depend on async processing.
 Async computation handling requires careful design.
 
 ---
+
+## 121. Blocking Threads Using Future.get() Everywhere
+
+Excessive blocking reduces scalability.
+
+---
+
+## 122. Ignoring CompletableFuture Exception Handling
+
+Async failures must be handled properly.
+
+---
+
+## 123. Writing Deeply Nested Async Code
+
+Poor async design reduces maintainability.
+
+---
+
+## 124. Assuming Async Always Improves Performance
+
+Improper async design may hurt performance.
+
+---
+
+## 125. Ignoring Thread Pool Usage in Async Systems
+
+Async systems still depend on thread management.
+
+---
+
+## 126. Overusing Async for Small Tasks
+
+Not every operation requires asynchronous execution.
+
+---
+
+## 127. Forgetting Async Workflow Coordination
+
+Multiple async tasks require proper orchestration.
+
+---
+
+## 128. Ignoring Backend Scalability Implications of Blocking Calls
+
+Blocking operations reduce throughput heavily.
+
+---
