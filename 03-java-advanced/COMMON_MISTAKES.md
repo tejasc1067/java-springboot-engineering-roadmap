@@ -861,3 +861,51 @@ Improper cleanup may cause memory leaks.
 Memory problems often appear only under heavy load.
 
 ---
+
+## 145. Assuming System.gc() Guarantees Immediate GC
+
+GC execution timing is controlled by JVM.
+
+---
+
+## 146. Creating Excessive Temporary Objects
+
+Heavy allocation increases GC pressure.
+
+---
+
+## 147. Ignoring Stop-The-World Pause Effects
+
+GC pauses impact backend latency.
+
+---
+
+## 148. Assuming Automatic Memory Management Removes Need for Optimization
+
+Poor allocation patterns still hurt performance.
+
+---
+
+## 149. Retaining Long-Lived Objects Unnecessarily
+
+Old Generation pressure increases Full GC frequency.
+
+---
+
+## 150. Ignoring Heap Monitoring in Production
+
+GC behavior must be monitored in real systems.
+
+---
+
+## 151. Misunderstanding Young vs Old Generation
+
+Different generations serve different optimization purposes.
+
+---
+
+## 152. Treating GC Tuning as Optional in Large Systems
+
+High-scale systems often require JVM tuning.
+
+---

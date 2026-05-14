@@ -1287,3 +1287,65 @@ Deep or uncontrolled recursion.
 Impacts scalability, latency and production stability.
 
 ---
+
+## Q181. What is garbage collection in Java?
+
+Automatic removal of unreachable objects from memory.
+
+---
+
+## Q182. What are GC roots?
+
+Starting points used by GC for reachability analysis.
+
+---
+
+## Q183. What is Young Generation?
+
+Memory area storing newly created objects.
+
+---
+
+## Q184. What is Old Generation?
+
+Memory area storing long-lived objects.
+
+---
+
+## Q185. What is Minor GC?
+
+GC process cleaning Young Generation.
+
+---
+
+## Q186. What is Major/Full GC?
+
+GC process cleaning Old Generation.
+
+---
+
+## Q187. What are Stop-The-World pauses?
+
+Application thread pauses during GC operations.
+
+---
+
+## Q188. What is G1 GC?
+
+Garbage collector designed for lower pause times.
+
+---
+
+## Q189. Can excessive object creation affect performance?
+
+Yes.
+
+It increases GC pressure and latency.
+
+---
+
+## Q190. Why is GC understanding important for backend systems?
+
+GC heavily impacts scalability and latency.
+
+---
