@@ -957,3 +957,51 @@ Different JVM regions serve different purposes.
 High-scale systems often require JVM tuning.
 
 ---
+
+## 161. Premature Optimization
+
+Optimize only after measurement and bottleneck analysis.
+
+---
+
+## 162. Creating Excessive Temporary Objects
+
+Heavy allocations increase GC pressure.
+
+---
+
+## 163. Using String Concatenation in Large Loops
+
+Causes unnecessary object creation.
+
+---
+
+## 164. Choosing Wrong Collection Type
+
+Collection choice impacts scalability heavily.
+
+---
+
+## 165. Ignoring Boxing/Unboxing Costs
+
+Wrapper usage introduces extra overhead.
+
+---
+
+## 166. Overusing Synchronization
+
+Excessive locking reduces throughput.
+
+---
+
+## 167. Ignoring Caching Opportunities
+
+Repeated expensive operations waste resources.
+
+---
+
+## 168. Optimizing Without Profiling
+
+Real bottlenecks may exist elsewhere.
+
+---

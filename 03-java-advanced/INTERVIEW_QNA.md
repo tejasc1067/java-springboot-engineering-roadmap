@@ -1419,3 +1419,67 @@ JVM optimization mechanism for frequently executed code.
 Impact scalability, latency, memory usage and performance.
 
 ---
+
+## Q201. Why is performance optimization important in backend systems?
+
+Impacts scalability, latency and infrastructure efficiency.
+
+---
+
+## Q202. Difference between CPU-bound and IO-bound tasks?
+
+CPU-bound:
+heavy computation.
+
+IO-bound:
+waiting for external resources.
+
+---
+
+## Q203. Why is excessive object creation harmful?
+
+Increases GC pressure and memory overhead.
+
+---
+
+## Q204. Why is StringBuilder preferred in loops?
+
+Avoids unnecessary temporary String objects.
+
+---
+
+## Q205. What is boxing and unboxing?
+
+Conversion between primitives and wrapper objects.
+
+---
+
+## Q206. Why does collection choice matter?
+
+Different collections provide different performance characteristics.
+
+---
+
+## Q207. What is caching?
+
+Storing reusable data to avoid repeated expensive operations.
+
+---
+
+## Q208. Why is batching important?
+
+Improves throughput and reduces overhead.
+
+---
+
+## Q209. Why should optimization be measurement-driven?
+
+Premature optimization may increase complexity unnecessarily.
+
+---
+
+## Q210. Why is profiling important in backend engineering?
+
+Helps identify real bottlenecks and performance issues.
+
+---
