@@ -1789,3 +1789,63 @@ Reduced performance, readability and maintainability.
 Spring, Hibernate, Jackson and JUnit.
 
 ---
+
+## Q261. What are annotations in Java?
+
+Metadata providing information about program elements.
+
+---
+
+## Q262. Why are annotations important?
+
+Enable framework automation and declarative programming.
+
+---
+
+## Q263. What is @Override annotation?
+
+Indicates method overrides parent method.
+
+---
+
+## Q264. What is @Deprecated annotation?
+
+Marks outdated APIs.
+
+---
+
+## Q265. What is @SuppressWarnings annotation?
+
+Suppresses compiler warnings.
+
+---
+
+## Q266. What are meta-annotations?
+
+Annotations defining behavior of annotations.
+
+---
+
+## Q267. What are retention policies?
+
+Define lifecycle of annotations.
+
+---
+
+## Q268. Why are runtime annotations important?
+
+Frameworks inspect them using reflection.
+
+---
+
+## Q269. Why do frameworks heavily use annotations?
+
+For dependency injection, API mapping and automation.
+
+---
+
+## Q270. Which major frameworks heavily depend on annotations?
+
+Spring, Hibernate, JUnit and REST frameworks.
+
+---

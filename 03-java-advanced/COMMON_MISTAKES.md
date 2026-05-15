@@ -1246,3 +1246,51 @@ Reflection mainly useful for frameworks and infrastructure.
 May reduce maintainability and debugging clarity.
 
 ---
+
+## 209. Overusing Annotations Blindly
+
+Excessive annotations may hide complexity.
+
+---
+
+## 210. Ignoring Annotation Retention Policies
+
+Wrong retention breaks runtime processing.
+
+---
+
+## 211. Using Reflection-Heavy Annotation Scanning Everywhere
+
+Runtime scanning introduces startup overhead.
+
+---
+
+## 212. Creating Unclear Custom Annotations
+
+Poor naming reduces maintainability.
+
+---
+
+## 213. Treating Annotations as Business Logic
+
+Annotations should provide metadata, not replace logic.
+
+---
+
+## 214. Ignoring Declarative Architecture Complexity
+
+Heavy annotation-driven systems may become difficult to debug.
+
+---
+
+## 215. Using Too Many Nested Framework Annotations
+
+Deep abstraction reduces transparency.
+
+---
+
+## 216. Ignoring Runtime Annotation Processing Costs
+
+Reflection-based scanning affects startup performance.
+
+---
