@@ -1349,3 +1349,73 @@ It increases GC pressure and latency.
 GC heavily impacts scalability and latency.
 
 ---
+
+## Q191. What is JVM?
+
+Java Virtual Machine responsible for executing Java bytecode.
+
+---
+
+## Q192. Why is JVM important?
+
+Provides platform independence and runtime management.
+
+---
+
+## Q193. What is bytecode?
+
+Intermediate compiled Java code executed by JVM.
+
+---
+
+## Q194. What are class loading phases?
+
+- Loading
+- Linking
+- Initialization
+
+---
+
+## Q195. What is JIT compiler?
+
+Compiles frequently executed bytecode into native machine code.
+
+---
+
+## Q196. Difference between interpreter and JIT?
+
+Interpreter:
+executes line-by-line.
+
+JIT:
+optimizes hot code into native code.
+
+---
+
+## Q197. What are stack frames?
+
+Runtime method execution structures stored in stack memory.
+
+---
+
+## Q198. What are important JVM runtime areas?
+
+- Heap
+- Stack
+- Method Area
+- PC Register
+- Native Method Stack
+
+---
+
+## Q199. What is HotSpot JVM?
+
+JVM optimization mechanism for frequently executed code.
+
+---
+
+## Q200. Why are JVM internals important in backend systems?
+
+Impact scalability, latency, memory usage and performance.
+
+---

@@ -909,3 +909,51 @@ Different generations serve different optimization purposes.
 High-scale systems often require JVM tuning.
 
 ---
+
+## 153. Treating JVM as Black Box
+
+Backend engineers should understand JVM behavior.
+
+---
+
+## 154. Ignoring JIT Optimization Effects
+
+Repeated execution patterns impact performance.
+
+---
+
+## 155. Misunderstanding Heap and Stack Internals
+
+Runtime memory behavior affects scalability.
+
+---
+
+## 156. Ignoring JVM Monitoring in Production
+
+Runtime visibility is critical for debugging.
+
+---
+
+## 157. Assuming Java Performance Depends Only on Code
+
+JVM optimizations heavily affect execution speed.
+
+---
+
+## 158. Ignoring Class Loading Costs
+
+Large systems may suffer startup overhead.
+
+---
+
+## 159. Misunderstanding Runtime Memory Areas
+
+Different JVM regions serve different purposes.
+
+---
+
+## 160. Ignoring JVM-Level Performance Tuning
+
+High-scale systems often require JVM tuning.
+
+---
