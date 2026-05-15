@@ -1973,3 +1973,64 @@ Distributed systems fundamentally communicate through networks.
 REST APIs, microservices, databases and message brokers.
 
 ---
+
+## Q291. What is Java NIO?
+
+Non-blocking IO framework introduced for scalable IO handling.
+
+---
+
+## Q292. Why was NIO introduced?
+
+To improve scalability and concurrency handling.
+
+---
+
+## Q293. Difference between blocking and non-blocking IO?
+
+Blocking IO waits for completion.
+Non-blocking IO handles multiple operations efficiently.
+
+---
+
+## Q294. What are buffers in NIO?
+
+Temporary storage containers for IO operations.
+
+---
+
+## Q295. What are channels in NIO?
+
+Communication paths for data transfer.
+
+---
+
+## Q296. What is Selector in NIO?
+
+Allows monitoring multiple channels using single thread.
+
+---
+
+## Q297. Why is NIO important for scalable backend systems?
+
+Reduces thread overhead and improves concurrency scalability.
+
+---
+
+## Q298. Which major frameworks heavily use NIO concepts?
+
+Netty, Kafka and WebFlux.
+
+---
+
+## Q299. Why is NIO important in reactive systems?
+
+Reactive systems heavily depend on non-blocking IO.
+
+---
+
+## Q300. What are challenges of NIO?
+
+Higher complexity and event-driven debugging difficulty.
+
+---

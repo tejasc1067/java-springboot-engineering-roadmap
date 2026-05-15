@@ -1390,3 +1390,51 @@ Missing timeouts may hang applications.
 Networking deeply affects backend architecture and scalability.
 
 ---
+
+## 233. Misunderstanding Blocking vs Non-Blocking IO
+
+Scalability behavior differs significantly.
+
+---
+
+## 234. Using Blocking Operations Inside NIO Workflows
+
+Reduces scalability advantages.
+
+---
+
+## 235. Ignoring Selector Complexity
+
+Event-driven systems require careful design.
+
+---
+
+## 236. Forgetting Buffer flip() Operation
+
+Incorrect buffer state breaks processing.
+
+---
+
+## 237. Ignoring Resource Cleanup in NIO
+
+Channels and selectors should be closed properly.
+
+---
+
+## 238. Treating NIO as Simple Socket Replacement
+
+NIO changes backend architecture model significantly.
+
+---
+
+## 239. Building Complex Event Loops Without Need
+
+Complexity increases debugging difficulty.
+
+---
+
+## 240. Ignoring Reactive-System Relevance of NIO
+
+NIO foundations are critical for modern scalable systems.
+
+---
