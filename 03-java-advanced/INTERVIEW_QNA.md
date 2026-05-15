@@ -1543,3 +1543,63 @@ Methods with implementation inside interfaces.
 Modern frameworks heavily depend on functional-style programming.
 
 ---
+
+## Q221. What is functional interface?
+
+Interface containing exactly one abstract method.
+
+---
+
+## Q222. Why are functional interfaces important?
+
+Enable lambda expressions and functional programming.
+
+---
+
+## Q223. What is @FunctionalInterface annotation?
+
+Compiler validation annotation for functional interfaces.
+
+---
+
+## Q224. What is Predicate in Java?
+
+Functional interface representing boolean condition logic.
+
+---
+
+## Q225. What is Function in Java?
+
+Functional interface representing transformation operation.
+
+---
+
+## Q226. What is Consumer in Java?
+
+Functional interface consuming data without returning result.
+
+---
+
+## Q227. What is Supplier in Java?
+
+Functional interface generating or supplying values.
+
+---
+
+## Q228. What is function composition?
+
+Combining functions into transformation pipelines.
+
+---
+
+## Q229. Why are functional interfaces important in backend systems?
+
+Heavily used in streams, async systems and modern frameworks.
+
+---
+
+## Q230. What are benefits of functional programming style?
+
+Improves readability, composability and declarative processing.
+
+---

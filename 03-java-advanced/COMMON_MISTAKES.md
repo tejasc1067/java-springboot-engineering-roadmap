@@ -1053,3 +1053,52 @@ Functional style should improve clarity, not complexity.
 Java 8 changed modern backend engineering style significantly.
 
 ---
+
+## 177. Overusing Functional Pipelines
+
+Complex pipelines may reduce maintainability.
+
+---
+
+## 178. Writing Side Effects Inside Lambdas
+
+Side effects reduce predictability.
+
+---
+
+## 179. Ignoring Readability in Functional Style
+
+Declarative code should remain understandable.
+
+---
+
+## 180. Misunderstanding Predicate vs Function
+
+Predicate returns boolean.
+Function transforms values.
+
+---
+
+## 181. Overusing Lambdas for Complex Logic
+
+Large lambdas hurt readability.
+
+---
+
+## 182. Ignoring Performance Costs of Functional Pipelines
+
+Pipelines may introduce allocation overhead.
+
+---
+
+## 183. Misusing Optional Functional Chains
+
+Deep Optional chains reduce clarity.
+
+---
+
+## 184. Treating Functional Programming as Pure Syntax Feature
+
+Functional style changes backend architecture mindset.
+
+---
