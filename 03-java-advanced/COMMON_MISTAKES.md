@@ -1005,3 +1005,51 @@ Repeated expensive operations waste resources.
 Real bottlenecks may exist elsewhere.
 
 ---
+
+## 169. Overusing Complex Stream Chains
+
+Deep pipelines may reduce readability.
+
+---
+
+## 170. Using Streams Everywhere Blindly
+
+Streams are not always fastest solution.
+
+---
+
+## 171. Misusing Parallel Streams
+
+Parallel streams may hurt scalability and latency.
+
+---
+
+## 172. Ignoring Lazy Evaluation Behavior
+
+Intermediate operations execute only during terminal operation.
+
+---
+
+## 173. Using Optional as Field Everywhere
+
+Optional intended mainly for return types.
+
+---
+
+## 174. Writing Side Effects Inside Stream Operations
+
+Side effects reduce predictability and maintainability.
+
+---
+
+## 175. Ignoring Functional Programming Readability Balance
+
+Functional style should improve clarity, not complexity.
+
+---
+
+## 176. Treating Java 8 Features as Only Syntax Sugar
+
+Java 8 changed modern backend engineering style significantly.
+
+---

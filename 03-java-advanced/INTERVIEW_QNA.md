@@ -1483,3 +1483,63 @@ Premature optimization may increase complexity unnecessarily.
 Helps identify real bottlenecks and performance issues.
 
 ---
+
+## Q211. Why was Java 8 revolutionary?
+
+Introduced functional programming support and modern APIs.
+
+---
+
+## Q212. What is lambda expression?
+
+Compact anonymous function representation.
+
+---
+
+## Q213. Why are lambdas important?
+
+Improve readability and simplify functional-style processing.
+
+---
+
+## Q214. What is method reference?
+
+Shorter lambda syntax referencing existing methods.
+
+---
+
+## Q215. What is Stream API?
+
+Declarative pipeline-based collection processing API.
+
+---
+
+## Q216. What is lazy evaluation in streams?
+
+Operations execute only during terminal operation.
+
+---
+
+## Q217. What is Optional?
+
+Container object representing optional value presence.
+
+---
+
+## Q218. Why is Optional important?
+
+Reduces NullPointerException risks and improves API clarity.
+
+---
+
+## Q219. What are default methods?
+
+Methods with implementation inside interfaces.
+
+---
+
+## Q220. Why are Java 8 features important in backend engineering?
+
+Modern frameworks heavily depend on functional-style programming.
+
+---
