@@ -1102,3 +1102,51 @@ Deep Optional chains reduce clarity.
 Functional style changes backend architecture mindset.
 
 ---
+
+## 185. Writing Overly Complex Stream Pipelines
+
+Deep pipelines reduce readability.
+
+---
+
+## 186. Ignoring Lazy Evaluation
+
+Intermediate operations execute only during terminal operation.
+
+---
+
+## 187. Using Streams for Tiny Operations Blindly
+
+Simple loops may sometimes be clearer and faster.
+
+---
+
+## 188. Misusing Parallel Streams
+
+Parallel execution may hurt latency and throughput.
+
+---
+
+## 189. Writing Side Effects Inside Stream Operations
+
+Side effects reduce predictability.
+
+---
+
+## 190. Ignoring Stream Allocation Overhead
+
+Streams create additional objects internally.
+
+---
+
+## 191. Overusing FlatMap Without Understanding Complexity
+
+Nested transformations may become difficult to debug.
+
+---
+
+## 192. Treating Streams as Only Syntax Improvement
+
+Streams represent declarative processing mindset.
+
+---

@@ -1603,3 +1603,63 @@ Heavily used in streams, async systems and modern frameworks.
 Improves readability, composability and declarative processing.
 
 ---
+
+## Q231. What is Stream API?
+
+Declarative collection-processing API introduced in Java 8.
+
+---
+
+## Q232. What are intermediate operations in streams?
+
+Lazy operations like filter, map and sorted.
+
+---
+
+## Q233. What are terminal operations in streams?
+
+Operations triggering execution like collect and reduce.
+
+---
+
+## Q234. What is lazy evaluation in streams?
+
+Intermediate operations execute only during terminal operation.
+
+---
+
+## Q235. What is filter() in Stream API?
+
+Used for conditional selection of elements.
+
+---
+
+## Q236. What is map() in Stream API?
+
+Used for transforming stream elements.
+
+---
+
+## Q237. What is reduce() in Stream API?
+
+Used for aggregation and accumulation logic.
+
+---
+
+## Q238. What is flatMap() in Stream API?
+
+Used for flattening nested structures.
+
+---
+
+## Q239. What are advantages of Stream API?
+
+Improves readability, composability and declarative processing.
+
+---
+
+## Q240. Why should parallel streams be used carefully?
+
+Improper usage may reduce performance and increase contention.
+
+---
