@@ -2094,3 +2094,64 @@ Production systems require continuous runtime visibility.
 Latency spikes, GC pauses, memory pressure and crashes.
 
 ---
+
+## Q311. Difference between latency and throughput?
+
+Latency measures response time.
+Throughput measures total processed work.
+
+---
+
+## Q312. What is JVM warm-up?
+
+Performance improvement over time due to JIT optimizations.
+
+---
+
+## Q313. What is JIT compilation?
+
+Converts bytecode into optimized native execution.
+
+---
+
+## Q314. What is cold start problem?
+
+Application startup phase may initially perform slower.
+
+---
+
+## Q315. Why are thread pools important?
+
+Improve scalability and resource efficiency.
+
+---
+
+## Q316. Why are connection pools important?
+
+Reduce expensive connection creation overhead.
+
+---
+
+## Q317. What is backpressure?
+
+Mechanism preventing system overload.
+
+---
+
+## Q318. Why is observability important?
+
+Production systems require runtime visibility and diagnostics.
+
+---
+
+## Q319. What are common backend bottlenecks?
+
+CPU, memory, GC, threads, networking and database access.
+
+---
+
+## Q320. Why must backend engineers understand production JVM concepts?
+
+Production systems require scalability and runtime-awareness thinking.
+
+---

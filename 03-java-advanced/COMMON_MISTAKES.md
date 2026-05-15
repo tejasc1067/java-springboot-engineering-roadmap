@@ -1486,3 +1486,51 @@ Production systems require continuous monitoring.
 Backend engineers should understand runtime behavior deeply.
 
 ---
+
+## 249. Ignoring Latency vs Throughput Tradeoffs
+
+Different systems optimize different goals.
+
+---
+
+## 250. Configuring Thread Pools Blindly
+
+Improper sizing hurts scalability.
+
+---
+
+## 251. Ignoring Connection Pool Limits
+
+Poor configuration may exhaust resources.
+
+---
+
+## 252. Ignoring Backpressure in Distributed Systems
+
+May cause cascading failures.
+
+---
+
+## 253. Ignoring Cold Start Performance
+
+Cloud-native systems heavily affected by startup latency.
+
+---
+
+## 254. Ignoring CPU Saturation
+
+High CPU usage impacts throughput and latency.
+
+---
+
+## 255. Treating Observability as Optional
+
+Production systems require runtime visibility.
+
+---
+
+## 256. Focusing Only on Business Logic
+
+Production engineering requires scalability and runtime awareness.
+
+---
