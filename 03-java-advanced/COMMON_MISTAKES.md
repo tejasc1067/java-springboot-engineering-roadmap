@@ -1294,3 +1294,51 @@ Deep abstraction reduces transparency.
 Reflection-based scanning affects startup performance.
 
 ---
+
+## 217. Forgetting Serializable Interface
+
+Serialization fails without implementing Serializable.
+
+---
+
+## 218. Ignoring serialVersionUID
+
+Version mismatch may break deserialization.
+
+---
+
+## 219. Serializing Sensitive Data Accidentally
+
+Passwords and secrets should often be transient.
+
+---
+
+## 220. Using Native Serialization Everywhere Blindly
+
+Modern systems often prefer JSON or Protobuf.
+
+---
+
+## 221. Ignoring Serialization Performance Costs
+
+Serialization introduces CPU and memory overhead.
+
+---
+
+## 222. Ignoring Deserialization Security Risks
+
+Unsafe deserialization may introduce vulnerabilities.
+
+---
+
+## 223. Serializing Large Object Graphs Unnecessarily
+
+Large graphs increase network and memory usage.
+
+---
+
+## 224. Treating Serialization as Pure Persistence Mechanism
+
+Serialization heavily impacts distributed architectures.
+
+---

@@ -1849,3 +1849,63 @@ For dependency injection, API mapping and automation.
 Spring, Hibernate, JUnit and REST frameworks.
 
 ---
+
+## Q271. What is serialization in Java?
+
+Converting object into byte stream.
+
+---
+
+## Q272. What is deserialization?
+
+Converting byte stream back into object.
+
+---
+
+## Q273. Why is serialization important?
+
+Used for distributed communication, caching and persistence.
+
+---
+
+## Q274. What is Serializable interface?
+
+Marker interface enabling Java serialization.
+
+---
+
+## Q275. What is ObjectOutputStream?
+
+Used for writing serialized objects.
+
+---
+
+## Q276. What is ObjectInputStream?
+
+Used for reading serialized objects.
+
+---
+
+## Q277. What is transient keyword?
+
+Prevents field serialization.
+
+---
+
+## Q278. Why is serialVersionUID important?
+
+Controls serialization compatibility between versions.
+
+---
+
+## Q279. Why is serialization important in distributed systems?
+
+Enables inter-service object transfer.
+
+---
+
+## Q280. Why is native Java serialization used carefully today?
+
+Due to security, performance and compatibility concerns.
+
+---
