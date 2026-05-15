@@ -1663,3 +1663,67 @@ Improves readability, composability and declarative processing.
 Improper usage may reduce performance and increase contention.
 
 ---
+
+## Q241. Why was Optional introduced in Java?
+
+To improve null-safety and API clarity.
+
+---
+
+## Q242. What does Optional represent?
+
+Value may or may not exist.
+
+---
+
+## Q243. Difference between Optional.of() and Optional.ofNullable()?
+
+of():
+does not allow null.
+
+ofNullable():
+allows null.
+
+---
+
+## Q244. What is ifPresent() in Optional?
+
+Executes logic only when value exists.
+
+---
+
+## Q245. What is orElse() in Optional?
+
+Provides fallback value when Optional is empty.
+
+---
+
+## Q246. Difference between orElse() and orElseGet()?
+
+orElseGet() performs lazy fallback generation.
+
+---
+
+## Q247. What is orElseThrow()?
+
+Throws exception when value absent.
+
+---
+
+## Q248. Why is Optional important in backend systems?
+
+Improves API contracts and null safety.
+
+---
+
+## Q249. Where should Optional ideally be used?
+
+Mostly for return types.
+
+---
+
+## Q250. Why should Optional not be overused?
+
+May increase complexity and object overhead.
+
+---

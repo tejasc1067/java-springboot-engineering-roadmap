@@ -1150,3 +1150,51 @@ Nested transformations may become difficult to debug.
 Streams represent declarative processing mindset.
 
 ---
+
+## 193. Calling get() Without Presence Check
+
+May cause NoSuchElementException.
+
+---
+
+## 194. Using Optional Everywhere Blindly
+
+Optional should be used carefully.
+
+---
+
+## 195. Using Optional as Entity Fields
+
+Usually not recommended for serialization models.
+
+---
+
+## 196. Ignoring orElseGet() Lazy Evaluation
+
+orElseGet() avoids unnecessary fallback creation.
+
+---
+
+## 197. Creating Deep Optional Chains
+
+Complex chains reduce readability.
+
+---
+
+## 198. Returning Null Instead of Optional
+
+Breaks Optional API contract.
+
+---
+
+## 199. Treating Optional as Replacement for All Null Handling
+
+Optional should improve clarity, not complexity.
+
+---
+
+## 200. Overusing Optional in Performance-Critical Paths
+
+Optional introduces additional object overhead.
+
+---
