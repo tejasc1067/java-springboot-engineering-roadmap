@@ -1198,3 +1198,51 @@ Optional should improve clarity, not complexity.
 Optional introduces additional object overhead.
 
 ---
+
+## 201. Overusing Reflection Blindly
+
+Reflection introduces runtime overhead.
+
+---
+
+## 202. Ignoring Reflection Performance Costs
+
+Dynamic inspection is slower than direct execution.
+
+---
+
+## 203. Breaking Encapsulation Unnecessarily
+
+Reflection may bypass access restrictions.
+
+---
+
+## 204. Ignoring Security Risks of Reflection
+
+Improper usage may expose internal structures.
+
+---
+
+## 205. Using Reflection Where Simple Design Is Better
+
+Reflection should solve real framework/runtime problems.
+
+---
+
+## 206. Ignoring Runtime Exceptions During Reflection
+
+Reflection APIs may throw checked exceptions.
+
+---
+
+## 207. Treating Reflection as Regular Business Logic Tool
+
+Reflection mainly useful for frameworks and infrastructure.
+
+---
+
+## 208. Building Complex Reflection-Based Logic Without Need
+
+May reduce maintainability and debugging clarity.
+
+---

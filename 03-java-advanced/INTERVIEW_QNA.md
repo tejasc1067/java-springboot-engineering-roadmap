@@ -1727,3 +1727,65 @@ Mostly for return types.
 May increase complexity and object overhead.
 
 ---
+
+## Q251. What is reflection in Java?
+
+Runtime inspection and manipulation of classes and objects.
+
+---
+
+## Q252. Why is reflection important?
+
+Used heavily by frameworks for dynamic behavior and automation.
+
+---
+
+## Q253. What is Class class in Java?
+
+Entry point for reflection operations.
+
+---
+
+## Q254. How can Class objects be obtained?
+
+- ClassName.class
+- object.getClass()
+- Class.forName()
+
+---
+
+## Q255. What can reflection inspect?
+
+Fields, methods, constructors and annotations.
+
+---
+
+## Q256. What is dynamic object creation?
+
+Creating objects at runtime using reflection.
+
+---
+
+## Q257. Why do frameworks use reflection?
+
+For dependency injection, annotation scanning and runtime processing.
+
+---
+
+## Q258. Why is reflection slower than direct calls?
+
+Runtime metadata inspection introduces overhead.
+
+---
+
+## Q259. What are risks of excessive reflection usage?
+
+Reduced performance, readability and maintainability.
+
+---
+
+## Q260. Which major frameworks heavily use reflection?
+
+Spring, Hibernate, Jackson and JUnit.
+
+---
