@@ -2034,3 +2034,63 @@ Reactive systems heavily depend on non-blocking IO.
 Higher complexity and event-driven debugging difficulty.
 
 ---
+
+## Q301. Why is JVM tuning important?
+
+Improves performance, scalability and runtime stability.
+
+---
+
+## Q302. What do -Xms and -Xmx represent?
+
+Initial and maximum heap size.
+
+---
+
+## Q303. Why is GC monitoring important?
+
+GC behavior impacts latency and throughput.
+
+---
+
+## Q304. What is thread dump?
+
+Snapshot of running threads.
+
+---
+
+## Q305. What is heap dump?
+
+Snapshot of JVM memory state.
+
+---
+
+## Q306. What is jstack tool used for?
+
+Generating thread dumps.
+
+---
+
+## Q307. What is jmap tool used for?
+
+Heap dump and memory analysis.
+
+---
+
+## Q308. What is jvisualvm?
+
+JVM monitoring and diagnostics tool.
+
+---
+
+## Q309. Why is observability important in backend systems?
+
+Production systems require continuous runtime visibility.
+
+---
+
+## Q310. What problems may poor JVM tuning cause?
+
+Latency spikes, GC pauses, memory pressure and crashes.
+
+---

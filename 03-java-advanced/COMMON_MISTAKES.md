@@ -1438,3 +1438,51 @@ Complexity increases debugging difficulty.
 NIO foundations are critical for modern scalable systems.
 
 ---
+
+## 241. Ignoring JVM Monitoring in Production
+
+Lack of visibility delays issue detection.
+
+---
+
+## 242. Setting Heap Sizes Blindly
+
+Improper heap sizing hurts performance.
+
+---
+
+## 243. Ignoring GC Behavior
+
+GC directly impacts application latency.
+
+---
+
+## 244. Ignoring Thread Dumps During Troubleshooting
+
+Thread dumps are critical for concurrency debugging.
+
+---
+
+## 245. Ignoring Memory Leak Detection
+
+Leaks may crash production systems.
+
+---
+
+## 246. Using Default JVM Settings Everywhere
+
+Different workloads require different tuning.
+
+---
+
+## 247. Ignoring Observability and Metrics
+
+Production systems require continuous monitoring.
+
+---
+
+## 248. Treating JVM Tuning as Only DevOps Responsibility
+
+Backend engineers should understand runtime behavior deeply.
+
+---
