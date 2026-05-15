@@ -1909,3 +1909,67 @@ Enables inter-service object transfer.
 Due to security, performance and compatibility concerns.
 
 ---
+
+## Q281. What is socket in Java?
+
+Communication endpoint for network interaction.
+
+---
+
+## Q282. What is ServerSocket?
+
+Server-side socket listening for client connections.
+
+---
+
+## Q283. What is client-server architecture?
+
+Client requests services, server provides services.
+
+---
+
+## Q284. Difference between TCP and UDP?
+
+TCP:
+reliable and connection-oriented.
+
+UDP:
+faster but unreliable.
+
+---
+
+## Q285. Why is TCP heavily used in backend systems?
+
+Provides reliable ordered communication.
+
+---
+
+## Q286. What is blocking IO?
+
+Thread waits until IO operation completes.
+
+---
+
+## Q287. Why is blocking IO important in backend engineering?
+
+Affects scalability and thread utilization.
+
+---
+
+## Q288. What are ports in networking?
+
+Identifiers for services/applications.
+
+---
+
+## Q289. Why is networking important in distributed systems?
+
+Distributed systems fundamentally communicate through networks.
+
+---
+
+## Q290. Which backend systems heavily depend on networking?
+
+REST APIs, microservices, databases and message brokers.
+
+---

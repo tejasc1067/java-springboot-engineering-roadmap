@@ -1342,3 +1342,51 @@ Large graphs increase network and memory usage.
 Serialization heavily impacts distributed architectures.
 
 ---
+
+## 225. Ignoring Socket Resource Cleanup
+
+Sockets should be closed properly.
+
+---
+
+## 226. Misunderstanding Blocking IO
+
+Blocking operations affect scalability.
+
+---
+
+## 227. Using Single-Threaded Networking Blindly
+
+Limits concurrent client handling.
+
+---
+
+## 228. Ignoring TCP vs UDP Tradeoffs
+
+Protocol selection impacts reliability and performance.
+
+---
+
+## 229. Ignoring Network Failure Handling
+
+Distributed systems must handle network instability.
+
+---
+
+## 230. Hardcoding Ports Everywhere
+
+Ports should often be configurable.
+
+---
+
+## 231. Ignoring Timeout Configuration
+
+Missing timeouts may hang applications.
+
+---
+
+## 232. Treating Networking as Only Infrastructure Topic
+
+Networking deeply affects backend architecture and scalability.
+
+---
