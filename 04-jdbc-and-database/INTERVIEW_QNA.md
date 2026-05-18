@@ -57,3 +57,63 @@ Incorrect data may break business workflows.
 Databases provide structure, querying, consistency and concurrency handling.
 
 ---
+
+## Q11. What is a database?
+
+Organized collection of data.
+
+---
+
+## Q12. What is DBMS?
+
+Software used to manage databases.
+
+---
+
+## Q13. What are tables in databases?
+
+Structures organizing data into rows and columns.
+
+---
+
+## Q14. What is a row in database?
+
+Single record of data.
+
+---
+
+## Q15. What is a column in database?
+
+Attribute/property of data.
+
+---
+
+## Q16. What is schema?
+
+Structure definition of database.
+
+---
+
+## Q17. What are CRUD operations?
+
+Create, Read, Update and Delete operations.
+
+---
+
+## Q18. What are relational databases?
+
+Databases organizing data into related tables.
+
+---
+
+## Q19. Why are relational databases important in backend systems?
+
+Backend systems heavily depend on structured relational data.
+
+---
+
+## Q20. What is backend persistence workflow?
+
+Process of storing and retrieving application data reliably.
+
+---
