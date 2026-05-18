@@ -93,3 +93,51 @@ Persistence is foundational for reliable systems.
 Databases are deeply connected to API workflows.
 
 ---
+
+## 17. Ignoring Entity Relationships
+
+Backend systems fundamentally depend on relationships.
+
+---
+
+## 18. Incorrect Relationship Modeling
+
+Poor relationships create complex persistence logic.
+
+---
+
+## 19. Overusing Many-to-Many Relationships
+
+May create maintenance and query complexity.
+
+---
+
+## 20. Ignoring Relational Integrity
+
+Invalid references break consistency.
+
+---
+
+## 21. Designing Tables Without Backend Perspective
+
+Database design should support backend workflows.
+
+---
+
+## 22. Ignoring Transactional Relationship Consistency
+
+Related data must remain synchronized.
+
+---
+
+## 23. Treating Relational Modeling as Only Database Topic
+
+It deeply impacts APIs and backend architecture.
+
+---
+
+## 24. Poor Naming of Database Entities
+
+Confusing schemas reduce maintainability.
+
+---

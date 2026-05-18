@@ -117,3 +117,63 @@ Backend systems heavily depend on structured relational data.
 Process of storing and retrieving application data reliably.
 
 ---
+
+## Q21. What is a relational database?
+
+Database storing data in related tables.
+
+---
+
+## Q22. What is relational model?
+
+Model organizing data into tables and relationships.
+
+---
+
+## Q23. What is an entity in database design?
+
+Real-world object represented in database.
+
+---
+
+## Q24. What is one-to-one relationship?
+
+One record related to one record.
+
+---
+
+## Q25. What is one-to-many relationship?
+
+One record related to multiple records.
+
+---
+
+## Q26. What is many-to-many relationship?
+
+Multiple records related to multiple records.
+
+---
+
+## Q27. Why are relationships important in backend systems?
+
+Backend systems fundamentally depend on connected data.
+
+---
+
+## Q28. What is relational integrity?
+
+Consistency and validity of relationships.
+
+---
+
+## Q29. Why are relational databases important in Spring Boot?
+
+Spring ecosystems heavily depend on relational persistence.
+
+---
+
+## Q30. What problems may poor relational modeling create?
+
+Complex queries, scalability issues and maintenance problems.
+
+---
