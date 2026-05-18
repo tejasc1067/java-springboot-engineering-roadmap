@@ -177,3 +177,63 @@ Spring ecosystems heavily depend on relational persistence.
 Complex queries, scalability issues and maintenance problems.
 
 ---
+
+## Q31. What is a primary key?
+
+Unique identifier for each table row.
+
+---
+
+## Q32. Why is primary key important?
+
+Prevents duplicate records and enables reliable relationships.
+
+---
+
+## Q33. What is a foreign key?
+
+Column referencing primary key of another table.
+
+---
+
+## Q34. Why are foreign keys important?
+
+Maintain relational integrity.
+
+---
+
+## Q35. What is relational integrity?
+
+Consistency and validity of relationships.
+
+---
+
+## Q36. What is unique constraint?
+
+Prevents duplicate values.
+
+---
+
+## Q37. What is NOT NULL constraint?
+
+Ensures value cannot be null.
+
+---
+
+## Q38. What is default constraint?
+
+Provides automatic default value.
+
+---
+
+## Q39. What is check constraint?
+
+Validates allowed rules or values.
+
+---
+
+## Q40. Why are constraints important in backend systems?
+
+Constraints help maintain reliable consistent data.
+
+---

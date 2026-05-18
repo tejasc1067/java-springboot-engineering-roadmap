@@ -141,3 +141,51 @@ It deeply impacts APIs and backend architecture.
 Confusing schemas reduce maintainability.
 
 ---
+
+## 25. Missing Primary Keys
+
+Tables without primary keys create unreliable data.
+
+---
+
+## 26. Incorrect Foreign Key Relationships
+
+Invalid relationships break backend consistency.
+
+---
+
+## 27. Ignoring Unique Constraints
+
+Duplicates create data corruption issues.
+
+---
+
+## 28. Overusing Nullable Columns
+
+Too many null values reduce reliability.
+
+---
+
+## 29. Ignoring Relational Integrity
+
+Broken relationships create orphan records.
+
+---
+
+## 30. Missing Validation Constraints
+
+Invalid data may enter production systems.
+
+---
+
+## 31. Treating Constraints as Optional
+
+Constraints are critical for reliable persistence.
+
+---
+
+## 32. Weak Database Integrity Design
+
+Poor integrity design causes backend failures.
+
+---
