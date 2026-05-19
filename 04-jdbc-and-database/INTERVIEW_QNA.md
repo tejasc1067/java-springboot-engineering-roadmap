@@ -357,3 +357,63 @@ Maintains consistency during multiple operations.
 ORM frameworks still generate SQL internally.
 
 ---
+
+## Q61. What is SELECT query?
+
+Used to retrieve data from database.
+
+---
+
+## Q62. What is INSERT query?
+
+Used to store new records.
+
+---
+
+## Q63. What is UPDATE query?
+
+Used to modify existing records.
+
+---
+
+## Q64. What is DELETE query?
+
+Used to remove records.
+
+---
+
+## Q65. Why is WHERE clause important?
+
+Prevents unwanted operations on all rows.
+
+---
+
+## Q66. Why should backend systems retrieve only required columns?
+
+Improves performance and reduces unnecessary data transfer.
+
+---
+
+## Q67. Why are CRUD operations important in backend systems?
+
+Backend APIs fundamentally depend on CRUD workflows.
+
+---
+
+## Q68. Why can poor queries hurt scalability?
+
+Inefficient queries increase database load.
+
+---
+
+## Q69. Why are SQL queries important even with ORM frameworks?
+
+ORM frameworks internally generate SQL.
+
+---
+
+## Q70. What is persistence workflow in backend systems?
+
+Lifecycle of storing, fetching and updating data reliably.
+
+---
