@@ -597,3 +597,63 @@ Analytics, reporting and transactional systems.
 Advanced querying directly impacts scalability and performance.
 
 ---
+
+## Q101. What is an index in database?
+
+Data structure used for faster searching.
+
+---
+
+## Q102. Why are indexes important?
+
+Indexes improve query performance and scalability.
+
+---
+
+## Q103. What is full table scan?
+
+Database scans every row to find matching data.
+
+---
+
+## Q104. Why are full table scans expensive?
+
+They become slow on large datasets.
+
+---
+
+## Q105. What columns are commonly indexed?
+
+Primary keys, foreign keys and frequently searched columns.
+
+---
+
+## Q106. What is clustered index?
+
+Index organizing actual table data.
+
+---
+
+## Q107. What is non-clustered index?
+
+Separate lookup structure for faster querying.
+
+---
+
+## Q108. Why can excessive indexing become problematic?
+
+Too many indexes slow write operations.
+
+---
+
+## Q109. Why is query optimization important in backend systems?
+
+Poor queries eventually create scalability bottlenecks.
+
+---
+
+## Q110. Why must backend engineers understand indexing?
+
+Backend performance heavily depends on optimized querying.
+
+---

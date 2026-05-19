@@ -477,3 +477,51 @@ Unnecessary retrieval increases database load.
 Backend systems fundamentally depend on advanced filtering logic.
 
 ---
+
+## 81. Ignoring Query Performance
+
+Slow queries eventually break scalability.
+
+---
+
+## 82. Excessive Full Table Scans
+
+Large scans overload production databases.
+
+---
+
+## 83. Blindly Adding Indexes Everywhere
+
+Too many indexes hurt write performance.
+
+---
+
+## 84. Missing Indexes on Frequently Queried Columns
+
+Important queries become unnecessarily slow.
+
+---
+
+## 85. Ignoring Backend Query Patterns
+
+Indexes should support API workflows.
+
+---
+
+## 86. Weak Understanding of Scalability
+
+Database optimization is critical for backend growth.
+
+---
+
+## 87. Retrieving Unnecessary Data
+
+Poor filtering increases database load.
+
+---
+
+## 88. Treating Optimization as Optional
+
+Performance engineering is core backend responsibility.
+
+---
