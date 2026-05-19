@@ -417,3 +417,63 @@ ORM frameworks internally generate SQL.
 Lifecycle of storing, fetching and updating data reliably.
 
 ---
+
+## Q71. What is WHERE clause?
+
+Used to filter rows.
+
+---
+
+## Q72. Why is WHERE clause important?
+
+Prevents unnecessary data retrieval.
+
+---
+
+## Q73. What is ORDER BY used for?
+
+Sorting query results.
+
+---
+
+## Q74. Difference between ASC and DESC?
+
+ASC sorts ascending while DESC sorts descending.
+
+---
+
+## Q75. What is GROUP BY?
+
+Used to group rows for aggregation.
+
+---
+
+## Q76. What is HAVING clause?
+
+Filters grouped results.
+
+---
+
+## Q77. Difference between WHERE and HAVING?
+
+WHERE filters rows before grouping while HAVING filters grouped data.
+
+---
+
+## Q78. What are aggregation functions?
+
+Functions like COUNT, SUM, AVG, MIN and MAX.
+
+---
+
+## Q79. Why are filtering queries important in backend systems?
+
+Efficient filtering improves scalability and performance.
+
+---
+
+## Q80. Why should backend engineers avoid fetching unnecessary data?
+
+Excessive data retrieval hurts performance and scalability.
+
+---
