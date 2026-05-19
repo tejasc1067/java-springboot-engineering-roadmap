@@ -717,3 +717,63 @@ Committed data survives system failures.
 Backend systems require reliable consistent workflows.
 
 ---
+
+## Q121. What is JDBC?
+
+Java API used for database interaction.
+
+---
+
+## Q122. Why is JDBC important?
+
+JDBC enables Java applications to communicate with databases.
+
+---
+
+## Q123. What is JDBC architecture?
+
+Java Application → JDBC API → JDBC Driver → Database.
+
+---
+
+## Q124. What is JDBC driver?
+
+Translator between Java application and database.
+
+---
+
+## Q125. What is DriverManager?
+
+Used to create database connections.
+
+---
+
+## Q126. What is Connection object?
+
+Represents active database connection.
+
+---
+
+## Q127. What is Statement object?
+
+Used to execute SQL queries.
+
+---
+
+## Q128. What is ResultSet?
+
+Stores query execution results.
+
+---
+
+## Q129. Why is resource closing important in JDBC?
+
+Improper closing may create connection leaks.
+
+---
+
+## Q130. Why must backend engineers understand JDBC deeply?
+
+Spring and ORM frameworks internally rely on JDBC.
+
+---
