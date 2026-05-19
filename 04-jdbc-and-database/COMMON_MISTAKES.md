@@ -525,3 +525,51 @@ Poor filtering increases database load.
 Performance engineering is core backend responsibility.
 
 ---
+
+## 89. Ignoring Transaction Management
+
+Creates inconsistent backend workflows.
+
+---
+
+## 90. Missing Rollback Logic
+
+Partial failures may corrupt data.
+
+---
+
+## 91. Weak Understanding of ACID Properties
+
+Reliable systems fundamentally depend on ACID guarantees.
+
+---
+
+## 92. Ignoring Concurrent Transaction Issues
+
+Concurrency problems may create inconsistent state.
+
+---
+
+## 93. Blindly Committing Transactions
+
+Validation should occur before commit.
+
+---
+
+## 94. Long Running Transactions
+
+Long transactions may lock database resources.
+
+---
+
+## 95. Treating Transactions as Optional
+
+Production systems fundamentally depend on transactional consistency.
+
+---
+
+## 96. Ignoring Backend Consistency Engineering
+
+Reliable persistence is core backend responsibility.
+
+---

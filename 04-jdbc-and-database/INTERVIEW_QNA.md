@@ -657,3 +657,63 @@ Poor queries eventually create scalability bottlenecks.
 Backend performance heavily depends on optimized querying.
 
 ---
+
+## Q111. What is a database transaction?
+
+Group of operations executed as single unit.
+
+---
+
+## Q112. Why are transactions important?
+
+They maintain consistency and reliability.
+
+---
+
+## Q113. What is COMMIT?
+
+Permanently saves transaction changes.
+
+---
+
+## Q114. What is ROLLBACK?
+
+Undoes transaction changes.
+
+---
+
+## Q115. What are ACID properties?
+
+Atomicity, Consistency, Isolation and Durability.
+
+---
+
+## Q116. What is Atomicity?
+
+All operations succeed or fail together.
+
+---
+
+## Q117. What is Consistency?
+
+Database remains in valid state after transaction.
+
+---
+
+## Q118. What is Isolation?
+
+Concurrent transactions should not interfere.
+
+---
+
+## Q119. What is Durability?
+
+Committed data survives system failures.
+
+---
+
+## Q120. Why are transactions critical in backend systems?
+
+Backend systems require reliable consistent workflows.
+
+---
