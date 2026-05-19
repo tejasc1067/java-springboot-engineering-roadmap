@@ -477,3 +477,63 @@ Efficient filtering improves scalability and performance.
 Excessive data retrieval hurts performance and scalability.
 
 ---
+
+## Q81. What is JOIN in SQL?
+
+Used to combine data from multiple tables.
+
+---
+
+## Q82. What is INNER JOIN?
+
+Returns matching records from both tables.
+
+---
+
+## Q83. What is LEFT JOIN?
+
+Returns all rows from left table and matching rows from right table.
+
+---
+
+## Q84. What is RIGHT JOIN?
+
+Returns all rows from right table and matching rows from left table.
+
+---
+
+## Q85. What is FULL JOIN?
+
+Returns all rows from both tables.
+
+---
+
+## Q86. Why are joins important in backend systems?
+
+Backend systems store related data across multiple tables.
+
+---
+
+## Q87. Why can joins become expensive?
+
+Large joins increase query execution cost and memory usage.
+
+---
+
+## Q88. What backend systems heavily depend on joins?
+
+E-commerce, analytics and transactional systems.
+
+---
+
+## Q89. Why is relational modeling important for joins?
+
+Good relationships improve query efficiency.
+
+---
+
+## Q90. Why should backend engineers understand join performance?
+
+Poor joins create scalability bottlenecks.
+
+---
