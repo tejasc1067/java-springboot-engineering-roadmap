@@ -237,3 +237,63 @@ Validates allowed rules or values.
 Constraints help maintain reliable consistent data.
 
 ---
+
+## Q41. What is database normalization?
+
+Process of reducing redundancy and improving consistency.
+
+---
+
+## Q42. Why is normalization important?
+
+Improves maintainability and consistency.
+
+---
+
+## Q43. What is redundancy in database?
+
+Unnecessary duplicate data.
+
+---
+
+## Q44. What is First Normal Form (1NF)?
+
+Each column should contain atomic values.
+
+---
+
+## Q45. What is Second Normal Form (2NF)?
+
+Removes partial dependency.
+
+---
+
+## Q46. What is Third Normal Form (3NF)?
+
+Removes transitive dependency.
+
+---
+
+## Q47. Why does poor schema design hurt backend systems?
+
+Creates scalability and maintenance problems.
+
+---
+
+## Q48. What is denormalization?
+
+Intentional duplication for performance optimization.
+
+---
+
+## Q49. When is denormalization used?
+
+Analytics and high-read systems.
+
+---
+
+## Q50. Why is schema design important in Spring Boot systems?
+
+Persistence design directly affects backend architecture.
+
+---
