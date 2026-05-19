@@ -333,3 +333,51 @@ Backend persistence workflows depend on query execution.
 Bad queries become production bottlenecks.
 
 ---
+
+## 57. Fetching Entire Tables Unnecessarily
+
+Hurts scalability and performance.
+
+---
+
+## 58. Missing WHERE Conditions
+
+May retrieve excessive unnecessary data.
+
+---
+
+## 59. Using HAVING Instead of WHERE Incorrectly
+
+Creates inefficient grouped queries.
+
+---
+
+## 60. Ignoring Sorting Performance
+
+ORDER BY on large datasets may become expensive.
+
+---
+
+## 61. Poor Aggregation Query Design
+
+Heavy grouping queries may overload databases.
+
+---
+
+## 62. Ignoring Backend Query Patterns
+
+Queries should align with API workflows.
+
+---
+
+## 63. Retrieving Unsorted Data Blindly
+
+Backend systems often require predictable ordering.
+
+---
+
+## 64. Weak Understanding of Aggregation Logic
+
+Analytics workflows heavily depend on aggregation.
+
+---
