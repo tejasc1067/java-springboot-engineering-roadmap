@@ -381,3 +381,51 @@ Backend systems often require predictable ordering.
 Analytics workflows heavily depend on aggregation.
 
 ---
+
+## 65. Blindly Joining Large Tables
+
+May create severe performance issues.
+
+---
+
+## 66. Missing Join Conditions
+
+Incorrect joins may create cartesian products.
+
+---
+
+## 67. Poor Relationship Modeling
+
+Bad schema relationships hurt query efficiency.
+
+---
+
+## 68. Overfetching Data Through Joins
+
+Unnecessary joined data increases load.
+
+---
+
+## 69. Ignoring Join Performance
+
+Complex joins eventually bottleneck APIs.
+
+---
+
+## 70. Using Wrong Join Types
+
+Incorrect join choice creates inaccurate results.
+
+---
+
+## 71. Ignoring Backend Query Patterns
+
+Join design should align with API workflows.
+
+---
+
+## 72. Weak Understanding of Relational Querying
+
+Backend systems fundamentally depend on relational joins.
+
+---
