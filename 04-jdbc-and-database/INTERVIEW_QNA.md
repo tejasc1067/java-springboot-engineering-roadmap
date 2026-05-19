@@ -537,3 +537,63 @@ Good relationships improve query efficiency.
 Poor joins create scalability bottlenecks.
 
 ---
+
+## Q91. What is a subquery?
+
+Query inside another query.
+
+---
+
+## Q92. Why are subqueries important?
+
+They help solve advanced filtering and business-query requirements.
+
+---
+
+## Q93. How does subquery execution work?
+
+Inner query executes first, then outer query uses result.
+
+---
+
+## Q94. What is correlated subquery?
+
+Subquery depending on outer query rows.
+
+---
+
+## Q95. What is EXISTS operator?
+
+Checks whether matching records exist.
+
+---
+
+## Q96. What is IN operator?
+
+Matches values from subquery results.
+
+---
+
+## Q97. Why are subqueries heavily used in backend systems?
+
+Backend business logic often requires advanced filtering.
+
+---
+
+## Q98. Why can nested queries become expensive?
+
+Poor nested queries increase execution cost.
+
+---
+
+## Q99. What systems heavily depend on advanced querying?
+
+Analytics, reporting and transactional systems.
+
+---
+
+## Q100. Why should backend engineers understand advanced SQL querying?
+
+Advanced querying directly impacts scalability and performance.
+
+---

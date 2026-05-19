@@ -429,3 +429,51 @@ Join design should align with API workflows.
 Backend systems fundamentally depend on relational joins.
 
 ---
+
+## 73. Blindly Nesting Queries
+
+Deep nesting may create performance bottlenecks.
+
+---
+
+## 74. Ignoring Subquery Execution Cost
+
+Nested queries can become expensive on large datasets.
+
+---
+
+## 75. Misusing Correlated Subqueries
+
+Repeated execution may severely impact performance.
+
+---
+
+## 76. Using IN Instead of EXISTS Inefficiently
+
+Large datasets may require optimized existence checks.
+
+---
+
+## 77. Ignoring Backend Query Patterns
+
+Advanced queries should support business workflows.
+
+---
+
+## 78. Writing Complex Queries Without Readability
+
+Unreadable SQL becomes difficult to maintain.
+
+---
+
+## 79. Overfetching Data in Nested Queries
+
+Unnecessary retrieval increases database load.
+
+---
+
+## 80. Weak Understanding of Advanced Querying
+
+Backend systems fundamentally depend on advanced filtering logic.
+
+---
