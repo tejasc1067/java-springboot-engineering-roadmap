@@ -621,3 +621,51 @@ Backend systems fundamentally depend on result mapping.
 Reliable connectivity is core backend responsibility.
 
 ---
+
+## 105. Not Closing JDBC Resources
+
+Creates connection leaks and scalability issues.
+
+---
+
+## 106. Weak Understanding of CRUD Workflows
+
+Backend persistence fundamentally depends on CRUD operations.
+
+---
+
+## 107. Ignoring ResultSet Processing
+
+Incorrect result handling may create application bugs.
+
+---
+
+## 108. Hardcoding Database Credentials
+
+Unsafe for production systems.
+
+---
+
+## 109. Ignoring Error Handling in JDBC
+
+Database failures must be handled properly.
+
+---
+
+## 110. Treating CRUD as Simple Operations
+
+CRUD workflows heavily affect backend architecture.
+
+---
+
+## 111. Weak Connection Lifecycle Management
+
+Improper lifecycle handling hurts scalability.
+
+---
+
+## 112. Ignoring Production Persistence Engineering
+
+Reliable JDBC handling is core backend responsibility.
+
+---
