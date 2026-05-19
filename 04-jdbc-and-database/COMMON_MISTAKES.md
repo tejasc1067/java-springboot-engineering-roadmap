@@ -285,3 +285,51 @@ Data retrieval is core backend workflow.
 Backend APIs fundamentally depend on SQL workflows.
 
 ---
+
+## 49. Using SELECT *
+
+Fetching unnecessary data hurts performance.
+
+---
+
+## 50. Missing WHERE Clause in UPDATE
+
+May accidentally update all rows.
+
+---
+
+## 51. Missing WHERE Clause in DELETE
+
+May accidentally delete all records.
+
+---
+
+## 52. Retrieving Excessive Data
+
+Large unnecessary result sets hurt scalability.
+
+---
+
+## 53. Ignoring Query Performance
+
+Slow queries eventually bottleneck APIs.
+
+---
+
+## 54. Treating CRUD as Only Database Logic
+
+CRUD directly impacts backend APIs.
+
+---
+
+## 55. Weak Understanding of Query Flow
+
+Backend persistence workflows depend on query execution.
+
+---
+
+## 56. Ignoring Scalability Impact of Queries
+
+Bad queries become production bottlenecks.
+
+---
