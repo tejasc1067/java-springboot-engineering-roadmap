@@ -777,3 +777,63 @@ Improper closing may create connection leaks.
 Spring and ORM frameworks internally rely on JDBC.
 
 ---
+
+## Q131. How is JDBC connection created?
+
+Using DriverManager.getConnection().
+
+---
+
+## Q132. What is CRUD in backend systems?
+
+Create, Read, Update and Delete operations.
+
+---
+
+## Q133. Why is JDBC CRUD important?
+
+Backend systems fundamentally depend on persistence operations.
+
+---
+
+## Q134. What is ResultSet used for?
+
+Processing query results.
+
+---
+
+## Q135. Why must JDBC resources be closed?
+
+To prevent connection leaks and resource exhaustion.
+
+---
+
+## Q136. What happens if database connections are not closed?
+
+Connections may remain occupied and overload database.
+
+---
+
+## Q137. Why is SELECT operation important in backend systems?
+
+Most backend systems constantly retrieve data.
+
+---
+
+## Q138. Why are UPDATE operations critical?
+
+Backend systems constantly modify transactional data.
+
+---
+
+## Q139. Why should backend engineers understand CRUD workflows deeply?
+
+CRUD operations form the foundation of persistence systems.
+
+---
+
+## Q140. Why is JDBC still relevant with ORM frameworks?
+
+ORM frameworks internally rely on JDBC.
+
+---
