@@ -573,3 +573,51 @@ Production systems fundamentally depend on transactional consistency.
 Reliable persistence is core backend responsibility.
 
 ---
+
+## 97. Ignoring JDBC Fundamentals
+
+Weak JDBC understanding creates weak persistence understanding.
+
+---
+
+## 98. Not Closing Database Connections
+
+Connection leaks eventually overload databases.
+
+---
+
+## 99. Weak Understanding of JDBC Workflow
+
+Backend persistence depends on proper workflow handling.
+
+---
+
+## 100. Treating JDBC as Outdated
+
+Modern frameworks still internally rely on JDBC.
+
+---
+
+## 101. Ignoring Connection Management
+
+Poor connection handling hurts scalability.
+
+---
+
+## 102. Blindly Executing Queries
+
+Query execution should be controlled and optimized.
+
+---
+
+## 103. Weak Understanding of ResultSet Processing
+
+Backend systems fundamentally depend on result mapping.
+
+---
+
+## 104. Ignoring Production Persistence Engineering
+
+Reliable connectivity is core backend responsibility.
+
+---
