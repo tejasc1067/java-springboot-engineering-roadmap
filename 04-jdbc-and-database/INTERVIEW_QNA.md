@@ -297,3 +297,63 @@ Analytics and high-read systems.
 Persistence design directly affects backend architecture.
 
 ---
+
+## Q51. What is SQL?
+
+Structured Query Language used for relational databases.
+
+---
+
+## Q52. Why is SQL important for backend engineers?
+
+Backend systems fundamentally depend on database querying.
+
+---
+
+## Q53. Is SQL a programming language?
+
+No, SQL is a declarative query language.
+
+---
+
+## Q54. What is DDL?
+
+Data Definition Language used for schema management.
+
+---
+
+## Q55. What is DML?
+
+Data Manipulation Language used for modifying data.
+
+---
+
+## Q56. What is DQL?
+
+Data Query Language used for retrieving data.
+
+---
+
+## Q57. What is TCL?
+
+Transaction Control Language used for transaction management.
+
+---
+
+## Q58. What is the most important SQL command?
+
+SELECT because backend systems frequently retrieve data.
+
+---
+
+## Q59. Why is transaction management important?
+
+Maintains consistency during multiple operations.
+
+---
+
+## Q60. Why must backend engineers understand SQL even with Hibernate?
+
+ORM frameworks still generate SQL internally.
+
+---
