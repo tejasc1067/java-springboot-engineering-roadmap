@@ -189,3 +189,51 @@ Constraints are critical for reliable persistence.
 Poor integrity design causes backend failures.
 
 ---
+
+## 33. Excessive Duplicate Data
+
+Redundancy creates inconsistency problems.
+
+---
+
+## 34. Ignoring Normalization
+
+Poor normalization increases maintenance complexity.
+
+---
+
+## 35. Storing Multiple Values in One Column
+
+Violates First Normal Form.
+
+---
+
+## 36. Poor Relationship Separation
+
+Bad schema structure hurts scalability.
+
+---
+
+## 37. Over-Normalizing Everything
+
+Too much normalization may hurt performance.
+
+---
+
+## 38. Ignoring Backend Query Patterns
+
+Schema should support backend workflows.
+
+---
+
+## 39. Designing Schema Without Scalability Thinking
+
+Growth eventually exposes bad design.
+
+---
+
+## 40. Treating Database Design as Only DBA Responsibility
+
+Backend engineers must understand schema design deeply.
+
+---
