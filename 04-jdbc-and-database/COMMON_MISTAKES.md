@@ -237,3 +237,51 @@ Growth eventually exposes bad design.
 Backend engineers must understand schema design deeply.
 
 ---
+
+## 41. Treating SQL as Optional
+
+Backend systems fundamentally depend on SQL querying.
+
+---
+
+## 42. Ignoring Transaction Awareness
+
+Poor transaction handling breaks consistency.
+
+---
+
+## 43. Learning ORM Without SQL Understanding
+
+Creates weak backend debugging skills.
+
+---
+
+## 44. Misunderstanding SQL Categories
+
+DDL, DML, DQL and TCL have different responsibilities.
+
+---
+
+## 45. Ignoring Query Performance
+
+Poor SQL affects backend scalability.
+
+---
+
+## 46. Thinking SQL is Only Database Engineer Responsibility
+
+Backend engineers must deeply understand SQL.
+
+---
+
+## 47. Weak Understanding of SELECT Queries
+
+Data retrieval is core backend workflow.
+
+---
+
+## 48. Ignoring Persistence Workflow Thinking
+
+Backend APIs fundamentally depend on SQL workflows.
+
+---
