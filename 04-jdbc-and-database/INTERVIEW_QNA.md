@@ -837,3 +837,63 @@ CRUD operations form the foundation of persistence systems.
 ORM frameworks internally rely on JDBC.
 
 ---
+
+## Q141. What is PreparedStatement?
+
+Precompiled SQL statement used for secure querying.
+
+---
+
+## Q142. Why is PreparedStatement important?
+
+Prevents SQL injection attacks.
+
+---
+
+## Q143. What is SQL injection?
+
+Malicious manipulation of SQL queries through unsafe input.
+
+---
+
+## Q144. Why is string concatenation dangerous in SQL queries?
+
+Attackers may inject harmful SQL input.
+
+---
+
+## Q145. What are parameterized queries?
+
+Queries using placeholders for safe input binding.
+
+---
+
+## Q146. Why is PreparedStatement safer than Statement?
+
+It separates SQL logic from user input.
+
+---
+
+## Q147. How does PreparedStatement improve performance?
+
+Precompiled queries can be reused efficiently.
+
+---
+
+## Q148. Why is SQL injection dangerous?
+
+It may expose databases and compromise systems.
+
+---
+
+## Q149. What systems critically require secure querying?
+
+Authentication, payment and admin systems.
+
+---
+
+## Q150. Why must backend engineers understand query security deeply?
+
+Persistence security is core backend responsibility.
+
+---
