@@ -717,3 +717,51 @@ Security must be part of backend architecture.
 Persistence security is critical for production systems.
 
 ---
+
+## 121. Blindly Using Auto-Commit
+
+Multi-step workflows may become inconsistent.
+
+---
+
+## 122. Ignoring Rollback Handling
+
+Failures may corrupt backend state.
+
+---
+
+## 123. Weak Understanding of Transaction Boundaries
+
+Improper boundaries create unreliable workflows.
+
+---
+
+## 124. Committing Before Validation Completes
+
+Validation failures should rollback changes.
+
+---
+
+## 125. Long Running JDBC Transactions
+
+Long transactions may lock database resources.
+
+---
+
+## 126. Ignoring Transaction Safety in APIs
+
+Backend systems fundamentally require consistency guarantees.
+
+---
+
+## 127. Weak Understanding of Backend Reliability Engineering
+
+Reliable persistence is core backend responsibility.
+
+---
+
+## 128. Treating Transactions as Only Database Concern
+
+Backend engineers must deeply understand transaction workflows.
+
+---

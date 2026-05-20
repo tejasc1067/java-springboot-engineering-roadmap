@@ -897,3 +897,63 @@ Authentication, payment and admin systems.
 Persistence security is core backend responsibility.
 
 ---
+
+## Q151. What is auto-commit in JDBC?
+
+Each SQL operation commits automatically.
+
+---
+
+## Q152. Why can auto-commit be dangerous?
+
+Multi-step workflows may create inconsistent state.
+
+---
+
+## Q153. How to disable auto-commit in JDBC?
+
+Using connection.setAutoCommit(false).
+
+---
+
+## Q154. Why is manual transaction handling important?
+
+Ensures consistency across multiple operations.
+
+---
+
+## Q155. What does commit() do in JDBC?
+
+Permanently saves transaction changes.
+
+---
+
+## Q156. What does rollback() do in JDBC?
+
+Restores database state after failure.
+
+---
+
+## Q157. Why are JDBC transactions important in backend systems?
+
+They maintain persistence consistency and reliability.
+
+---
+
+## Q158. What systems critically depend on transaction safety?
+
+Banking, payment and inventory systems.
+
+---
+
+## Q159. Why should backend engineers understand transaction boundaries?
+
+Improper boundaries may create inconsistent workflows.
+
+---
+
+## Q160. Why is rollback handling critical?
+
+Partial failures should not corrupt backend data.
+
+---
