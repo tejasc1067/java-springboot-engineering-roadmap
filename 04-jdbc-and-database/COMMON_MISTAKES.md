@@ -669,3 +669,51 @@ Improper lifecycle handling hurts scalability.
 Reliable JDBC handling is core backend responsibility.
 
 ---
+
+## 113. Building Queries Using String Concatenation
+
+Creates SQL injection vulnerabilities.
+
+---
+
+## 114. Ignoring Query Security
+
+Unsafe persistence may compromise production systems.
+
+---
+
+## 115. Using Statement Instead of PreparedStatement Blindly
+
+PreparedStatement should be preferred for dynamic queries.
+
+---
+
+## 116. Weak Understanding of SQL Injection
+
+Backend systems fundamentally require secure querying.
+
+---
+
+## 117. Trusting Raw User Input
+
+User input must always be treated as unsafe.
+
+---
+
+## 118. Ignoring Authentication Query Security
+
+Login systems are common SQL injection targets.
+
+---
+
+## 119. Weak Security-First Engineering Mindset
+
+Security must be part of backend architecture.
+
+---
+
+## 120. Treating Database Security as Optional
+
+Persistence security is critical for production systems.
+
+---
