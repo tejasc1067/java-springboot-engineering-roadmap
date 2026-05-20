@@ -861,3 +861,51 @@ Backend engineering fundamentally requires efficient resource management.
 Enterprise systems heavily depend on pooled database access.
 
 ---
+
+## 145. Not Using Try-With-Resources
+
+Creates resource and connection leaks.
+
+---
+
+## 146. Hardcoding Database Credentials
+
+Unsafe for production systems.
+
+---
+
+## 147. Weak Exception Handling
+
+Poor handling creates unreliable backend workflows.
+
+---
+
+## 148. Ignoring Query Optimization
+
+Inefficient queries eventually hurt scalability.
+
+---
+
+## 149. Missing Logging Around Persistence Failures
+
+Production debugging becomes difficult.
+
+---
+
+## 150. Weak Production Engineering Mindset
+
+Backend systems require reliability-first engineering.
+
+---
+
+## 151. Ignoring Resource Utilization
+
+Poor resource handling affects scalability.
+
+---
+
+## 152. Treating JDBC as Tutorial-Level Code
+
+Enterprise persistence requires production-grade engineering.
+
+---

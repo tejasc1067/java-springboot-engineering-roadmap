@@ -1077,3 +1077,63 @@ Maximum number of active pooled connections.
 Modern scalable backend systems fundamentally depend on pooled persistence.
 
 ---
+
+## Q181. Why is try-with-resources important in JDBC?
+
+Automatically closes resources and prevents leaks.
+
+---
+
+## Q182. Why should JDBC resources always be closed?
+
+Unclosed resources may exhaust database connections.
+
+---
+
+## Q183. Why should database credentials not be hardcoded?
+
+Hardcoded credentials create major security risks.
+
+---
+
+## Q184. What should production systems use instead of hardcoded credentials?
+
+Environment variables or secrets management systems.
+
+---
+
+## Q185. Why is PreparedStatement preferred in production?
+
+Improves security and query optimization.
+
+---
+
+## Q186. Why is exception handling important in JDBC?
+
+Database failures must be handled safely and predictably.
+
+---
+
+## Q187. Why is logging important in backend persistence?
+
+Helps diagnose failures and production issues.
+
+---
+
+## Q188. Why is query optimization important?
+
+Poor queries eventually create scalability bottlenecks.
+
+---
+
+## Q189. Why should backend engineers understand persistence best practices deeply?
+
+Reliable scalable systems fundamentally depend on them.
+
+---
+
+## Q190. Why is production-grade JDBC engineering important?
+
+Enterprise backend systems require scalable and secure persistence.
+
+---
