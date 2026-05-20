@@ -813,3 +813,51 @@ Failed bulk operations should maintain consistency.
 Scalable backend systems heavily depend on batching.
 
 ---
+
+## 137. Creating New Connection Per Request
+
+Creates severe scalability bottlenecks.
+
+---
+
+## 138. Ignoring Connection Pooling
+
+Production systems fundamentally require pooled persistence.
+
+---
+
+## 139. Holding Connections Too Long
+
+Other requests may become blocked.
+
+---
+
+## 140. Misconfiguring Pool Size
+
+Too many or too few connections hurt performance.
+
+---
+
+## 141. Forgetting To Close Connections
+
+Connections may never return to pool.
+
+---
+
+## 142. Weak Understanding of Persistence Scalability
+
+Database scalability depends heavily on pooling.
+
+---
+
+## 143. Ignoring Resource Optimization
+
+Backend engineering fundamentally requires efficient resource management.
+
+---
+
+## 144. Treating Connection Pooling as Optional
+
+Enterprise systems heavily depend on pooled database access.
+
+---
