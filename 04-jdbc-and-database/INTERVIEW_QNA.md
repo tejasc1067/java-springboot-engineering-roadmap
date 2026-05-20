@@ -1017,3 +1017,63 @@ Scalable persistence systems fundamentally depend on batching.
 Bulk imports, migration scripts and scheduled processing jobs.
 
 ---
+
+## Q171. What is connection pooling?
+
+Reusing existing database connections instead of repeatedly creating new ones.
+
+---
+
+## Q172. Why is connection pooling important?
+
+It improves scalability and reduces database overhead.
+
+---
+
+## Q173. Why are database connections expensive?
+
+They require authentication, network setup and resource allocation.
+
+---
+
+## Q174. What problems occur without connection pooling?
+
+Database overload, latency and resource exhaustion.
+
+---
+
+## Q175. What is HikariCP?
+
+High-performance JDBC connection pool commonly used in Spring Boot.
+
+---
+
+## Q176. Why is HikariCP popular?
+
+Low latency, lightweight design and production reliability.
+
+---
+
+## Q177. What happens when connection pools are misconfigured?
+
+Applications may suffer scalability and performance issues.
+
+---
+
+## Q178. Why should connections be returned to pool quickly?
+
+Holding connections blocks other backend requests.
+
+---
+
+## Q179. What is max pool size?
+
+Maximum number of active pooled connections.
+
+---
+
+## Q180. Why must backend engineers understand connection pooling deeply?
+
+Modern scalable backend systems fundamentally depend on pooled persistence.
+
+---
