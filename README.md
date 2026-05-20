@@ -86,13 +86,14 @@ java-springboot-engineering-roadmap/
 
 ✅ 01-java-fundamentals  
 ✅ 02-oops-and-design-principles  
-✅ 03-java-advanced
+✅ 03-java-advanced  
+✅ 04-jdbc-and-database
 
 ---
 
 ## In Progress
 
-🚧 04-jdbc-and-database
+🚧 05-maven-and-gradle
 
 ---
 

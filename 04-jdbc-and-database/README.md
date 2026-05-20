@@ -14,6 +14,8 @@ This module is designed to build:
 - query optimization awareness
 - backend scalability understanding
 - production database awareness
+- JDBC engineering fundamentals
+- scalable persistence engineering mindset
 
 This module forms the foundation for:
 - Spring JDBC
@@ -22,6 +24,7 @@ This module forms the foundation for:
 - transactional backend systems
 - scalable backend persistence
 - production backend applications
+- enterprise persistence architecture
 
 ---
 
@@ -36,8 +39,10 @@ After completing this module, you should be able to:
 ✅ Understand transactions and ACID properties  
 ✅ Use JDBC for backend database interaction  
 ✅ Prevent SQL injection vulnerabilities  
-✅ Understand connection pooling basics  
+✅ Understand connection pooling deeply  
+✅ Understand batch processing workflows  
 ✅ Understand query optimization awareness  
+✅ Write production-grade JDBC code  
 ✅ Think with backend persistence engineering mindset
 
 ---
@@ -74,29 +79,15 @@ After completing this module, you should be able to:
 
 - Joins
 - Subqueries
-- SQL Functions
-- Aggregation
 - Query Optimization Awareness
 - Indexes Basics
 
 ---
 
-## Transactions & Concurrency
+## Transactions
 
 - Transactions
 - ACID Properties
-- Isolation Levels
-- Concurrency Basics
-- Locking
-- Deadlocks
-
----
-
-## PostgreSQL Fundamentals
-
-- PostgreSQL Basics
-- PostgreSQL Setup
-- PostgreSQL + JDBC Integration
 
 ---
 
@@ -109,18 +100,23 @@ After completing this module, you should be able to:
 - PreparedStatement
 - ResultSet
 - CRUD Operations
-- Batch Processing
 - Transaction Management
+- Batch Processing
+- Connection Pooling
+- Production JDBC Engineering
 
 ---
 
 ## Production Database Awareness
 
 - SQL Injection Prevention
-- Connection Pooling Basics
+- Connection Pooling
 - Query Performance Awareness
 - Transaction Failure Awareness
 - Backend Persistence Best Practices
+- Production Reliability Awareness
+- Resource Management
+- Scalability Engineering
 
 ---
 
@@ -140,43 +136,19 @@ After completing this module, you should be able to:
 ├── 06-basic-sql-queries.md
 ├── 07-where-group-by-having-order-by.md
 ├── 08-joins-deep-dive.md
-├── 09-subqueries-and-sql-functions.md
-├── 10-indexes-and-query-performance.md
+├── 09-subqueries-and-nested-queries.md
+├── 10-indexes-and-query-optimization.md
 ├── 11-transactions-and-acid-properties.md
-├── 12-isolation-levels-and-concurrency.md
-├── 13-locking-and-deadlocks.md
-├── 14-postgresql-fundamentals.md
-├── 15-jdbc-introduction.md
-├── 16-jdbc-crud-operations.md
-├── 17-preparedstatement-and-sql-injection.md
-├── 18-jdbc-transaction-management.md
-├── 19-connection-pooling-basics.md
-├── 20-batch-processing.md
-├── 21-database-best-practices.md
+├── 12-jdbc-introduction-and-architecture.md
+├── 13-jdbc-connection-and-basic-crud.md
+├── 14-preparedstatement-and-sql-injection.md
+├── 15-jdbc-transaction-management.md
+├── 16-jdbc-batch-processing.md
+├── 17-jdbc-connection-pooling.md
+├── 18-jdbc-best-practices-and-production-considerations.md
+├── 19-jdbc-interview-revision.md
 │
 ├── CODE_EXAMPLES/
-│   ├── 00-database-foundation/
-│   ├── 01-introduction-to-databases/
-│   ├── 02-relational-database-fundamentals/
-│   ├── 03-primary-key-foreign-key-and-constraints/
-│   ├── 04-database-design-and-normalization/
-│   ├── 05-sql-introduction/
-│   ├── 06-basic-sql-queries/
-│   ├── 07-where-group-by-having-order-by/
-│   ├── 08-joins-deep-dive/
-│   ├── 09-subqueries-and-sql-functions/
-│   ├── 10-indexes-and-query-performance/
-│   ├── 11-transactions-and-acid-properties/
-│   ├── 12-isolation-levels-and-concurrency/
-│   ├── 13-locking-and-deadlocks/
-│   ├── 14-postgresql-fundamentals/
-│   ├── 15-jdbc-introduction/
-│   ├── 16-jdbc-crud-operations/
-│   ├── 17-preparedstatement-and-sql-injection/
-│   ├── 18-jdbc-transaction-management/
-│   ├── 19-connection-pooling-basics/
-│   ├── 20-batch-processing/
-│   └── 21-database-best-practices/
 │
 ├── INTERVIEW_QNA.md
 └── COMMON_MISTAKES.md
@@ -196,7 +168,8 @@ Each topic is designed with:
 ✅ performance engineering mindset  
 ✅ interview preparation  
 ✅ common mistakes awareness  
-✅ persistence-layer understanding
+✅ persistence-layer understanding  
+✅ production-grade backend engineering mindset
 
 This module focuses on:
 # backend persistence engineering mindset
@@ -215,6 +188,9 @@ Modern backend systems fundamentally depend on:
 - relational modeling
 - query optimization
 - scalable data access
+- connection pooling
+- transaction safety
+- reliable persistence workflows
 
 Spring Boot applications heavily depend on:
 - JDBC
@@ -222,6 +198,7 @@ Spring Boot applications heavily depend on:
 - connection pooling
 - ORM frameworks
 - persistence engineering
+- production-grade database interaction
 
 Strong database understanding is essential for:
 - scalable backend systems
@@ -229,24 +206,29 @@ Strong database understanding is essential for:
 - production APIs
 - microservices persistence
 - backend performance optimization
+- enterprise persistence architecture
 
 ---
 
 # Interview Preparation
 
-INTERVIEW_QNA.md contains:
+`INTERVIEW_QNA.md` contains:
 - SQL interview questions
 - JDBC interview questions
 - transaction questions
 - joins and query discussions
 - database optimization concepts
 - backend persistence discussions
+- connection pooling questions
+- PreparedStatement questions
+- transaction-management questions
+- scalability-engineering discussions
 
 ---
 
 # Common Mistakes
 
-COMMON_MISTAKES.md contains:
+`COMMON_MISTAKES.md` contains:
 - SQL mistakes
 - normalization mistakes
 - JDBC resource leaks
@@ -255,6 +237,8 @@ COMMON_MISTAKES.md contains:
 - connection pooling problems
 - query optimization mistakes
 - backend persistence pitfalls
+- scalability mistakes
+- production engineering mistakes
 
 ---
 
@@ -275,6 +259,27 @@ Before starting this module, learners should understand:
 
 ---
 
+# Production Engineering Awareness
+
+This module heavily focuses on:
+- production-grade persistence engineering
+- scalable database interaction
+- backend reliability
+- transaction consistency
+- query optimization awareness
+- resource-management discipline
+- backend scalability mindset
+
+This module is designed to prepare learners for:
+- Spring Boot persistence
+- Hibernate
+- Spring Data JPA
+- enterprise backend systems
+- scalable API development
+- production backend engineering
+
+---
+
 # End Goal
 
 By the end of this module, learners should be able to:
@@ -284,6 +289,8 @@ By the end of this module, learners should be able to:
 ✅ understand transactional systems  
 ✅ build JDBC-based persistence layers  
 ✅ understand backend database workflows  
+✅ write production-grade JDBC code  
+✅ understand scalable persistence engineering  
 ✅ prepare for Hibernate and Spring Data JPA  
 ✅ think with persistence-layer engineering mindset
 
