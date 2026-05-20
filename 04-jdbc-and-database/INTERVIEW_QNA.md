@@ -957,3 +957,63 @@ Improper boundaries may create inconsistent workflows.
 Partial failures should not corrupt backend data.
 
 ---
+
+## Q161. What is JDBC batch processing?
+
+Executing multiple queries together efficiently.
+
+---
+
+## Q162. Why is batch processing important?
+
+Improves scalability and reduces database overhead.
+
+---
+
+## Q163. What does addBatch() do?
+
+Adds queries into batch queue.
+
+---
+
+## Q164. What does executeBatch() do?
+
+Executes entire batch together.
+
+---
+
+## Q165. Why is batching faster than individual execution?
+
+Reduces database round trips and execution overhead.
+
+---
+
+## Q166. What systems heavily depend on batch processing?
+
+Analytics, ETL and enterprise ingestion systems.
+
+---
+
+## Q167. Why are transactions important during batch execution?
+
+Failures may require rollback for consistency.
+
+---
+
+## Q168. Why can poor bulk processing hurt scalability?
+
+Large inefficient operations overload databases.
+
+---
+
+## Q169. Why should backend engineers understand batching deeply?
+
+Scalable persistence systems fundamentally depend on batching.
+
+---
+
+## Q170. What enterprise workflows commonly use batching?
+
+Bulk imports, migration scripts and scheduled processing jobs.
+
+---
