@@ -765,3 +765,51 @@ Reliable persistence is core backend responsibility.
 Backend engineers must deeply understand transaction workflows.
 
 ---
+
+## 129. Executing Bulk Queries One-By-One
+
+Creates unnecessary database overhead.
+
+---
+
+## 130. Ignoring Batch Processing Optimization
+
+Large-scale persistence becomes inefficient.
+
+---
+
+## 131. Missing Transaction Handling During Batch Execution
+
+Partial failures may corrupt backend data.
+
+---
+
+## 132. Creating Extremely Large Batches
+
+Huge batches may cause memory issues.
+
+---
+
+## 133. Ignoring Backend Ingestion Patterns
+
+Batch workflows should align with system architecture.
+
+---
+
+## 134. Weak Understanding of Scalability Engineering
+
+Enterprise systems fundamentally require optimized persistence.
+
+---
+
+## 135. Ignoring Rollback Safety During Bulk Operations
+
+Failed bulk operations should maintain consistency.
+
+---
+
+## 136. Treating Batch Processing as Optional
+
+Scalable backend systems heavily depend on batching.
+
+---
