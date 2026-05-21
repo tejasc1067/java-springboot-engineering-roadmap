@@ -1,911 +1,475 @@
-## 1. Treating Databases as Only Storage Layer
+# Common Mistakes — JDBC and Databases
 
-Databases deeply affect backend architecture.
+Real bugs that have shipped to real production, with the specific code that causes them and the specific fix.
 
----
-
-## 2. Ignoring Persistence Thinking
-
-Backend systems fundamentally depend on persistent data.
-
----
-
-## 3. Ignoring Data Consistency Importance
-
-Inconsistent data may break transactions.
-
----
-
-## 4. Overusing File-Based Storage
-
-Files do not scale well for backend systems.
-
----
-
-## 5. Ignoring Relational Modeling
-
-Poor relationships create backend complexity.
-
----
-
-## 6. Ignoring Transactional System Awareness
-
-Critical workflows require consistency guarantees.
-
----
-
-## 7. Thinking Backend Engineering is Only APIs
-
-Persistence is foundational for backend systems.
-
----
-
-## 8. Ignoring Database Scalability Early
-
-Growth eventually exposes persistence bottlenecks.
-
----
-
-## 9. Confusing Rows and Columns
-
-Rows represent records while columns represent attributes.
-
----
-
-## 10. Ignoring Schema Design Importance
-
-Poor schema design creates backend complexity.
-
----
-
-## 11. Treating CRUD as Only SQL Topic
-
-CRUD is foundational for backend APIs.
-
----
-
-## 12. Ignoring Relational Thinking
-
-Relationships are critical for backend systems.
-
----
-
-## 13. Overcomplicating Simple Database Structures
-
-Good schema design should remain maintainable.
-
----
-
-## 14. Ignoring Database Consistency Requirements
-
-Incorrect data handling breaks workflows.
-
----
-
-## 15. Thinking Databases Are Optional in Backend Systems
-
-Persistence is foundational for reliable systems.
-
----
-
-## 16. Ignoring Backend Workflow Perspective
-
-Databases are deeply connected to API workflows.
-
----
-
-## 17. Ignoring Entity Relationships
-
-Backend systems fundamentally depend on relationships.
-
----
-
-## 18. Incorrect Relationship Modeling
-
-Poor relationships create complex persistence logic.
-
----
-
-## 19. Overusing Many-to-Many Relationships
-
-May create maintenance and query complexity.
-
----
-
-## 20. Ignoring Relational Integrity
-
-Invalid references break consistency.
-
----
-
-## 21. Designing Tables Without Backend Perspective
-
-Database design should support backend workflows.
-
----
-
-## 22. Ignoring Transactional Relationship Consistency
-
-Related data must remain synchronized.
-
----
-
-## 23. Treating Relational Modeling as Only Database Topic
-
-It deeply impacts APIs and backend architecture.
-
----
-
-## 24. Poor Naming of Database Entities
-
-Confusing schemas reduce maintainability.
-
----
-
-## 25. Missing Primary Keys
-
-Tables without primary keys create unreliable data.
-
----
-
-## 26. Incorrect Foreign Key Relationships
-
-Invalid relationships break backend consistency.
-
----
-
-## 27. Ignoring Unique Constraints
-
-Duplicates create data corruption issues.
-
----
-
-## 28. Overusing Nullable Columns
-
-Too many null values reduce reliability.
-
----
-
-## 29. Ignoring Relational Integrity
-
-Broken relationships create orphan records.
-
----
-
-## 30. Missing Validation Constraints
-
-Invalid data may enter production systems.
-
----
-
-## 31. Treating Constraints as Optional
-
-Constraints are critical for reliable persistence.
-
----
-
-## 32. Weak Database Integrity Design
-
-Poor integrity design causes backend failures.
-
----
-
-## 33. Excessive Duplicate Data
-
-Redundancy creates inconsistency problems.
-
----
-
-## 34. Ignoring Normalization
-
-Poor normalization increases maintenance complexity.
-
----
-
-## 35. Storing Multiple Values in One Column
-
-Violates First Normal Form.
-
----
-
-## 36. Poor Relationship Separation
-
-Bad schema structure hurts scalability.
-
----
-
-## 37. Over-Normalizing Everything
-
-Too much normalization may hurt performance.
-
----
-
-## 38. Ignoring Backend Query Patterns
-
-Schema should support backend workflows.
-
----
-
-## 39. Designing Schema Without Scalability Thinking
-
-Growth eventually exposes bad design.
-
----
-
-## 40. Treating Database Design as Only DBA Responsibility
-
-Backend engineers must understand schema design deeply.
-
----
-
-## 41. Treating SQL as Optional
-
-Backend systems fundamentally depend on SQL querying.
-
----
-
-## 42. Ignoring Transaction Awareness
-
-Poor transaction handling breaks consistency.
-
----
-
-## 43. Learning ORM Without SQL Understanding
-
-Creates weak backend debugging skills.
-
----
-
-## 44. Misunderstanding SQL Categories
-
-DDL, DML, DQL and TCL have different responsibilities.
-
----
-
-## 45. Ignoring Query Performance
-
-Poor SQL affects backend scalability.
-
----
-
-## 46. Thinking SQL is Only Database Engineer Responsibility
-
-Backend engineers must deeply understand SQL.
-
----
-
-## 47. Weak Understanding of SELECT Queries
-
-Data retrieval is core backend workflow.
-
----
-
-## 48. Ignoring Persistence Workflow Thinking
-
-Backend APIs fundamentally depend on SQL workflows.
-
----
-
-## 49. Using SELECT *
-
-Fetching unnecessary data hurts performance.
-
----
-
-## 50. Missing WHERE Clause in UPDATE
-
-May accidentally update all rows.
-
----
-
-## 51. Missing WHERE Clause in DELETE
-
-May accidentally delete all records.
-
----
-
-## 52. Retrieving Excessive Data
-
-Large unnecessary result sets hurt scalability.
-
----
-
-## 53. Ignoring Query Performance
-
-Slow queries eventually bottleneck APIs.
-
----
-
-## 54. Treating CRUD as Only Database Logic
-
-CRUD directly impacts backend APIs.
-
----
-
-## 55. Weak Understanding of Query Flow
-
-Backend persistence workflows depend on query execution.
-
----
-
-## 56. Ignoring Scalability Impact of Queries
-
-Bad queries become production bottlenecks.
-
----
-
-## 57. Fetching Entire Tables Unnecessarily
-
-Hurts scalability and performance.
-
----
-
-## 58. Missing WHERE Conditions
-
-May retrieve excessive unnecessary data.
-
----
-
-## 59. Using HAVING Instead of WHERE Incorrectly
-
-Creates inefficient grouped queries.
-
----
-
-## 60. Ignoring Sorting Performance
-
-ORDER BY on large datasets may become expensive.
-
----
-
-## 61. Poor Aggregation Query Design
-
-Heavy grouping queries may overload databases.
-
----
-
-## 62. Ignoring Backend Query Patterns
-
-Queries should align with API workflows.
-
----
-
-## 63. Retrieving Unsorted Data Blindly
-
-Backend systems often require predictable ordering.
-
----
-
-## 64. Weak Understanding of Aggregation Logic
-
-Analytics workflows heavily depend on aggregation.
-
----
-
-## 65. Blindly Joining Large Tables
-
-May create severe performance issues.
-
----
-
-## 66. Missing Join Conditions
-
-Incorrect joins may create cartesian products.
-
----
-
-## 67. Poor Relationship Modeling
-
-Bad schema relationships hurt query efficiency.
-
----
-
-## 68. Overfetching Data Through Joins
-
-Unnecessary joined data increases load.
-
----
-
-## 69. Ignoring Join Performance
-
-Complex joins eventually bottleneck APIs.
-
----
-
-## 70. Using Wrong Join Types
-
-Incorrect join choice creates inaccurate results.
-
----
-
-## 71. Ignoring Backend Query Patterns
-
-Join design should align with API workflows.
-
----
-
-## 72. Weak Understanding of Relational Querying
-
-Backend systems fundamentally depend on relational joins.
-
----
-
-## 73. Blindly Nesting Queries
-
-Deep nesting may create performance bottlenecks.
-
----
-
-## 74. Ignoring Subquery Execution Cost
-
-Nested queries can become expensive on large datasets.
-
----
-
-## 75. Misusing Correlated Subqueries
-
-Repeated execution may severely impact performance.
-
----
-
-## 76. Using IN Instead of EXISTS Inefficiently
-
-Large datasets may require optimized existence checks.
-
----
-
-## 77. Ignoring Backend Query Patterns
-
-Advanced queries should support business workflows.
-
----
-
-## 78. Writing Complex Queries Without Readability
+These are not typos. They're the things that look fine in a code review, pass tests in dev, and break months later under real load or attack.
 
-Unreadable SQL becomes difficult to maintain.
-
----
-
-## 79. Overfetching Data in Nested Queries
-
-Unnecessary retrieval increases database load.
-
----
-
-## 80. Weak Understanding of Advanced Querying
-
-Backend systems fundamentally depend on advanced filtering logic.
-
----
-
-## 81. Ignoring Query Performance
-
-Slow queries eventually break scalability.
-
----
-
-## 82. Excessive Full Table Scans
-
-Large scans overload production databases.
-
----
-
-## 83. Blindly Adding Indexes Everywhere
-
-Too many indexes hurt write performance.
-
----
-
-## 84. Missing Indexes on Frequently Queried Columns
-
-Important queries become unnecessarily slow.
-
 ---
 
-## 85. Ignoring Backend Query Patterns
+## Schema and modeling
 
-Indexes should support API workflows.
+### 1. Table with no primary key
 
----
-
-## 86. Weak Understanding of Scalability
-
-Database optimization is critical for backend growth.
-
----
-
-## 87. Retrieving Unnecessary Data
-
-Poor filtering increases database load.
-
----
-
-## 88. Treating Optimization as Optional
-
-Performance engineering is core backend responsibility.
-
----
+```sql
+-- BAD
+CREATE TABLE events (event_type VARCHAR(50), payload TEXT);
+```
 
-## 89. Ignoring Transaction Management
+You can't update or delete a single row reliably, can't reference it from another table, can't trust uniqueness. Almost always a bug.
 
-Creates inconsistent backend workflows.
+**Fix:** add a primary key. Auto-incrementing surrogate is fine in the vast majority of cases.
 
----
-
-## 90. Missing Rollback Logic
-
-Partial failures may corrupt data.
+```sql
+CREATE TABLE events (id BIGINT AUTO_INCREMENT PRIMARY KEY, event_type VARCHAR(50), payload TEXT);
+```
 
 ---
 
-## 91. Weak Understanding of ACID Properties
+### 2. Storing multiple values in one column
 
-Reliable systems fundamentally depend on ACID guarantees.
+```sql
+-- BAD
+CREATE TABLE users (id INT PRIMARY KEY, phone_numbers VARCHAR(500));
+-- inserted as: '555-1111, 555-2222'
+```
 
----
+Violates 1NF. Querying for "users with phone 555-1111" requires substring matching. Adding/removing one phone is string manipulation.
 
-## 92. Ignoring Concurrent Transaction Issues
+**Fix:** separate table.
 
-Concurrency problems may create inconsistent state.
+```sql
+CREATE TABLE phones (id INT PRIMARY KEY, user_id INT, number VARCHAR(20));
+```
 
 ---
 
-## 93. Blindly Committing Transactions
+### 3. Many-to-many as a comma-separated column
 
-Validation should occur before commit.
+Same as #2 but for relationships. `tags VARCHAR(500) = 'java,db,spring'` is never the right answer. Always use a junction table.
 
 ---
 
-## 94. Long Running Transactions
+### 4. Application-level uniqueness without a database constraint
 
-Long transactions may lock database resources.
-
----
+```java
+// BAD
+if (userRepository.findByEmail(email) == null) {
+    userRepository.save(new User(email));
+}
+```
 
-## 95. Treating Transactions as Optional
+Looks fine in single-threaded tests. Two simultaneous signups with the same email both pass the check and both insert. You now have two users with the same email.
 
-Production systems fundamentally depend on transactional consistency.
+**Fix:** add a `UNIQUE` constraint at the database level. Let the database enforce uniqueness; the application check is just convenience.
 
 ---
 
-## 96. Ignoring Backend Consistency Engineering
+### 5. Nullable columns that shouldn't be
 
-Reliable persistence is core backend responsibility.
+A `users.created_at` declared without `NOT NULL` is almost always a bug — someone forgot. Every nullable column is one more `if (x != null)` branch in your code, forever.
 
----
-
-## 97. Ignoring JDBC Fundamentals
-
-Weak JDBC understanding creates weak persistence understanding.
+**Fix:** be deliberate. Default to `NOT NULL` unless "no value" is genuinely meaningful for that column.
 
 ---
 
-## 98. Not Closing Database Connections
+### 6. `ON DELETE CASCADE` everywhere
 
-Connection leaks eventually overload databases.
+```sql
+-- DANGEROUS
+FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+```
 
----
-
-## 99. Weak Understanding of JDBC Workflow
+One `DELETE FROM customers WHERE last_login < '2020'` becomes "delete every order, every comment, every payment for those users." Often irreversible.
 
-Backend persistence depends on proper workflow handling.
+**Fix:** default to `ON DELETE RESTRICT`. Opt into `CASCADE` only where it's clearly correct (e.g. deleting a user should delete their session tokens).
 
 ---
 
-## 100. Treating JDBC as Outdated
+## SQL
 
-Modern frameworks still internally rely on JDBC.
+### 7. `WHERE x = NULL`
 
----
+```sql
+-- BAD: returns nothing, no error
+SELECT * FROM users WHERE email = NULL;
+```
 
-## 101. Ignoring Connection Management
+NULL means "unknown." `NULL = NULL` is itself NULL (not true). The comparison never matches.
 
-Poor connection handling hurts scalability.
+**Fix:** `WHERE email IS NULL` (and `IS NOT NULL` for the inverse).
 
 ---
-
-## 102. Blindly Executing Queries
 
-Query execution should be controlled and optimized.
+### 8. `SELECT *` in application code
 
----
+```java
+ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+String name = rs.getString("name");
+```
 
-## 103. Weak Understanding of ResultSet Processing
+Performance: hauls back every column even if you need two. Brittleness: schema changes can break the row-reading code in subtle ways.
 
-Backend systems fundamentally depend on result mapping.
+**Fix:** name the columns you need: `SELECT id, name, email FROM users`.
 
 ---
 
-## 104. Ignoring Production Persistence Engineering
+### 9. `UPDATE`/`DELETE` without `WHERE`
 
-Reliable connectivity is core backend responsibility.
-
----
+```sql
+UPDATE products SET price = 0;        -- ← every product is now free
+DELETE FROM users;                    -- ← every user is now gone
+```
 
-## 105. Not Closing JDBC Resources
+This has destroyed many a Friday. No warning, no confirmation.
 
-Creates connection leaks and scalability issues.
+**Fix:** habit — write the `WHERE` first, then add `SET`. In a SQL console, run `SELECT COUNT(*) FROM ... WHERE ...` first to preview. In production, wrap in a transaction with `ROLLBACK` ready.
 
 ---
 
-## 106. Weak Understanding of CRUD Workflows
+### 10. `HAVING` when you meant `WHERE`
 
-Backend persistence fundamentally depends on CRUD operations.
+```sql
+-- Functionally works, but inefficient:
+SELECT category, COUNT(*) FROM products
+GROUP BY category HAVING category = 'electronics';
 
----
+-- Better — filter before grouping:
+SELECT category, COUNT(*) FROM products
+WHERE category = 'electronics' GROUP BY category;
+```
 
-## 107. Ignoring ResultSet Processing
+`WHERE` filters rows before grouping (less work). `HAVING` filters groups after.
 
-Incorrect result handling may create application bugs.
+**Rule:** if the condition is about a single row, use `WHERE`. If it's about an aggregate, use `HAVING`.
 
 ---
 
-## 108. Hardcoding Database Credentials
+### 11. Forgetting the `ON` clause and getting a Cartesian product
 
-Unsafe for production systems.
-
----
+```sql
+-- BAD: legacy comma syntax with no ON
+SELECT * FROM customers, orders;
+```
 
-## 109. Ignoring Error Handling in JDBC
+4 customers × 1000 orders = 4000 rows. Then "the query is slow." Then "the database is broken."
 
-Database failures must be handled properly.
+**Fix:** always use explicit `JOIN ... ON ...`. Never the comma syntax. The verbose form makes a missing `ON` a parse error.
 
 ---
 
-## 110. Treating CRUD as Simple Operations
+### 12. INNER JOIN losing rows you didn't realize were missing
 
-CRUD workflows heavily affect backend architecture.
+You report total revenue with `SELECT SUM(amount) FROM orders INNER JOIN customers ON ...`. The number is off because orphan orders (orders whose customer was deleted without `ON DELETE CASCADE`) silently disappear.
 
----
-
-## 111. Weak Connection Lifecycle Management
-
-Improper lifecycle handling hurts scalability.
+**Fix:** if you want "all orders even without a matching customer," use `LEFT JOIN`. Audit periodically with `SELECT COUNT(*) FROM orders` vs the joined count.
 
 ---
 
-## 112. Ignoring Production Persistence Engineering
+### 13. Function on indexed column kills the index
 
-Reliable JDBC handling is core backend responsibility.
+```java
+// BAD: even with index on email, this scans the whole table
+"WHERE LOWER(email) = ?"
+```
 
----
-
-## 113. Building Queries Using String Concatenation
+The database can't use the index because it would have to apply `LOWER()` to every row first.
 
-Creates SQL injection vulnerabilities.
+**Fix:** either store the value already-lowercased (cleaner), or create a functional index `CREATE INDEX ... ON users(LOWER(email))`.
 
 ---
-
-## 114. Ignoring Query Security
-
-Unsafe persistence may compromise production systems.
 
----
+## JDBC
 
-## 115. Using Statement Instead of PreparedStatement Blindly
+### 14. Building SQL with string concatenation
 
-PreparedStatement should be preferred for dynamic queries.
+```java
+// CATASTROPHIC: SQL injection
+String sql = "SELECT * FROM users WHERE email = '" + email + "'";
+```
 
----
+The textbook security failure. Attacker submits `anything' OR '1'='1` and bypasses your auth.
 
-## 116. Weak Understanding of SQL Injection
+**Fix:** always use `PreparedStatement` with `?` placeholders and bind values with `setString`/`setInt`/etc.
 
-Backend systems fundamentally require secure querying.
+```java
+PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE email = ?");
+ps.setString(1, email);
+```
 
 ---
 
-## 117. Trusting Raw User Input
+### 15. Connections, statements, ResultSets not closed
 
-User input must always be treated as unsafe.
+```java
+// LEAK
+Connection conn = DriverManager.getConnection(URL, USER, PASS);
+Statement s = conn.createStatement();
+ResultSet rs = s.executeQuery("SELECT ...");
+// no close anywhere; exception path doubly so
+```
 
----
+Production symptom: app runs fine for an hour, then "Cannot get connection — pool exhausted." Restart fixes it for an hour. Repeat.
 
-## 118. Ignoring Authentication Query Security
+**Fix:** every JDBC resource in try-with-resources.
 
-Login systems are common SQL injection targets.
+```java
+try (Connection conn = ds.getConnection();
+     PreparedStatement ps = conn.prepareStatement(SQL);
+     ResultSet rs = ps.executeQuery()) {
+    while (rs.next()) { /* ... */ }
+}
+```
 
 ---
 
-## 119. Weak Security-First Engineering Mindset
+### 16. Forgetting `conn.commit()`
 
-Security must be part of backend architecture.
+```java
+conn.setAutoCommit(false);
+ps.executeUpdate("INSERT ...");
+// method returns; connection closes; insert silently vanishes
+```
 
----
+When a connection closes without an explicit `commit()`, most drivers roll back. Your work disappears.
 
-## 120. Treating Database Security as Optional
+**Fix:** commit explicitly on success, rollback explicitly on failure, both inside try/catch.
 
-Persistence security is critical for production systems.
-
 ---
-
-## 121. Blindly Using Auto-Commit
 
-Multi-step workflows may become inconsistent.
+### 17. Catching SQLException and swallowing it
 
----
+```java
+try {
+    ps.executeUpdate();
+} catch (SQLException e) {
+    log.error("oops");   // no stack trace, no rollback, no rethrow
+}
+```
 
-## 122. Ignoring Rollback Handling
+Future-you debugging a production incident has nothing to go on.
 
-Failures may corrupt backend state.
+**Fix:** include the full exception (`log.error("inserting user", e)`), rollback in transactions, and rethrow as a domain exception so callers know.
 
 ---
 
-## 123. Weak Understanding of Transaction Boundaries
+### 18. `DriverManager.getConnection()` per request
 
-Improper boundaries create unreliable workflows.
-
----
+```java
+@GetMapping("/user/{id}")
+public User getUser(@PathVariable long id) {
+    try (Connection conn = DriverManager.getConnection(URL, USER, PASS); ...) {
+        // 50ms of TCP handshake on every single request
+    }
+}
+```
 
-## 124. Committing Before Validation Completes
+Connection setup dominates request latency. Under load, you exhaust the database's connection limit.
 
-Validation failures should rollback changes.
+**Fix:** use a `DataSource` backed by HikariCP. Open the pool once at startup; borrow per request.
 
 ---
 
-## 125. Long Running JDBC Transactions
+### 19. Long-running transactions
 
-Long transactions may lock database resources.
+```java
+conn.setAutoCommit(false);
+stmt.executeUpdate("UPDATE inventory SET ...");
+externalApi.callSlowService();          // 5 seconds, holding the lock
+stmt.executeUpdate("UPDATE orders SET ...");
+conn.commit();
+```
 
----
-
-## 126. Ignoring Transaction Safety in APIs
+The row(s) updated by the first statement are locked for those 5 seconds. Other transactions trying to touch them queue up. Throughput collapses.
 
-Backend systems fundamentally require consistency guarantees.
+**Fix:** don't put slow non-database work inside a transaction. Either do the API call first and use the result, or split into separate transactions.
 
 ---
 
-## 127. Weak Understanding of Backend Reliability Engineering
+### 20. Holding a `ResultSet` open while doing other work
 
-Reliable persistence is core backend responsibility.
-
----
+```java
+ResultSet rs = stmt.executeQuery("SELECT ...");
+while (rs.next()) {
+    callOtherService(rs.getString(1));   // ResultSet is still open
+}
+```
 
-## 128. Treating Transactions as Only Database Concern
+The connection (and database cursor) is held for the entire iteration. Slow callees → long-held resources → pool exhaustion.
 
-Backend engineers must deeply understand transaction workflows.
+**Fix:** drain the ResultSet into a `List` first, then do the slow work outside the JDBC try block.
 
 ---
 
-## 129. Executing Bulk Queries One-By-One
+### 21. Ignoring `executeUpdate` return value
 
-Creates unnecessary database overhead.
+```java
+ps.executeUpdate("UPDATE users SET ... WHERE id = ?");
+// returned int discarded
+```
 
----
+A WHERE that matches nothing returns 0. Silent failure — the user thought their update happened.
 
-## 130. Ignoring Batch Processing Optimization
+**Fix:** check the return value. If it's 0 and you expected 1, throw or log meaningfully.
 
-Large-scale persistence becomes inefficient.
-
 ---
-
-## 131. Missing Transaction Handling During Batch Execution
 
-Partial failures may corrupt backend data.
+### 22. Single-row inserts in a tight loop
 
----
+```java
+for (User u : users) {
+    try (Connection conn = ds.getConnection();
+         PreparedStatement ps = conn.prepareStatement(SQL)) {
+        ps.setString(1, u.name());
+        ps.executeUpdate();
+    }
+}
+```
 
-## 132. Creating Extremely Large Batches
+For 10k rows: 10k connection borrowings, 10k prepares, 10k network round trips. Slow.
 
-Huge batches may cause memory issues.
+**Fix:** one connection, one PreparedStatement, `addBatch` per row, `executeBatch` at the end.
 
 ---
 
-## 133. Ignoring Backend Ingestion Patterns
+### 23. JDBC batch without a transaction
 
-Batch workflows should align with system architecture.
-
----
+```java
+// Batch with autocommit on
+for (Row r : rows) { ps.addBatch(); ... }
+ps.executeBatch();
+// each statement may have committed independently
+```
 
-## 134. Weak Understanding of Scalability Engineering
+A partial failure halfway leaves the table in an inconsistent state. You can't roll back.
 
-Enterprise systems fundamentally require optimized persistence.
+**Fix:** `setAutoCommit(false)` before the batch, `commit()` after, `rollback()` on `BatchUpdateException`.
 
 ---
 
-## 135. Ignoring Rollback Safety During Bulk Operations
+### 24. Index everything (write performance death)
 
-Failed bulk operations should maintain consistency.
+```sql
+CREATE INDEX idx1 ON users(name);
+CREATE INDEX idx2 ON users(email);
+CREATE INDEX idx3 ON users(created_at);
+CREATE INDEX idx4 ON users(country);
+CREATE INDEX idx5 ON users(status);
+-- 5 indexes = every insert updates 5 indexes
+```
 
----
+Reads got fast. Inserts got 5x slower. Total throughput dropped.
 
-## 136. Treating Batch Processing as Optional
+**Fix:** index PK, FKs, frequently-filtered columns. Stop. Add others only when a measured query is slow.
 
-Scalable backend systems heavily depend on batching.
-
 ---
 
-## 137. Creating New Connection Per Request
+### 25. No index on a foreign key
 
-Creates severe scalability bottlenecks.
+```sql
+CREATE TABLE orders (
+    id INT PRIMARY KEY,
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+-- Many databases don't index FKs automatically.
+```
 
----
+Now every JOIN involving `orders.customer_id` is a full table scan.
 
-## 138. Ignoring Connection Pooling
+**Fix:** index every foreign key. Always.
 
-Production systems fundamentally require pooled persistence.
+```sql
+CREATE INDEX idx_orders_customer_id ON orders(customer_id);
+```
 
 ---
 
-## 139. Holding Connections Too Long
+## Transactions
 
-Other requests may become blocked.
+### 26. Catching the exception but not rolling back
 
----
+```java
+try {
+    stmt.executeUpdate("UPDATE A ...");
+    stmt.executeUpdate("UPDATE B ...");
+    conn.commit();
+} catch (Exception e) {
+    log.error("failed", e);   // forgot rollback
+}
+```
 
-## 140. Misconfiguring Pool Size
+The first UPDATE's tentative state hangs around until the connection closes (where it'll be rolled back implicitly — but the connection might be returned to the pool first, with surprising downstream effects).
 
-Too many or too few connections hurt performance.
+**Fix:** always `conn.rollback()` in the catch.
 
 ---
-
-## 141. Forgetting To Close Connections
 
-Connections may never return to pool.
-
----
+### 27. Long transactions across user interactions
 
-## 142. Weak Understanding of Persistence Scalability
+A "shopping cart" transaction that stays open while the user takes 10 minutes to fill out a form. The locked rows block other carts.
 
-Database scalability depends heavily on pooling.
+**Fix:** transactions are for single coherent operations, not for "the whole user session." For multi-step business logic across user interactions, use a draft/state machine in the database (e.g. `cart_status = 'pending'`), not a held transaction.
 
 ---
 
-## 143. Ignoring Resource Optimization
+### 28. Mixing autocommit modes on the same connection
 
-Backend engineering fundamentally requires efficient resource management.
+```java
+conn.setAutoCommit(false);
+// do work, commit
+// forget to set autocommit back to true
+// next caller of this connection gets surprising behavior
+```
 
----
+With a pool, the same connection serves the next request still in non-autocommit mode.
 
-## 144. Treating Connection Pooling as Optional
+**Fix:** restore autocommit in `finally`. Pools like HikariCP also reset on return — but don't rely on it; be explicit.
 
-Enterprise systems heavily depend on pooled database access.
-
 ---
-
-## 145. Not Using Try-With-Resources
 
-Creates resource and connection leaks.
+## Configuration / Production
 
----
+### 29. Hardcoded credentials
 
-## 146. Hardcoding Database Credentials
+```java
+private static final String PASS = "Pa$$w0rd";   // committed to git forever
+```
 
-Unsafe for production systems.
+**Fix:** environment variables, secrets manager, config file outside the repo. Code should never see the literal password.
 
 ---
-
-## 147. Weak Exception Handling
-
-Poor handling creates unreliable backend workflows.
 
----
+### 30. No query timeout
 
-## 148. Ignoring Query Optimization
+A runaway query (missing index, accidental cross join, unexpected data shape) ties up the request thread until the database decides to give up — often many minutes.
 
-Inefficient queries eventually hurt scalability.
+**Fix:** `ps.setQueryTimeout(5)` on user-facing queries. In Spring, `@Transactional(timeout = 5)`.
 
 ---
 
-## 149. Missing Logging Around Persistence Failures
+### 31. Running DDL from application code
 
-Production debugging becomes difficult.
-
----
+```java
+@PostConstruct
+void init() {
+    jdbc.execute("CREATE TABLE IF NOT EXISTS ...");
+}
+```
 
-## 150. Weak Production Engineering Mindset
+Multiple instances at startup fight. Rolling back a schema change is hard. Reviews are inadequate.
 
-Backend systems require reliability-first engineering.
+**Fix:** use Flyway or Liquibase. Migrations are SQL files committed to git and run by a tool, not the app.
 
 ---
 
-## 151. Ignoring Resource Utilization
+### 32. Retrying every SQLException
 
-Poor resource handling affects scalability.
+```java
+catch (SQLException e) {
+    retry();   // even for syntax errors, constraint violations, etc.
+}
+```
 
----
-
-## 152. Treating JDBC as Tutorial-Level Code
+You retry a "duplicate key" error 3 times and get 3 failures. Or you retry a syntax error forever.
 
-Enterprise persistence requires production-grade engineering.
-
----
+**Fix:** only retry transient failures (connection blip, deadlock — SQLState classes `08*` and `40001`). Non-transient failures throw immediately.
