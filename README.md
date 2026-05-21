@@ -1,224 +1,159 @@
-# Java Spring Boot Backend Engineering Roadmap
+# Java + Spring Boot Backend Engineering Roadmap
 
-## Overview
+A free, structured curriculum for learning Java backend engineering — from "I've never written code" to "I can build a Spring Boot service."
 
-This repository is a complete beginner-to-advanced backend engineering roadmap using:
-
-- Java
-- Spring Boot
-- Databases
-- REST APIs
-- Microservices
-- System Design
-- DevOps Concepts
-
-The goal of this repository is not only to teach syntax, but also to build:
-- backend engineering mindset
-- production awareness
-- scalability understanding
-- debugging skills
-- clean coding habits
-- interview preparation
-
-This roadmap is designed for:
-- beginners
-- aspiring backend developers
-- Java developers
-- Spring Boot learners
-- interview preparation
-- backend engineering mastery
+This is a **learning roadmap**, not a course you buy and not a boot camp. It's a sequence of topics, real code examples you can run, common-mistake catalogs, and self-check questions. Work through it at your own pace.
 
 ---
 
-# Learning Philosophy
+## Honest scope
 
-This repository focuses on:
-# engineering thinking
+This repo teaches the **concepts, vocabulary, and patterns** of Java backend engineering. Working through it will:
 
-instead of:
-# tutorial-style memorization
+- ✅ Give you the mental model of Java, OOP, JVM, JDBC, Spring Boot, REST APIs, microservices, observability.
+- ✅ Let you read other people's Java backend code and understand what's happening.
+- ✅ Prepare you for backend engineering interviews.
+- ✅ Get you ready to build your own projects.
 
-Every module is designed with:
-- concept explanations
-- backend relevance
-- production awareness
-- code examples
-- common mistakes
-- interview questions
-- scalability concepts
+What it **won't** do on its own:
+
+- ❌ Make you "hireable" without you also building real projects.
+- ❌ Cover cloud (AWS, GCP, deployment) — see "What's deliberately not in this repo" below.
+- ❌ Replace ~50–100 hours of debugging your own code in real apps.
+
+Be skeptical of any free or paid resource that claims to do those last three. Real proficiency comes from this curriculum **plus** shipping things. The repo gives you the map; you still have to walk the territory.
 
 ---
 
-# Roadmap Structure
+## Start here
 
-```text
-java-springboot-engineering-roadmap/
-│
-├── 01-java-fundamentals/
-├── 02-oops-and-design-principles/
-├── 03-java-advanced/
-├── 04-jdbc-and-database/
-├── 05-maven-and-gradle/
-├── 06-unit-testing/
-├── 07-spring-core/
-├── 08-spring-boot/
-├── 09-rest-api-development/
-├── 10-spring-data-jpa/
-├── 11-exception-handling-and-validation/
-├── 12-security/
-├── 13-microservices/
-├── 14-docker-and-devops/
-├── 15-system-design/
-├── 16-design-patterns/
-├── 17-kafka-and-event-driven/
-├── 18-redis-caching/
-├── 19-observability-and-monitoring/
-├── 20-projects/
-│
-└── assets/
+### If you're a total beginner (no coding experience)
+
+Start at **`01-java-fundamentals/`**. Expect ~6–9 months at 10 hrs/week.
+
+Before you start, install the JDK and IntelliJ — see [`SETUP.md`](SETUP.md).
+
+### If you already code in another language (frontend, data, QA, devops...)
+
+You can skim modules 01–02 quickly. Start seriously at **`03-java-advanced/`** to ground yourself in Java's concurrency and JVM model, then continue. Expect ~3–4 months at 10 hrs/week.
+
+### If you know Java but not backend specifically
+
+Start at **`04-jdbc-and-database/`**. This is where backend-specific thinking begins (persistence, transactions, connection pools). Expect ~2–3 months at 10 hrs/week.
+
+---
+
+## How to use a module
+
+Every module has the same shape:
+
+```
+NN-module-name/
+├── README.md              # what this module is, prerequisites, checkpoint
+├── NN-topic-name.md       # one markdown per topic, in study order
+├── COMMON_MISTAKES.md     # real bugs (not typos), with code
+├── INTERVIEW_QNA.md       # interview questions with real answers
+└── CODE_EXAMPLES/
+    └── NN-topic-name/
+        └── *.java         # runnable code examples
 ```
 
----
+For each topic:
 
-# Current Progress
+1. Read the markdown.
+2. Run the first code example. Read it. Modify it.
+3. Run the next example. Compare.
+4. Do the "Try this yourself" exercise at the end of the markdown.
+5. Answer the "Self-check" questions out loud, in your own words. If you can't, re-read the topic.
 
-## Completed
-
-✅ 01-java-fundamentals  
-✅ 02-oops-and-design-principles  
-✅ 03-java-advanced  
-✅ 04-jdbc-and-database
-
----
-
-## In Progress
-
-🚧 05-maven-and-gradle
+Each module ends with a **checkpoint** — a handful of questions you should be able to answer before moving on. If you can't, don't move on; the next module assumes you can.
 
 ---
 
-# Repository Structure
+## Roadmap
 
-Each module may contain:
-
-```text
-README.md
-CODE_EXAMPLES/
-INTERVIEW_QNA.md
-COMMON_MISTAKES.md
+```
+01-java-fundamentals                          ← ✓ done
+02-oops-and-design-principles                 ← ✓ done
+03-java-advanced                              ← ✓ done
+04-jdbc-and-database                          ← ✓ done (new template)
+05-maven-and-gradle                           ← 🚧 in progress
+06-unit-testing
+07-spring-core
+08-spring-boot
+09-rest-api-development
+10-spring-data-jpa
+11-exception-handling-and-validation
+12-security
+13-microservices
+14-docker-and-devops
+15-system-design
+16-design-patterns
+17-kafka-and-event-driven
+18-redis-caching
+19-observability-and-monitoring
+20-projects
 ```
 
-This structure helps learners:
-- study concepts
-- practice coding
-- prepare for interviews
-- understand backend engineering patterns
+**Module 04 is the current reference implementation** of the curriculum's style and depth: runnable code examples (H2 in-memory database), vulnerable-then-safe contrasts for security topics, broken-then-fixed contrasts for resource management, real exception handling. Modules 01–03 cover their content well but will eventually be rewritten to match the new depth.
 
 ---
 
-# Topics Covered
+## What's deliberately *not* in this repo
 
-This roadmap will cover:
+So you don't have to wonder. These are out of scope on purpose, so the roadmap stays finishable for one person:
 
-## Core Java
+- **Cloud (AWS, GCP, Azure).** Deployment, infrastructure, IAM, managed services. Real backend jobs expect this — plan to learn it from a different resource after (or alongside) this one.
+- **Real deployed projects.** This repo teaches concepts. Building and shipping side projects is your job, in parallel. Pick something small (URL shortener, todo API, expense tracker) by the time you finish module 09 (REST APIs).
+- **Frontend, mobile, CSS, JavaScript, React.** This is a backend roadmap. Frontend is a different career path with its own curriculum.
+- **Machine learning, data engineering.** Different fields.
+- **CI/CD pipelines, Kubernetes, advanced DevOps.** Touched on in module 14 but not deep. Real DevOps is its own roadmap.
 
-- Java Fundamentals
-- OOP
-- Collections
-- Exception Handling
-- Multithreading
-- JVM Internals
-
----
-
-## Backend Engineering
-
-- Spring Core
-- Spring Boot
-- REST APIs
-- Authentication & Security
-- Validation
-- JPA & Hibernate
-- Microservices
+You don't need any of these to *follow this roadmap*. You'll need most of them to *be a complete backend engineer*. Knowing the boundary is freeing — you can focus on what's in this repo without feeling like you're missing something secret.
 
 ---
 
-## Databases
+## Setup
 
-- JDBC
-- SQL
-- PostgreSQL
-- Database Design
+One time, when you start: [`SETUP.md`](SETUP.md) — JDK, IDE, and how to run the code examples.
 
----
-
-## DevOps & Scalability
-
-- Docker
-- CI/CD Basics
-- Kafka
-- Redis
-- Observability
-- Monitoring
+You don't need anything else installed until you reach module 04 (which adds an H2 database jar, instructions in `SETUP.md`).
 
 ---
 
-## System Design
+## Philosophy
 
-- Backend Architecture
-- Scalability
-- Distributed Systems
-- Design Patterns
+A few principles that shape every page:
 
----
-
-# Learning Goals
-
-By following this roadmap, learners should be able to:
-
-✅ Build backend applications using Spring Boot  
-✅ Design REST APIs  
-✅ Understand scalable backend architecture  
-✅ Work with databases  
-✅ Understand microservices concepts  
-✅ Understand concurrency and JVM behavior  
-✅ Build production-ready backend systems  
-✅ Prepare for backend engineering interviews
+- **Honest depth over apparent breadth.** A topic that genuinely teaches you `PreparedStatement` matters more than 20 topics that just list its name.
+- **Show the failure mode, not just the fix.** Real understanding comes from "I saw what goes wrong" not "I memorized the rule." Security and concurrency topics deliberately include broken code so you can run it, see the failure, then run the fixed version.
+- **Code that runs.** Every Java file under `CODE_EXAMPLES/` is meant to execute. No `println` simulations pretending to be JDBC.
+- **No filler.** No "Very important backend engineering concept" lines. If a sentence doesn't carry information, it's deleted.
+- **Calmly bounded.** The roadmap is big but finite. The boundary makes it walkable.
 
 ---
 
-# Difficulty Progression
+## Contributing / feedback
 
-🟢 Beginner  
-🟡 Intermediate  
-🔴 Advanced
-
-The roadmap gradually increases in difficulty.
+This is a personal project. If you find an error or have a suggestion, open an issue. If you're walking the roadmap and have feedback on what's confusing, that's the most useful thing to report — content quality matters more than coverage.
 
 ---
 
-# Recommended Learning Approach
+## What's next after this roadmap
 
-For each module:
+Once you finish, you'll know enough Java backend engineering to:
 
-1. Read concept notes
-2. Study code examples
-3. Practice coding manually
-4. Review interview questions
-5. Understand common mistakes
-6. Build mini projects
-7. Revise concepts regularly
+- Build a Spring Boot REST API end-to-end.
+- Understand a typical Java backend codebase well enough to contribute.
+- Pass the technical-screen of most junior-to-mid backend interviews.
 
----
+You'll **still** need to:
 
-# End Goal
+- Learn one cloud provider (separate roadmap).
+- Ship 1–2 real projects, deployed publicly.
+- Read other people's production code (open-source Spring Boot apps on GitHub are good for this).
+- Get used to debugging the unfamiliar — incidents, slow queries, mysterious null pointer exceptions in code you didn't write.
 
-The final goal of this repository is to help learners become Backend Engineers not just Framework users.
+This roadmap is the **structured part**. The unstructured part — building, breaking, fixing — is the rest of your career.
 
-The roadmap emphasizes:
-- engineering fundamentals
-- scalability
-- maintainability
-- debugging
-- production awareness
-- real-world backend development
+Onwards.
