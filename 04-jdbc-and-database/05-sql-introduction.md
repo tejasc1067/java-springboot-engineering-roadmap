@@ -1,217 +1,155 @@
-# SQL Introduction
+# 05 — SQL Introduction
 
-This topic focuses on:
-# SQL engineering foundations
+SQL ("Structured Query Language") is how you talk to a relational database. Every operation — create a table, insert a row, query, update, delete — is a SQL statement.
 
-Almost every backend system eventually interacts with:
-# SQL databases
+This topic introduces the *language*. You'll write your first real SQL, run it against H2, and see output. The next few topics cover individual operations in depth.
 
-Very important backend engineering topic.
+> **Setup needed.** Before running any code in this topic, make sure you've completed `SETUP.md` at the repo root (download H2 jar to `04-jdbc-and-database/CODE_EXAMPLES/lib/`).
 
 ---
 
-# What is SQL?
+## SQL is declarative
 
-SQL means:
-# Structured Query Language
+Quick refresher from topic 01. In Java:
 
-Used for:
-- storing data
-- querying data
-- updating data
-- deleting data
-- managing relational databases
+```java
+List<User> adults = new ArrayList<>();
+for (User u : users) {
+    if (u.age >= 18) adults.add(u);
+}
+```
 
-Very important backend engineering foundation.
+You're describing *how* to find adults: iterate, check each one, append.
 
----
+In SQL:
 
-# Why SQL Exists
+```sql
+SELECT * FROM users WHERE age >= 18;
+```
 
-Relational databases require:
-# structured querying mechanism
+You're describing *what* you want: "users where age is at least 18." The database decides how to find them.
 
-SQL provides:
-- standardized querying
-- relational operations
-- transactional support
-- efficient data retrieval
-
-Very important persistence-engineering concept.
+This matters because the database can pick the best strategy for *your* data — use an index if there's one, scan the table if there isn't, parallelize across cores, whatever. You don't have to write that logic.
 
 ---
 
-# SQL is NOT a Programming Language
+## The four sub-languages of SQL
 
-SQL is:
-# declarative language
+SQL is actually a bundle of four sublanguages, distinguished by what kind of operation they perform. People often confuse them.
 
-You describe:
-# WHAT data you want
+| Acronym | Stands for | What it does | Keywords |
+|---------|-----------|--------------|----------|
+| **DDL** | Data Definition Language | Defines/changes the *structure* (schema) | `CREATE`, `ALTER`, `DROP` |
+| **DML** | Data Manipulation Language | Changes the *data* in tables | `INSERT`, `UPDATE`, `DELETE` |
+| **DQL** | Data Query Language | Reads data | `SELECT` |
+| **TCL** | Transaction Control Language | Manages transactions | `COMMIT`, `ROLLBACK`, `SAVEPOINT` |
 
-NOT:
-# HOW database internally retrieves it
+Some people lump DQL into DML. Names vary. The categories matter; the names don't.
 
-Very important database-engineering mindset.
-
----
-
-# SQL vs Java Thinking
-
-Java:
-step-by-step logic
-
-SQL:
-data-oriented querying
-
-Very important backend engineering distinction.
+**Why this distinction matters:** in production, who's allowed to run what is often controlled by category. Application code typically runs DML and DQL constantly. DDL runs rarely (migrations only). TCL controls *when* DML writes become permanent.
 
 ---
 
-# SQL Categories Overview
+## Your first SQL statements
 
-Major SQL categories:
-- DDL
-- DML
-- DQL
-- TCL
+```sql
+-- DDL: create the structure
+CREATE TABLE users (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    age INT
+);
 
-Very important SQL foundation.
+-- DML: add data
+INSERT INTO users (id, name, age) VALUES (1, 'Alice', 30);
+INSERT INTO users (id, name, age) VALUES (2, 'Bob', 17);
+INSERT INTO users (id, name, age) VALUES (3, 'Carol', 25);
 
----
+-- DQL: read data
+SELECT * FROM users WHERE age >= 18;
 
-# DDL (Data Definition Language)
+-- DML: change data
+UPDATE users SET age = 31 WHERE id = 1;
 
-Used for:
-# database structure management
+-- DML: remove data
+DELETE FROM users WHERE id = 2;
 
-Examples:
-- CREATE
-- ALTER
-- DROP
-- TRUNCATE
+-- DDL: remove the structure
+DROP TABLE users;
+```
 
-Very important schema-engineering topic.
+Run-through:
 
----
+1. `CREATE TABLE` defined three columns. The database now knows the table exists.
+2. Three `INSERT`s added three rows.
+3. `SELECT * FROM users WHERE age >= 18` returns the two adults (Alice and Carol).
+4. `UPDATE` modified Alice's age.
+5. `DELETE` removed Bob.
+6. `DROP TABLE` wiped the table entirely.
 
-# DML (Data Manipulation Language)
-
-Used for:
-# modifying data
-
-Examples:
-- INSERT
-- UPDATE
-- DELETE
-
-Very important backend persistence topic.
-
----
-
-# DQL (Data Query Language)
-
-Used for:
-# retrieving data
-
-Example:
-- SELECT
-
-Most important SQL operation for backend systems.
+That's a complete CRUD cycle plus schema management in 8 statements.
 
 ---
 
-# TCL (Transaction Control Language)
+## SQL syntax notes that catch beginners
 
-Used for:
-# transaction management
-
-Examples:
-- COMMIT
-- ROLLBACK
-- SAVEPOINT
-
-Very important transactional-system foundation.
+- **SQL keywords are case-insensitive.** `SELECT`, `select`, `Select` are all the same. Convention: uppercase for keywords (`SELECT`), lowercase for identifiers (`users`, `age`).
+- **Statements end with `;`.** Some tools require it, others don't. Always add it; harmless when not needed.
+- **Strings use single quotes, not double quotes.** `'Alice'` is a string. `"Alice"` may be parsed as a column name. Different from Java.
+- **Equality is `=`, not `==`.** Same as math, different from most programming languages.
+- **NULL doesn't equal NULL.** `WHERE x = NULL` does not work. Use `WHERE x IS NULL`. This is the most common SQL footgun for newcomers.
+- **`SELECT *`** means "all columns." Convenient for exploration; bad for production code (more on this later).
 
 ---
 
-# SQL Workflow in Backend Systems
+## What is H2 and why are we using it?
 
-Backend applications constantly perform:
-- inserts
-- reads
-- updates
-- deletes
+H2 is a relational database written in pure Java. It can run **in-memory** — meaning the entire database lives in your JVM's heap, no separate process, no installation, no config file.
 
-Very important persistence workflow awareness.
+In-memory means:
 
----
+- Zero setup. Just add the jar to your classpath.
+- Each program run starts with an empty database (unless you persist it to a file).
+- Perfect for learning and for tests. Real production apps would use PostgreSQL or MySQL.
 
-# Real-World Backend Examples
+H2's SQL is mostly standard, so what you learn here transfers directly to PostgreSQL/MySQL. The few differences are noted as we go.
 
-Examples:
-- user registration
-- login systems
-- order systems
-- payment systems
-- inventory systems
+**Connection URL pattern we'll use:**
 
-All heavily depend on:
-# SQL operations
+```
+jdbc:h2:mem:demo;DB_CLOSE_DELAY=-1
+```
 
-Very important backend engineering awareness.
+- `jdbc:h2:` — protocol
+- `mem:demo` — in-memory database named "demo"
+- `DB_CLOSE_DELAY=-1` — keep the database alive for the JVM's lifetime (otherwise H2 closes it as soon as the last connection closes, which can cause confusion across operations within a single `main`)
 
 ---
 
-# SQL and Spring Boot Connection
+## Code examples
 
-Spring Boot systems heavily use:
-- SQL databases
-- JDBC
-- Hibernate
-- JPA
-- transactions
+Run these in order. Each adds one new idea.
 
-Very important backend engineering progression.
+1. `FirstQuery.java` — open a connection to H2, run `SELECT 1`. Smoke test.
+2. `CreateAndDescribe.java` — DDL: create a table, then read back its column metadata.
+3. `InsertAndSelect.java` — DML + DQL: insert rows, read them back.
+4. `FullCycle.java` — everything: CREATE, INSERT, SELECT, UPDATE, DELETE, DROP in one program.
+5. `NullGotcha.java` — demonstrates the `= NULL` vs `IS NULL` trap.
 
----
-
-# Why SQL is Critical for Backend Engineers
-
-Backend engineers must understand:
-- querying
-- relationships
-- transactions
-- performance
-- persistence workflows
-
-Very important engineering requirement.
+You don't need to understand the JDBC ceremony (`DriverManager`, `Connection`, `Statement`, etc.) yet. That's topic 12. For now, focus on the SQL strings and the printed output.
 
 ---
 
-# Important Engineering Lesson
+## Try this yourself
 
-Strong backend engineering requires:
-# strong SQL understanding
-
-Even when using:
-- Hibernate
-- Spring Data JPA
-- ORM frameworks
-
-SQL knowledge remains essential.
-
-Very important backend engineering mindset.
+1. In `FirstQuery.java`, change `SELECT 1` to `SELECT 1 + 1` and rerun. What changes?
+2. In `InsertAndSelect.java`, add a fourth user with an age of `null`, then add a `WHERE age IS NULL` query.
+3. Run `NullGotcha.java` and predict the output before reading it. Were you right?
 
 ---
 
-# Industry Relevance
+## Self-check
 
-Modern backend systems fundamentally rely on:
-- SQL querying
-- relational persistence
-- transactions
-- scalable querying
-- backend data workflows
-
-SQL is foundational for backend engineering.
+1. What's the difference between DDL and DML? Give an example keyword from each.
+2. In SQL, what's wrong with `WHERE email = NULL`? What should it be?
+3. Why is SQL called "declarative"?

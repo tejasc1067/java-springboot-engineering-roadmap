@@ -1,230 +1,177 @@
-# Transactions and ACID Properties
+# 11 — Transactions and ACID Properties
 
-This topic focuses on:
-# database transactions and consistency engineering
+A **transaction** is a group of database operations that succeed together or fail together. No half-states.
 
-Backend systems must maintain:
-# reliable and consistent data
-
-Transactions are foundational for:
-- banking systems
-- payment systems
-- e-commerce systems
-- inventory systems
-- distributed systems
-
-Very important backend engineering topic.
+This topic explains *what* a transaction is conceptually. Topic 15 shows how to control transactions in Java with JDBC.
 
 ---
 
-# What is a Transaction?
+## The motivating example: a bank transfer
 
-Transaction means:
-# group of operations executed as single unit
+Alice transfers $100 to Bob. Two operations:
 
-Either:
-- everything succeeds
-  OR
-- everything fails
+```sql
+UPDATE accounts SET balance = balance - 100 WHERE owner = 'Alice';
+UPDATE accounts SET balance = balance + 100 WHERE owner = 'Bob';
+```
 
-Very important persistence-engineering foundation.
+Imagine the server crashes between statement 1 and statement 2. Without a transaction:
 
----
+- $100 has been deducted from Alice's account.
+- $100 has *not* been added to Bob's account.
+- $100 has vanished into the void.
 
-# Why Transactions Exist
+The whole point of databases is that this **must not be possible**. A transaction wraps both statements into a single unit:
 
-Without transactions:
-backend systems may create:
-- inconsistent data
-- partial updates
-- corrupted workflows
-
-Very important production-engineering concept.
-
----
-
-# Real-World Example
-
-Bank transfer:
-
-Deduct money from Account A
-Add money to Account B
-
-If one operation fails:
-# entire transaction must fail
-
-Very important transactional-system mindset.
-
----
-
-# Transaction Lifecycle
-
-Typical flow:
-
-BEGIN
-→ EXECUTE OPERATIONS
-→ COMMIT or ROLLBACK
-
-Very important backend persistence workflow.
-
----
-
-# COMMIT
-
-COMMIT means:
-# permanently save changes
-
-Example:
-
+```sql
+BEGIN;
+    UPDATE accounts SET balance = balance - 100 WHERE owner = 'Alice';
+    UPDATE accounts SET balance = balance + 100 WHERE owner = 'Bob';
 COMMIT;
+```
 
-Very important transaction concept.
+Now one of two things happens:
 
----
+- Both updates apply (COMMIT succeeds) → money moved correctly.
+- Neither update applies (crash, error, ROLLBACK) → no change to either account.
 
-# ROLLBACK
-
-ROLLBACK means:
-# undo changes
-
-Example:
-
-ROLLBACK;
-
-Very important consistency concept.
+Half-states are impossible.
 
 ---
 
-# What are ACID Properties?
+## The three TCL commands
 
-ACID ensures:
-# reliable transactions
+| Command | What it does |
+|---------|---------|
+| `BEGIN` (or `START TRANSACTION`) | Start a transaction. Subsequent statements are tentative. |
+| `COMMIT` | Make all tentative changes permanent. Other connections see them. |
+| `ROLLBACK` | Discard all tentative changes. As if they never happened. |
 
-ACID:
-- Atomicity
-- Consistency
-- Isolation
-- Durability
-
-Very important backend engineering foundation.
+In JDBC the equivalents are `conn.setAutoCommit(false)`, `conn.commit()`, `conn.rollback()`. More on this in topic 15.
 
 ---
 
-# Atomicity
+## ACID — the four guarantees
 
-Atomicity means:
-# all or nothing
+Transactions provide four guarantees, abbreviated **ACID**. Almost every interview asks about these.
 
-Either:
-- complete success
-  OR
-- complete rollback
+### A — Atomicity
 
-Very important transactional consistency concept.
+"All or nothing." Either every statement in the transaction succeeds, or none of them do. No partial application.
 
----
+In the bank transfer: both updates happen, or neither does. Never one without the other.
 
-# Consistency
+### C — Consistency
 
-Consistency means:
-# valid database state maintained
+The database moves from one valid state to another. Any constraints (`UNIQUE`, `NOT NULL`, `CHECK`, foreign keys) are still satisfied after the transaction.
 
-Transactions should NOT break:
-- constraints
-- relationships
-- integrity rules
+If a transaction would leave the database invalid (e.g. violate a `CHECK (balance >= 0)`), it's rolled back. Bank transfer can't leave Alice with -$50.
 
-Very important backend reliability concept.
+(Note: "consistency" here means *database constraints stay valid*, not "distributed consistency" — different concept in distributed systems.)
 
----
+### I — Isolation
 
-# Isolation
+Concurrent transactions don't interfere with each other. If Alice transfers $100 to Bob *at the same time* that someone reads Bob's balance, the reader sees either the old balance or the new — never some half-applied intermediate state.
 
-Isolation means:
-# concurrent transactions should not interfere
+Isolation is the trickiest property and has *levels* — see below.
 
-Critical for:
-- banking systems
-- payment systems
-- inventory systems
+### D — Durability
 
-Very important concurrency foundation.
+Once a transaction is committed, it survives crashes. If the database server loses power one microsecond after `COMMIT`, the change is still there when the server restarts.
+
+Durability is achieved via the **write-ahead log**: before changes are written to data files, they're written to a sequential log. On recovery, the log is replayed.
 
 ---
 
-# Durability
+## Isolation levels
 
-Durability means:
-# committed data survives failures
+Isolation is the hardest property to guarantee fully — it can be expensive. So most databases offer a *menu* of isolation levels, trading guarantees for performance.
 
-Even after:
-- crashes
-- power failures
-- server restarts
+Listed from weakest (fastest) to strongest (slowest):
 
-Very important production-engineering topic.
+| Level | What can go wrong |
+|-------|-------------------|
+| **Read uncommitted** | You can read another transaction's uncommitted changes (a "dirty read"). |
+| **Read committed** (most common default) | No dirty reads, but two reads of the same row in your transaction may see different values (a "non-repeatable read"). |
+| **Repeatable read** | Within your transaction, the same query always returns the same rows. New rows from other transactions can still appear (a "phantom read"). |
+| **Serializable** | Strongest. Transactions behave as if they ran one at a time. Slowest. |
 
----
+### Concrete examples of the anomalies
 
-# Backend Engineering Connection
+**Dirty read** (read uncommitted):
+```
+T1: BEGIN; UPDATE balance SET amount = 0 WHERE owner = 'Alice';   -- not committed
+T2: SELECT amount FROM balance WHERE owner = 'Alice';            -- reads 0
+T1: ROLLBACK;                                                     -- Alice's balance never actually changed
+                                                                  -- T2 made decisions based on phantom data
+```
 
-Spring Boot systems heavily depend on:
-- transactional consistency
-- reliable persistence
-- rollback workflows
-- concurrent transaction safety
+**Non-repeatable read** (read committed):
+```
+T1: BEGIN; SELECT amount FROM balance WHERE owner = 'Alice';     -- reads 1000
+T2: UPDATE balance SET amount = 500 WHERE owner = 'Alice'; COMMIT;
+T1: SELECT amount FROM balance WHERE owner = 'Alice';             -- now reads 500, same transaction
+```
 
-Very important persistence-engineering mindset.
+**Phantom read** (repeatable read):
+```
+T1: BEGIN; SELECT COUNT(*) FROM orders WHERE customer = 'Alice'; -- reads 3
+T2: INSERT INTO orders ...; COMMIT;
+T1: SELECT COUNT(*) FROM orders WHERE customer = 'Alice'; -- now reads 4
+```
 
----
+**Defaults in practice:**
 
-# Real-World Backend Examples
+- PostgreSQL, Oracle, SQL Server: `Read committed`
+- MySQL InnoDB: `Repeatable read`
+- H2: `Read committed`
 
-Examples:
-- money transfers
-- order placement
-- payment processing
-- inventory deduction
-- ticket booking systems
-
-All heavily depend on:
-# transactions
-
-Very important backend engineering awareness.
-
----
-
-# Production Importance
-
-Poor transaction handling may cause:
-- money inconsistencies
-- duplicate operations
-- corrupted records
-- inventory mismatches
-
-Very important production-engineering topic.
+You can change the level per session if you need stronger guarantees. **For most apps, the default is fine** — pushing to `serializable` can dramatically reduce throughput.
 
 ---
 
-# Important Engineering Lesson
+## What's *not* in ACID
 
-Good backend engineering requires:
-# transaction-safety mindset
+Some confusions worth pre-empting:
 
-NOT:
-# blindly executing queries
-
-Very important backend engineering mindset.
+- ACID doesn't guarantee performance. A "consistent" database can still be slow.
+- ACID doesn't prevent two transactions from racing to update the same row — one will win, the other gets rolled back or blocked. (Optimistic vs pessimistic locking, beyond scope here.)
+- ACID is per-database. A "transaction" across two databases (e.g. write to MySQL + send to Kafka) is *not* atomic. Distributed transactions are hard.
 
 ---
 
-# Industry Relevance
+## When you don't need a transaction
 
-Modern backend systems fundamentally rely on:
-- transactional consistency
-- reliable persistence
-- rollback safety
-- concurrent transaction management
-- durable storage guarantees
+A single SQL statement is **implicitly its own transaction**. You don't need `BEGIN` around a single `UPDATE`.
 
-Transactions are foundational for backend engineering.
+You need explicit transactions when:
+
+- Two or more statements must succeed together (transfer, multi-step business operation).
+- You want to verify state, then act on it, without another connection sneaking in (e.g. "check inventory, then create order").
+
+---
+
+## Code examples
+
+1. `NoTransactionPartialFailure.java` — runs a two-step "transfer" with autocommit on. Forces a failure between steps and shows the database left in an inconsistent state.
+2. `WithTransactionRolledBack.java` — same scenario, but wrapped in a transaction. Failure triggers ROLLBACK. Database is unchanged.
+3. `AtomicityDemo.java` — shows that all statements in a committed transaction take effect together.
+4. `IsolationLevels.java` — sets different isolation levels and observes the difference.
+
+(These previews topic 15's JDBC transaction syntax; full coverage comes there.)
+
+---
+
+## Try this yourself
+
+1. In `NoTransactionPartialFailure.java`, comment out the forced failure. Does the transfer complete correctly?
+2. In `WithTransactionRolledBack.java`, replace `conn.rollback()` with `conn.commit()` inside the catch block. What happens to the data?
+3. In `IsolationLevels.java`, try changing to `Connection.TRANSACTION_SERIALIZABLE`. Note any timing or behavior differences.
+
+---
+
+## Self-check
+
+1. What does each letter in ACID stand for, in one sentence each?
+2. Alice and Bob's bank transfer crashes halfway. What guarantee is responsible for ensuring no money vanishes?
+3. Two transactions reading the same row at the same time: which ACID property ensures they don't see each other's uncommitted changes?

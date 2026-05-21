@@ -1,197 +1,258 @@
-# Joins Deep Dive
+# 08 — Joins Deep Dive
 
-This topic focuses on:
-# SQL joins and relational querying
+Normalization (topic 04) split your data across multiple tables. Joins put them back together at query time.
 
-Real backend systems store data across:
-# multiple related tables
-
-Joins allow backend systems to:
-# combine related data efficiently
-
-Very important backend engineering topic.
+Almost every non-trivial production query has at least one join. Get comfortable here.
 
 ---
 
-# Why Joins Exist
+## The setup
 
-Relational databases store:
-# related data in separate tables
+For all examples in this topic, picture two tables:
 
-Examples:
-- Users Table
-- Orders Table
-- Payments Table
+```
+customers                   orders
++----+---------+            +----+-------------+--------+
+| id | name    |            | id | customer_id | amount |
++----+---------+            +----+-------------+--------+
+|  1 | Alice   |            |  1 |           1 | 100.00 |
+|  2 | Bob     |            |  2 |           1 |  50.00 |
+|  3 | Carol   |            |  3 |           2 |  75.00 |
+|  4 | David   |            |  4 |           5 | 200.00 |    ← orphan (customer 5 doesn't exist)
++----+---------+            +----+-------------+--------+
+```
 
-To combine related data:
-# joins are required
-
-Very important relational-querying foundation.
-
----
-
-# INNER JOIN
-
-Returns:
-# matching records from both tables
-
-Example:
-
-SELECT users.name,
-orders.order_id
-FROM users
-INNER JOIN orders
-ON users.id = orders.user_id;
-
-Most important join type.
-
-Very important backend querying concept.
+Note: Carol (id 3) has no orders. David (id 4) has no orders. The order with `customer_id = 5` has no customer (an orphan — wouldn't exist if a foreign key constraint were enforced, but useful to demonstrate joins).
 
 ---
 
-# INNER JOIN Behavior
+## INNER JOIN — only matches
 
-Only matching rows are returned.
+```sql
+SELECT customers.name, orders.amount
+FROM customers
+INNER JOIN orders ON customers.id = orders.customer_id;
+```
 
-Example:
-users without orders
-→ excluded
+Result:
 
-Very important relational-querying understanding.
+```
++-------+--------+
+| name  | amount |
++-------+--------+
+| Alice | 100.00 |
+| Alice |  50.00 |
+| Bob   |  75.00 |
++-------+--------+
+```
 
----
+Only rows where the join condition matches both sides. **Carol and David disappear** (no orders). **The orphan order disappears** (no customer).
 
-# LEFT JOIN
-
-Returns:
-# all rows from left table
-
-and matching rows from right table.
-
-Example:
-
-SELECT users.name,
-orders.order_id
-FROM users
-LEFT JOIN orders
-ON users.id = orders.user_id;
-
-Very important backend reporting/querying concept.
+INNER JOIN is the default and the most common. When someone says "JOIN" with no qualifier, they mean INNER JOIN.
 
 ---
 
-# LEFT JOIN Behavior
+## LEFT JOIN — everything from the left, even unmatched
 
-Even if no matching order exists:
-# user still appears
+```sql
+SELECT customers.name, orders.amount
+FROM customers
+LEFT JOIN orders ON customers.id = orders.customer_id;
+```
 
-Very important analytics and reporting awareness.
+Result:
 
----
+```
++-------+--------+
+| name  | amount |
++-------+--------+
+| Alice | 100.00 |
+| Alice |  50.00 |
+| Bob   |  75.00 |
+| Carol |   NULL |     ← Carol kept, even though she has no orders
+| David |   NULL |     ← David too
++-------+--------+
+```
 
-# RIGHT JOIN
+All rows from the **left** table (customers) appear. Where there's no match in the right table, the right-side columns are filled with `NULL`.
 
-Returns:
-# all rows from right table
+Use LEFT JOIN when you want "all X, plus any Y they have." E.g., "all customers, plus their order count (which might be zero)."
 
-and matching rows from left table.
+```sql
+SELECT customers.name, COUNT(orders.id) AS order_count
+FROM customers
+LEFT JOIN orders ON customers.id = orders.customer_id
+GROUP BY customers.name;
+```
 
-Very important SQL-join awareness.
-
----
-
-# FULL JOIN
-
-Returns:
-# all rows from both tables
-
-Very important relational-querying concept.
-
----
-
-# Why Joins Matter in Backend Systems
-
-Backend systems constantly combine:
-- users and orders
-- orders and payments
-- products and inventory
-- customers and transactions
-
-Very important backend persistence workflow.
+This gives Carol and David `order_count = 0` instead of dropping them.
 
 ---
 
-# Join Execution Mindset
+## RIGHT JOIN — everything from the right
 
-Joins affect:
-- performance
-- memory usage
-- scalability
-- query execution time
+Mirror image of LEFT JOIN. Returns all rows from the right table, plus matches from the left.
 
-Very important production-engineering awareness.
+```sql
+SELECT customers.name, orders.amount
+FROM customers
+RIGHT JOIN orders ON customers.id = orders.customer_id;
+```
 
----
+Result:
 
-# Join Performance Importance
+```
++-------+--------+
+| name  | amount |
++-------+--------+
+| Alice | 100.00 |
+| Alice |  50.00 |
+| Bob   |  75.00 |
+| NULL  | 200.00 |     ← the orphan order, no customer to match
++-------+--------+
+```
 
-Poor joins may cause:
-- slow APIs
-- database bottlenecks
-- scalability limitations
-- excessive database load
+In practice, RIGHT JOIN is **rare**. You can always rewrite it as a LEFT JOIN by swapping the table order:
 
-Very important backend engineering topic.
+```sql
+-- Same result as the RIGHT JOIN above:
+SELECT customers.name, orders.amount
+FROM orders
+LEFT JOIN customers ON customers.id = orders.customer_id;
+```
 
----
-
-# Backend Engineering Connection
-
-Spring Boot systems heavily depend on:
-- relational joins
-- entity relationships
-- transactional querying
-- backend data aggregation
-
-Very important persistence-engineering mindset.
-
----
-
-# Real-World Backend Examples
-
-Examples:
-- fetch user orders
-- payment history
-- product inventory reports
-- customer analytics
-- order tracking
-
-All heavily depend on:
-# joins
-
-Very important backend engineering awareness.
+Most teams use LEFT JOIN exclusively for consistency. RIGHT JOIN exists; you'll see it; you'll basically never write it.
 
 ---
 
-# Important Engineering Lesson
+## FULL OUTER JOIN — everything from both sides
 
-Good backend engineering requires:
-# efficient relational querying mindset
+```sql
+SELECT customers.name, orders.amount
+FROM customers
+FULL OUTER JOIN orders ON customers.id = orders.customer_id;
+```
 
-NOT:
-# blindly joining large tables
+Result:
 
-Very important backend engineering mindset.
+```
++-------+--------+
+| name  | amount |
++-------+--------+
+| Alice | 100.00 |
+| Alice |  50.00 |
+| Bob   |  75.00 |
+| Carol |   NULL |
+| David |   NULL |
+| NULL  | 200.00 |
++-------+--------+
+```
+
+All rows from both tables. Unmatched sides get `NULL`. Useful for "find every customer with no orders AND every orphan order" kinds of audits.
+
+(H2, PostgreSQL support it. MySQL doesn't natively — you have to union a LEFT and a RIGHT join.)
 
 ---
 
-# Industry Relevance
+## CROSS JOIN — every row × every row
 
-Modern backend systems fundamentally rely on:
-- relational querying
-- multi-table joins
-- transactional consistency
-- scalable persistence
-- optimized backend querying
+```sql
+SELECT customers.name, products.name
+FROM customers
+CROSS JOIN products;
+```
 
-Joins are foundational for backend engineering.
+Result is the **Cartesian product**: every customer paired with every product. 4 customers × 10 products = 40 rows. Almost always a bug if you didn't intend it.
+
+You usually meet CROSS JOIN by accident — when you forget the `ON` clause:
+
+```sql
+-- BUG: no join condition. This is a CROSS JOIN in disguise.
+SELECT customers.name, orders.amount
+FROM customers, orders;
+```
+
+This older comma syntax silently produces a Cartesian product. With 1000 customers and 10000 orders, you get 10 million rows. Then your query "is slow." Always use explicit `JOIN ... ON ...` and never the comma form.
+
+---
+
+## Visualizing joins
+
+```
+INNER JOIN        LEFT JOIN         RIGHT JOIN        FULL OUTER JOIN
+
+    ___               ___              ___                  ___
+   /   \             /   \            /   \                /   \
+  ( A∩B )           (A∪(A∩B))        ((A∩B)∪B)            (A∪B)
+   \___/             \___/            \___/                \___/
+```
+
+(A = left table rows. B = right table rows. A∩B = rows that match. The shaded area is what's returned.)
+
+---
+
+## Joining more than two tables
+
+```sql
+SELECT
+    customers.name,
+    orders.id        AS order_id,
+    products.name    AS product_name,
+    order_items.quantity
+FROM customers
+INNER JOIN orders        ON customers.id  = orders.customer_id
+INNER JOIN order_items   ON orders.id     = order_items.order_id
+INNER JOIN products      ON order_items.product_id = products.id;
+```
+
+Four tables, three joins. The pattern scales — at each step, you're chaining one more "this table connects to that one by this column" rule.
+
+---
+
+## The orphan-row problem (and a hard-won lesson)
+
+In our example, the order with `customer_id = 5` referred to a non-existent customer. With INNER JOIN it silently disappeared from results. Imagine that's an order for $50,000. Your revenue report just under-counts by $50,000 and nobody notices.
+
+**This is why foreign key constraints (topic 03) matter.** A `FOREIGN KEY` would have prevented the orphan from being inserted in the first place.
+
+When you join and get fewer rows than expected, suspect either:
+
+1. Bad join condition (e.g. `ON customers.id = orders.id` — wrong column).
+2. Orphan rows being silently filtered out by INNER JOIN.
+
+A quick diagnostic:
+
+```sql
+SELECT COUNT(*) FROM orders;
+-- vs
+SELECT COUNT(*) FROM orders INNER JOIN customers ON orders.customer_id = customers.id;
+```
+
+If the second is smaller, you have orphans.
+
+---
+
+## Code examples
+
+1. `InnerJoin.java` — basic inner join. Carol/David/orphan vanish.
+2. `LeftJoin.java` — Carol/David appear with NULL amount; orphan still vanishes.
+3. `RightJoin.java` — Carol/David vanish; orphan appears with NULL name.
+4. `FullOuterJoin.java` — everyone appears.
+5. `AccidentalCartesian.java` — what happens when you forget the `ON`. **Watch the row count.**
+6. `ThreeTableJoin.java` — joining customers + orders + products via a junction.
+
+---
+
+## Try this yourself
+
+1. In `LeftJoin.java`, change `LEFT JOIN` to `INNER JOIN`. Which rows disappear?
+2. Modify `InnerJoin.java` to also include the customer's id. Notice how to disambiguate when both tables have an `id` column.
+3. Rewrite `RightJoin.java` as an equivalent LEFT JOIN by swapping the table order.
+
+---
+
+## Self-check
+
+1. You want a report listing every product and its sales count, including products with zero sales. INNER, LEFT, or RIGHT? Why?
+2. You wrote `FROM customers, orders` without an `ON` clause. What kind of result do you get and how many rows?
+3. Why is RIGHT JOIN considered unnecessary by most teams?
