@@ -1,301 +1,107 @@
-# JDBC and Database
+# 04 — JDBC and Databases
 
-## Overview
+How to talk to a relational database from Java, without a framework hiding things from you.
 
-This module focuses on:
-# backend database engineering fundamentals
+This module is the bridge between knowing Java and knowing backend persistence. By the end, you'll have written real `Connection`, `PreparedStatement`, and `ResultSet` code, broken it on purpose to see how it fails, and understand what frameworks like Spring Data JPA do for you when we get to them later.
 
-The goal is NOT only learning SQL syntax.
+## Who this is for
 
-This module is designed to build:
-- database engineering mindset
-- persistence-layer understanding
-- transaction awareness
-- query optimization awareness
-- backend scalability understanding
-- production database awareness
-- JDBC engineering fundamentals
-- scalable persistence engineering mindset
+- Beginners who finished modules 01–03 and can read Java code.
+- Career switchers who already code and want to understand the JVM's database layer before learning Hibernate or Spring Data.
 
-This module forms the foundation for:
-- Spring JDBC
-- Spring Data JPA
-- Hibernate
-- transactional backend systems
-- scalable backend persistence
-- production backend applications
-- enterprise persistence architecture
+## What you'll be able to do at the end
 
----
+Concrete, observable outcomes. Check each one off as you go.
 
-# Module Goals
+- [ ] Explain the four words "Connection", "Statement", "PreparedStatement", "ResultSet" and what each one does.
+- [ ] Write a JDBC program that creates a table, inserts rows, queries them, and prints the result.
+- [ ] Identify a SQL injection vulnerability in code review and show how to fix it.
+- [ ] Explain why a transaction wraps multiple statements and what `rollback()` does on failure.
+- [ ] Spot a connection leak in code and fix it with `try-with-resources`.
+- [ ] Explain in one sentence why production apps use a connection pool like HikariCP.
+- [ ] Read a simple `EXPLAIN` output and identify whether a query hits an index or does a full table scan.
 
-After completing this module, you should be able to:
+If you can do all 7 at the end, the module worked.
 
-✅ Understand relational databases deeply  
-✅ Write SQL queries confidently  
-✅ Understand database relationships  
-✅ Understand normalization basics  
-✅ Understand transactions and ACID properties  
-✅ Use JDBC for backend database interaction  
-✅ Prevent SQL injection vulnerabilities  
-✅ Understand connection pooling deeply  
-✅ Understand batch processing workflows  
-✅ Understand query optimization awareness  
-✅ Write production-grade JDBC code  
-✅ Think with backend persistence engineering mindset
+## Prerequisites
 
----
+Before starting, you should be able to:
 
-# Topics Covered
+- Read and write Java code (basic OOP, exceptions, collections) — module 01–03.
+- Run a `.java` file from the command line or IntelliJ — see `SETUP.md` in the repo root.
+- Understand that "the database" is a separate program your app talks to over a connection. You'll learn the details here.
 
-## Database Fundamentals
+You do **not** need to know SQL before starting. Topics 05–11 cover SQL from scratch.
 
-- Introduction to Databases
-- Relational Database Fundamentals
-- Primary Keys
-- Foreign Keys
-- Constraints
-- Database Design
-- Normalization
+## How this module is organized
 
----
+Topics 00–04 are conceptual — what databases are, how they're structured. No JDBC yet, light or no code.
 
-## SQL Fundamentals
+Topics 05–11 are SQL — running real queries against H2 from Java. You'll see the SQL and watch it execute.
 
-- SQL Introduction
-- SELECT Queries
-- INSERT Queries
-- UPDATE Queries
-- DELETE Queries
-- WHERE Clause
-- ORDER BY
-- GROUP BY
-- HAVING Clause
+Topics 12–18 are JDBC — the Java API for talking to relational databases. This is where the bugs (leaks, injections, broken transactions) get demonstrated and fixed.
 
----
-
-## Advanced SQL Concepts
-
-- Joins
-- Subqueries
-- Query Optimization Awareness
-- Indexes Basics
-
----
-
-## Transactions
-
-- Transactions
-- ACID Properties
-
----
-
-## JDBC Engineering
-
-- JDBC Architecture
-- DriverManager
-- Connection
-- Statement
-- PreparedStatement
-- ResultSet
-- CRUD Operations
-- Transaction Management
-- Batch Processing
-- Connection Pooling
-- Production JDBC Engineering
-
----
-
-## Production Database Awareness
-
-- SQL Injection Prevention
-- Connection Pooling
-- Query Performance Awareness
-- Transaction Failure Awareness
-- Backend Persistence Best Practices
-- Production Reliability Awareness
-- Resource Management
-- Scalability Engineering
-
----
-
-# Folder Structure
+Topic 19 is a revision/interview summary.
 
 ```text
-04-jdbc-and-database/
-│
-├── README.md
-│
-├── 00-database-foundation.md
-├── 01-introduction-to-databases.md
-├── 02-relational-database-fundamentals.md
-├── 03-primary-key-foreign-key-and-constraints.md
-├── 04-database-design-and-normalization.md
-├── 05-sql-introduction.md
-├── 06-basic-sql-queries.md
-├── 07-where-group-by-having-order-by.md
-├── 08-joins-deep-dive.md
-├── 09-subqueries-and-nested-queries.md
-├── 10-indexes-and-query-optimization.md
-├── 11-transactions-and-acid-properties.md
-├── 12-jdbc-introduction-and-architecture.md
-├── 13-jdbc-connection-and-basic-crud.md
-├── 14-preparedstatement-and-sql-injection.md
-├── 15-jdbc-transaction-management.md
-├── 16-jdbc-batch-processing.md
-├── 17-jdbc-connection-pooling.md
-├── 18-jdbc-best-practices-and-production-considerations.md
-├── 19-jdbc-interview-revision.md
-│
-├── CODE_EXAMPLES/
-│
-├── INTERVIEW_QNA.md
-└── COMMON_MISTAKES.md
+00-database-foundation                            ← why databases exist
+01-introduction-to-databases                      ← what databases actually are
+02-relational-database-fundamentals               ← tables, rows, relationships
+03-primary-key-foreign-key-and-constraints        ← integrity
+04-database-design-and-normalization              ← how to design schemas
+05-sql-introduction                               ← SQL begins
+06-basic-sql-queries                              ← SELECT/INSERT/UPDATE/DELETE
+07-where-group-by-having-order-by                 ← filtering, grouping
+08-joins-deep-dive                                ← combining tables
+09-subqueries-and-nested-queries
+10-indexes-and-query-optimization                 ← performance basics
+11-transactions-and-acid-properties               ← consistency
+12-jdbc-introduction-and-architecture             ← JDBC begins
+13-jdbc-connection-and-basic-crud                 ← real Java code now
+14-preparedstatement-and-sql-injection            ← security
+15-jdbc-transaction-management
+16-jdbc-batch-processing
+17-jdbc-connection-pooling                        ← HikariCP
+18-jdbc-best-practices-and-production-considerations
+19-jdbc-interview-revision
 ```
 
----
+## How to run the code
 
-# Learning Approach
+See `SETUP.md` at the repo root. One-time: download a single H2 jar to `04-jdbc-and-database/CODE_EXAMPLES/lib/`. After that, every example runs with:
 
-Each topic is designed with:
+```bash
+java --class-path "04-jdbc-and-database/CODE_EXAMPLES/lib/h2-2.2.224.jar" \
+  04-jdbc-and-database/CODE_EXAMPLES/<topic>/<File>.java
+```
 
-✅ beginner-friendly explanations  
-✅ backend engineering relevance  
-✅ production database awareness  
-✅ transaction understanding  
-✅ scalability awareness  
-✅ performance engineering mindset  
-✅ interview preparation  
-✅ common mistakes awareness  
-✅ persistence-layer understanding  
-✅ production-grade backend engineering mindset
+Inside each topic's `CODE_EXAMPLES/` folder, files are named in PascalCase (no numeric prefix). The *reading order* lives in each topic markdown's "Code examples" section — that's the canonical sequence; alphabetical file order will not match.
 
-This module focuses on:
-# backend persistence engineering mindset
+- Files with `Vulnerable`, `Broken`, or `Leaky` in their names are intentionally bad. The next file listed in the markdown fixes them (e.g. `StringConcatVulnerable.java` → `PreparedStatementSafe.java`). Run both, in the markdown's listed order. The bad one is the lesson.
 
-not just:
-# SQL syntax memorization
+## Working through a topic
 
----
+For each topic file:
 
-# Why Databases Matter in Backend Engineering?
+1. Read the markdown.
+2. Run the first code example listed. Read it. Run it again with a small change.
+3. Run the next listed example. Compare.
+4. Do the "Try this yourself" exercise at the end of the markdown.
+5. Answer the "Self-check" questions out loud, in your own words.
 
-Modern backend systems fundamentally depend on:
-- databases
-- persistence layers
-- transactions
-- relational modeling
-- query optimization
-- scalable data access
-- connection pooling
-- transaction safety
-- reliable persistence workflows
+If you can't answer all 3 self-check questions, re-read the topic. Don't move on.
 
-Spring Boot applications heavily depend on:
-- JDBC
-- transactions
-- connection pooling
-- ORM frameworks
-- persistence engineering
-- production-grade database interaction
+## Why no Maven yet?
 
-Strong database understanding is essential for:
-- scalable backend systems
-- transactional systems
-- production APIs
-- microservices persistence
-- backend performance optimization
-- enterprise persistence architecture
+You'll need exactly one external library in this module (H2). We download it directly so you can focus on the persistence concepts without learning a build tool at the same time. **Module 05** covers Maven and Gradle properly — at that point you'll never download a jar by hand again.
 
----
+## Module checkpoint
 
-# Interview Preparation
+Before moving to module 05, you should be able to answer these aloud:
 
-`INTERVIEW_QNA.md` contains:
-- SQL interview questions
-- JDBC interview questions
-- transaction questions
-- joins and query discussions
-- database optimization concepts
-- backend persistence discussions
-- connection pooling questions
-- PreparedStatement questions
-- transaction-management questions
-- scalability-engineering discussions
+1. Walk through what happens when `DriverManager.getConnection(url, user, password)` returns. What did the JVM just do?
+2. You're reviewing a teammate's PR. They wrote `"SELECT * FROM users WHERE email = '" + email + "'"`. What do you say in the review and why?
+3. A user reports the app gets slow after running for a few hours, then throws `Cannot get connection`. What are the top two suspects?
+4. Explain in one sentence what `connection.setAutoCommit(false)` changes.
 
----
-
-# Common Mistakes
-
-`COMMON_MISTAKES.md` contains:
-- SQL mistakes
-- normalization mistakes
-- JDBC resource leaks
-- transaction handling issues
-- SQL injection mistakes
-- connection pooling problems
-- query optimization mistakes
-- backend persistence pitfalls
-- scalability mistakes
-- production engineering mistakes
-
----
-
-# Difficulty Level
-
-🟠 Intermediate Backend Foundation
-
----
-
-# Prerequisites
-
-Before starting this module, learners should understand:
-- Java fundamentals
-- OOP concepts
-- exception handling
-- collections basics
-- advanced Java basics
-
----
-
-# Production Engineering Awareness
-
-This module heavily focuses on:
-- production-grade persistence engineering
-- scalable database interaction
-- backend reliability
-- transaction consistency
-- query optimization awareness
-- resource-management discipline
-- backend scalability mindset
-
-This module is designed to prepare learners for:
-- Spring Boot persistence
-- Hibernate
-- Spring Data JPA
-- enterprise backend systems
-- scalable API development
-- production backend engineering
-
----
-
-# End Goal
-
-By the end of this module, learners should be able to:
-
-✅ design relational backend data models  
-✅ write backend-focused SQL queries  
-✅ understand transactional systems  
-✅ build JDBC-based persistence layers  
-✅ understand backend database workflows  
-✅ write production-grade JDBC code  
-✅ understand scalable persistence engineering  
-✅ prepare for Hibernate and Spring Data JPA  
-✅ think with persistence-layer engineering mindset
-
-This module acts as the bridge between:
-# advanced Java engineering
-
-and:
-# backend persistence engineering
+If those four are easy, you're ready. If any feel shaky, the corresponding topic is `12`, `14`, `17`, and `15`.
