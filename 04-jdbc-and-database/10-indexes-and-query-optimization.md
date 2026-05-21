@@ -1,214 +1,181 @@
-# Indexes and Query Optimization
+# 10 — Indexes and Query Optimization
 
-This topic focuses on:
-# query optimization and indexing
+An **index** is a data structure the database keeps alongside a table to speed up reads. Without indexes, finding a row means scanning every row in the table — fast on 1000 rows, glacial on 100 million.
 
-Backend systems eventually fail to scale if:
-# database queries become slow
-
-Indexes are foundational for:
-- scalable APIs
-- fast querying
-- production databases
-- backend performance
-- large-scale systems
-
-Very important backend engineering topic.
+This topic introduces the *mental model* of indexes and how to think about query performance. Real-world optimization is a deep topic — what you need now is enough intuition to write reasonable SQL and recognize obvious problems in code review.
 
 ---
 
-# What is an Index?
+## The phone book analogy
 
-Index is:
-# data structure for faster searching
+Imagine a phone book with 10 million entries. To find "Smith, J.":
 
-Similar to:
-# book index
+- **Without an index:** start at page 1, read every name, stop when you find Smith.
+  Worst case: 10 million reads. This is a **full table scan**.
+- **With the index (alphabetical order):** open near the S section, scan a few pages.
+  ~30 reads. This is an **index seek**.
 
-Instead of scanning entire database table:
-database quickly locates data.
-
-Very important database-performance foundation.
+A database index is the equivalent of "the book is already in alphabetical order." For a `users` table indexed on `email`, finding `alice@example.com` doesn't require scanning every user — the database uses the index to jump directly to the right rows.
 
 ---
 
-# Why Indexes Exist
+## How indexes are implemented (briefly)
 
-Without indexes:
-database performs:
-# full table scan
+Most relational databases use **B-tree** indexes by default. A B-tree is a balanced tree structure that lets you find any value in O(log n) time. For a billion rows that's ~30 comparisons.
 
-Very expensive on large datasets.
+You don't need to know B-tree internals to use indexes well. Just two facts:
 
-Very important production-awareness concept.
+1. Looking up a value by an indexed column is *fast* (O(log n)).
+2. Scanning every row of a table is *slow on big tables* (O(n)).
 
----
-
-# Full Table Scan
-
-Database checks:
-# every row
-
-to find matching data.
-
-Example:
-
-SELECT *
-FROM users
-WHERE email = 'test@email.com';
-
-Without index:
-every row may be scanned.
-
-Very important performance-engineering topic.
+Everything else is consequence.
 
 ---
 
-# How Indexes Help
+## When the database uses an index
 
-Indexes improve:
-- query speed
-- filtering performance
-- search efficiency
-- sorting efficiency
+A WHERE condition can use an index when the indexed column is compared directly to a value:
 
-Very important backend scalability concept.
+```sql
+WHERE email = 'alice@example.com'        -- uses email index
+WHERE id BETWEEN 100 AND 200             -- uses primary key index (range)
+WHERE name LIKE 'A%'                     -- uses name index (prefix match)
+```
 
----
+A WHERE condition **cannot** use an index when:
 
-# Indexing Common Columns
+```sql
+WHERE LOWER(email) = 'alice@example.com'   -- function on column → no index
+WHERE name LIKE '%son'                     -- leading wildcard → no index
+WHERE email != 'x@y.com'                   -- inequality usually skips index
+```
 
-Usually indexes are added on:
-- primary keys
-- foreign keys
-- email columns
-- username columns
-- frequently filtered columns
-
-Very important backend querying awareness.
+Functions on indexed columns are the most common index-killer. If you find yourself writing `WHERE LOWER(email) = ...`, store the value already-lowercased, or create a **functional index** on `LOWER(email)`.
 
 ---
 
-# Clustered Index Basics
+## Creating an index
 
-Clustered index:
-# organizes actual table data
+```sql
+CREATE INDEX idx_users_email ON users(email);
+```
 
-Usually:
-# one clustered index per table
+That's it. From now on, queries with `WHERE email = ...` use the index automatically. You don't change your queries.
 
-Very important indexing foundation.
+**Multi-column index:**
 
----
+```sql
+CREATE INDEX idx_orders_customer_date ON orders(customer_id, created_at);
+```
 
-# Non-Clustered Index Basics
+This helps queries that filter by `customer_id`, OR by `customer_id AND created_at`, but not queries that filter only by `created_at` alone. Column order matters — the index is sorted "by customer first, then by date within customer."
 
-Non-clustered index:
-# separate lookup structure
+**Unique index:**
 
-Can have:
-# multiple non-clustered indexes
+```sql
+CREATE UNIQUE INDEX idx_users_email_unique ON users(email);
+```
 
-Very important backend querying concept.
-
----
-
-# Query Optimization Mindset
-
-Good backend engineers think about:
-- filtering efficiency
-- index usage
-- query execution cost
-- scalability impact
-
-Very important production-engineering mindset.
+Doubles as a uniqueness constraint AND a lookup index. Common pattern.
 
 ---
 
-# Indexing Tradeoffs
+## Indexes have a cost
 
-Indexes improve:
-- reads
+Indexes aren't free. For every write to the table, the database must also update every index on it.
 
-But may slow:
-- inserts
-- updates
-- deletes
+- **5 indexes on a table** = each `INSERT` does 1 row write + 5 index updates. Writes are ~5x slower than no-index.
+- **Indexes take disk space** — proportional to the table size for each one.
+- **Indexes can become out of date** — `ANALYZE` or auto-stats keep them efficient.
 
-Very important production-awareness concept.
+**The tradeoff:** indexes speed up reads, slow down writes. A read-heavy table (analytics, lookup tables) benefits from many indexes. A write-heavy table (logs, events) should have few.
 
----
+**Rules of thumb:**
 
-# Why Too Many Indexes Are Bad
-
-Too many indexes may cause:
-- storage overhead
-- slower writes
-- maintenance overhead
-
-Very important backend optimization awareness.
+- Index every primary key (automatic).
+- Index every foreign key (the database doesn't do this automatically — you should).
+- Index columns frequently used in WHERE.
+- Don't index columns rarely filtered on, or columns with very few distinct values (e.g. `gender`, `is_active`).
+- Start without extra indexes. Add them when a query is provably slow.
 
 ---
 
-# Backend Engineering Connection
+## EXPLAIN: ask the database what it's doing
 
-Spring Boot systems heavily depend on:
-- efficient querying
-- indexed filtering
-- scalable persistence
-- optimized database access
+Every relational database has an `EXPLAIN` (or `EXPLAIN PLAN`) command that shows how a query will be executed — index seek, full scan, join algorithm used, estimated row count, etc.
 
-Very important persistence-engineering mindset.
+```sql
+EXPLAIN SELECT * FROM users WHERE email = 'alice@example.com';
+```
 
----
+Output varies by database. What you're looking for:
 
-# Real-World Backend Examples
+- **"Seq Scan"** or **"Full Table Scan"** — the database is reading every row. Slow on big tables.
+- **"Index Scan"** or **"Index Seek"** — the database is using an index. Good.
+- A huge "rows examined" number for what should be a small result — something's not using the index it should.
 
-Examples:
-- login systems
-- email lookups
-- payment tracking
-- order history
-- analytics filtering
-
-All heavily depend on:
-# indexes
-
-Very important backend engineering awareness.
+**You don't have to read EXPLAIN output fluently.** You just need to know it exists and recognize "full scan = bad on big table." When a query is unexpectedly slow, run `EXPLAIN` on it.
 
 ---
 
-# Production Importance
+## Clustered vs non-clustered indexes (short version)
 
-Poor indexing may cause:
-- slow APIs
-- scalability bottlenecks
-- database overload
-- production failures
+- **Clustered index** — defines the physical order of the data on disk. A table can have only one. In MySQL InnoDB and SQL Server, the primary key is usually the clustered index.
+- **Non-clustered index** — a separate lookup structure that points back to the actual rows. A table can have many.
 
-Very important production-engineering topic.
+You'll encounter the terms in interviews. The practical impact: looking up a row by clustered index is one step (the data is right there). Looking up by non-clustered index is two steps (find the pointer, then fetch the row). For most application code this distinction doesn't matter; for very high-performance work it does.
 
 ---
 
-# Important Engineering Lesson
+## A common performance pattern: the missing-FK index
 
-Good backend engineering requires:
-# performance-aware querying mindset
+Foreign keys are not automatically indexed in most databases. So:
 
-NOT:
-# blindly writing queries
+```sql
+CREATE TABLE orders (
+    id INT PRIMARY KEY,
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
 
-Very important backend engineering mindset.
+-- This is FAST (uses primary key index):
+SELECT * FROM customers WHERE id = 42;
+
+-- This is SLOW (no index on orders.customer_id):
+SELECT * FROM orders WHERE customer_id = 42;
+```
+
+**Fix:**
+
+```sql
+CREATE INDEX idx_orders_customer_id ON orders(customer_id);
+```
+
+This single fix can make joins involving the FK 100× faster.
+
+**Rule:** every foreign key should have an index. Always.
 
 ---
 
-# Industry Relevance
+## Code examples
 
-Modern backend systems fundamentally rely on:
-- indexed querying
-- scalable persistence
-- optimized filtering
-- efficient data retrieval
-- backend performance engineering
+1. `FullTableScanVsIndex.java` — same query on a 50,000-row table, with and without an index. Times both.
+2. `ExplainPlan.java` — reads H2's EXPLAIN output to show what plan the database chose.
+3. `IndexWriteCost.java` — measures insert speed with 0, 1, and 5 indexes. Demonstrates the write penalty.
+4. `FunctionKillsIndex.java` — shows that `WHERE LOWER(email) = ...` skips the index, even though `WHERE email = ...` uses it.
 
-Indexes are foundational for backend scalability.
+---
+
+## Try this yourself
+
+1. In `FullTableScanVsIndex.java`, change the table size from 50,000 to 500,000. How does the ratio change?
+2. In `FunctionKillsIndex.java`, drop the existing email index and create a functional index `CREATE INDEX ... ON users(LOWER(email))`. Re-run. Does the function-call query speed up?
+3. Create a composite index `(country, age)`. Compare `WHERE country = 'USA' AND age > 30` vs `WHERE age > 30`. Which uses the index?
+
+---
+
+## Self-check
+
+1. You're reviewing a new table that has a primary key but no other indexes, and 3 foreign keys. What's the most likely performance problem?
+2. Why is `WHERE LOWER(email) = 'x@y.com'` slow even if there's an index on `email`?
+3. Indexes speed up reads. What do they slow down, and why?
