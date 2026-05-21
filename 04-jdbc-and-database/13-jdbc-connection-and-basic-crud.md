@@ -1,202 +1,241 @@
-# JDBC Connection and Basic CRUD
+# 13 — JDBC Connection and Basic CRUD
 
-This topic focuses on:
-# real JDBC CRUD workflows
+Time to write CRUD against a database from Java properly. We'll cover each operation, with `PreparedStatement` from the start, and the resource-management discipline that keeps your app from leaking connections.
 
-Now Java applications actually perform:
-- database connection
-- INSERT operations
-- SELECT operations
-- UPDATE operations
-- DELETE operations
-
-using:
-# actual JDBC workflow
-
-Very important backend engineering topic.
+This is the topic where "I know SQL" and "I know how to talk to a database from Java" meet.
 
 ---
 
-# Real JDBC Flow
+## The 4-step JDBC lifecycle
 
-Typical backend JDBC workflow:
+Every JDBC operation has the same shape:
 
-Create Connection
-↓
-Create Statement
-↓
-Execute SQL Query
-↓
-Process Result
-↓
-Close Resources
+1. **Open a Connection.** `DriverManager.getConnection(url, user, pass)`
+2. **Create a Statement.** `conn.prepareStatement(sql)` or `conn.createStatement()`
+3. **Execute.** `ps.executeQuery()`, `ps.executeUpdate()`
+4. **Close everything.** `rs.close()`, `ps.close()`, `conn.close()` — in reverse.
 
-Most important JDBC workflow foundation.
+Skipping step 4 is the most common JDBC bug in the wild. We'll address it head-on.
 
 ---
 
-# JDBC Connection Creation
+## CREATE (INSERT)
 
-Using:
+```java
+try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+     PreparedStatement ps = conn.prepareStatement(
+             "INSERT INTO users (name, email) VALUES (?, ?)")) {
+    ps.setString(1, "Alice");
+    ps.setString(2, "alice@example.com");
+    int inserted = ps.executeUpdate();
+    System.out.println("rows inserted: " + inserted);
+}
+```
 
-DriverManager.getConnection(...)
+`executeUpdate()` returns the number of rows the statement affected. For a single-row insert, that's 1. **Check it** — if you got 0, the insert silently failed (rare but possible with conditional inserts), and silent failures cause bugs.
 
-Java application creates:
-# active database connection
+### Getting back an auto-generated ID
 
-Very important persistence concept.
+When the table has an `AUTO_INCREMENT` primary key, you usually want to know what ID was assigned. You ask for it explicitly:
 
----
+```java
+try (PreparedStatement ps = conn.prepareStatement(
+        "INSERT INTO users (name) VALUES (?)",
+        Statement.RETURN_GENERATED_KEYS)) {
+    ps.setString(1, "Alice");
+    ps.executeUpdate();
+    try (ResultSet keys = ps.getGeneratedKeys()) {
+        if (keys.next()) {
+            long newId = keys.getLong(1);
+            System.out.println("New user id: " + newId);
+        }
+    }
+}
+```
 
-# INSERT Using JDBC
-
-Backend systems constantly:
-# store data
-
-Examples:
-- user registration
-- order creation
-- payment creation
-
-Very important backend persistence workflow.
-
----
-
-# SELECT Using JDBC
-
-Backend systems constantly:
-# retrieve data
-
-Examples:
-- login validation
-- profile fetching
-- order history
-- analytics retrieval
-
-Most important backend querying workflow.
+This is the standard pattern for "create resource, return its server-side ID."
 
 ---
 
-# UPDATE Using JDBC
+## READ (SELECT)
 
-Used for:
-# modifying existing records
+```java
+try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+     PreparedStatement ps = conn.prepareStatement(
+             "SELECT id, name, email FROM users WHERE country = ?")) {
+    ps.setString(1, "USA");
+    try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            User u = new User(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("email"));
+            // do something with u
+        }
+    }
+}
+```
 
-Examples:
-- update profile
-- payment status update
-- inventory update
+Notice the nested `try-with-resources`: the `ResultSet` is opened inside, so it closes before the `PreparedStatement` closes — the right order.
 
-Very important transactional-system concept.
+### Handling NULL columns
 
----
+Primitive `getInt()` returns `0` for SQL NULL, which can hide bugs. Use `wasNull()` or wrapper-aware methods:
 
-# DELETE Using JDBC
-
-Used for:
-# removing records
-
-Examples:
-- delete inactive users
-- remove expired sessions
-- cleanup workflows
-
-Very important backend persistence operation.
-
----
-
-# ResultSet Processing
-
-Query results are processed using:
-# ResultSet
-
-Typical workflow:
-
-while(resultSet.next()) {
-// process rows
+```java
+int age = rs.getInt("age");
+if (rs.wasNull()) {
+    // age was actually NULL; the 0 is meaningless
 }
 
-Very important JDBC querying concept.
+// Or:
+Object ageObj = rs.getObject("age");
+Integer age = (ageObj == null) ? null : (Integer) ageObj;
+```
 
 ---
 
-# Resource Closing
+## UPDATE
 
-Resources must always be closed:
-- Connection
-- Statement
-- ResultSet
+```java
+try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+     PreparedStatement ps = conn.prepareStatement(
+             "UPDATE users SET email = ? WHERE id = ?")) {
+    ps.setString(1, "newalice@example.com");
+    ps.setLong(2, 1L);
+    int updated = ps.executeUpdate();
+    if (updated == 0) {
+        // No row had id=1. Probably a bug. Don't silently ignore.
+    }
+}
+```
 
-Without proper closing:
-- connection leaks
-- memory issues
-- database overload
-
-Very important production-engineering topic.
-
----
-
-# Backend Engineering Connection
-
-Spring Boot systems internally perform:
-- CRUD workflows
-- query execution
-- result processing
-- transaction handling
-
-using JDBC abstractions.
-
-Very important backend engineering mindset.
+Same shape as INSERT. The returned int tells you how many rows the WHERE clause matched.
 
 ---
 
-# Real-World Backend Examples
+## DELETE
 
-Examples:
-- user management systems
-- payment systems
-- order management
-- inventory systems
-- reporting systems
+```java
+try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+     PreparedStatement ps = conn.prepareStatement(
+             "DELETE FROM users WHERE id = ?")) {
+    ps.setLong(1, 1L);
+    int deleted = ps.executeUpdate();
+}
+```
 
-All fundamentally depend on:
-# CRUD persistence workflows
-
-Very important backend engineering awareness.
-
----
-
-# Production Importance
-
-Poor JDBC CRUD handling may cause:
-- slow APIs
-- resource leaks
-- inconsistent data
-- scalability failures
-
-Very important production-engineering topic.
+By now this pattern is muscle memory.
 
 ---
 
-# Important Engineering Lesson
+## try-with-resources: non-negotiable
 
-Good backend engineering requires:
-# proper persistence workflow understanding
+Without try-with-resources, JDBC code looks like:
 
-NOT:
-# blindly executing database queries
+```java
+Connection conn = null;
+PreparedStatement ps = null;
+ResultSet rs = null;
+try {
+    conn = DriverManager.getConnection(URL, USER, PASS);
+    ps = conn.prepareStatement("SELECT ...");
+    rs = ps.executeQuery();
+    while (rs.next()) { ... }
+} catch (SQLException e) {
+    // log
+} finally {
+    if (rs != null) try { rs.close(); } catch (SQLException ignore) {}
+    if (ps != null) try { ps.close(); } catch (SQLException ignore) {}
+    if (conn != null) try { conn.close(); } catch (SQLException ignore) {}
+}
+```
 
-Very important backend engineering mindset.
+Ugly. Easy to forget one. Easy to swap the order. Each `close()` could throw, so you wrap each in another try. **People used to write this for a living.**
+
+Try-with-resources (Java 7+) makes it:
+
+```java
+try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+     PreparedStatement ps = conn.prepareStatement("SELECT ...");
+     ResultSet rs = ps.executeQuery()) {
+    while (rs.next()) { ... }
+}
+// Everything closed automatically, in reverse declaration order,
+// even if an exception was thrown.
+```
+
+**Rule: every `Connection`, `Statement`, `PreparedStatement`, and `ResultSet` must be in a try-with-resources.** No exceptions.
 
 ---
 
-# Industry Relevance
+## What "leaking" actually means
 
-Modern backend systems fundamentally rely on:
-- JDBC CRUD workflows
-- scalable persistence
-- efficient query execution
-- transactional consistency
-- reliable resource management
+A "connection leak" means the application opened a connection and never closed it. The connection sits open on the database side, occupying a slot.
 
-JDBC CRUD operations are foundational for backend engineering.
+Database servers have a limit on simultaneous connections (often 100–1000). Once that limit is hit, every new connection request hangs or fails with "too many connections" — the app appears completely broken even though "the code works fine."
+
+**The symptoms in production:**
+
+- App runs fine for an hour, then starts erroring with "Cannot get connection."
+- Restart fixes it temporarily.
+- Hours later, same problem.
+
+That's a connection leak. The cause is *always* a code path that opened a connection without closing it — usually missing try-with-resources, sometimes an exception path that skipped the close.
+
+This is why we hammer the resource discipline now. Before we get to connection pools (topic 17), you should have the leak-prevention reflexes built in.
+
+---
+
+## Reading ResultSets into your own objects
+
+The common pattern: read each row into a domain object, return a list.
+
+```java
+record User(long id, String name, String email) {}
+
+List<User> findAllUsers() throws SQLException {
+    List<User> result = new ArrayList<>();
+    String sql = "SELECT id, name, email FROM users";
+    try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            result.add(new User(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("email")));
+        }
+    }
+    return result;
+}
+```
+
+This is the building block of every DAO (Data Access Object) pattern you'll see. Frameworks like Spring `JdbcTemplate` and Hibernate just hide this for you.
+
+---
+
+## Code examples
+
+1. `Insert.java` — INSERT with PreparedStatement, retrieve generated key.
+2. `SelectAndRead.java` — SELECT with parameter binding, map rows to Java records.
+3. `Update.java` — UPDATE, with row-count verification.
+4. `Delete.java` — DELETE, with row-count verification.
+5. `TryWithResourcesProper.java` — full CRUD lifecycle with proper resource management.
+6. `ResourceLeakBroken.java` — what bad code looks like, and a demonstration that connections do leak.
+
+---
+
+## Try this yourself
+
+1. In `SelectAndRead.java`, change one column name in the SQL to something invalid. What exception do you get, and at what line?
+2. Modify `Insert.java` to insert two rows in sequence using the same `PreparedStatement`. Does the connection stay open between them?
+3. Run `ResourceLeakBroken.java` in a loop (1000 iterations). Does it eventually fail?
+
+---
+
+## Self-check
+
+1. What does `executeUpdate()` return, and what should you do with the value?
+2. Why is `try-with-resources` essential for JDBC code, not just nice-to-have?
+3. You're observing "Cannot get connection" errors after the app runs for ~2 hours. Where in the code do you look first?
