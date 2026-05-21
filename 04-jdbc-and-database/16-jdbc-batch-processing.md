@@ -1,183 +1,170 @@
-# JDBC Batch Processing
+# 16 — JDBC Batch Processing
 
-This topic focuses on:
-# JDBC batch execution and scalable persistence workflows
+When you need to write many rows — bulk imports, migrations, periodic syncs — running one `executeUpdate` per row is slow. Each call is a round trip to the database. JDBC's batch API lets you queue many operations and send them in a single round trip.
 
-Real production systems often need to execute:
-# large numbers of database operations efficiently
-
-Batch processing is heavily used in:
-- bulk inserts
-- migration scripts
-- analytics systems
-- reporting systems
-- enterprise backend workflows
-
-Very important backend engineering topic.
+The speedup is typically 10–100×, depending on row count and network latency.
 
 ---
 
-# What is JDBC Batch Processing?
+## The 3-line pattern
 
-Batch processing means:
-# executing multiple queries together
+```java
+try (PreparedStatement ps = conn.prepareStatement(
+        "INSERT INTO users (name, email) VALUES (?, ?)")) {
+    for (User u : users) {
+        ps.setString(1, u.name());
+        ps.setString(2, u.email());
+        ps.addBatch();                    // queue this row's parameters
+    }
+    int[] results = ps.executeBatch();    // send them all
+}
+```
 
-instead of:
-# one-by-one execution
-
-Very important performance-engineering foundation.
-
----
-
-# Why Batch Processing Exists
-
-Executing queries individually may cause:
-- excessive database calls
-- network overhead
-- slower execution
-- poor scalability
-
-Very important backend optimization concept.
+That's it. `addBatch()` queues the current parameter values; `executeBatch()` sends them and returns an array of row counts (one per queued statement, in order).
 
 ---
 
-# JDBC Batch Workflow
+## Why batching helps
 
-Typical flow:
+Imagine you're inserting 10,000 rows.
 
-Create PreparedStatement
-↓
-Add Queries To Batch
-↓
-Execute Batch Together
-↓
-Process Results
+**Without batching:**
 
-Most important batch-processing workflow.
+```
+10,000 × (send SQL + wait for ack) = 10,000 round trips
+```
 
----
+Each round trip takes ~1ms on a fast network. Total: ~10 seconds.
 
-# addBatch()
+**With batching:**
 
-Used for:
-# adding queries into batch
+```
+1 × (send 10,000 rows + wait for ack) = 1 round trip
+```
 
-Example idea:
+Total: ~50ms (mostly the time to send the data over the wire).
 
-preparedStatement.addBatch();
-
-Very important JDBC batching concept.
+The savings come from network latency, not from less actual work. The database still inserts 10,000 rows — it just does so without your code waiting in between.
 
 ---
 
-# executeBatch()
+## Batching with a transaction
 
-Used for:
-# executing entire batch together
+Without a transaction, each batch operation may auto-commit (depending on the driver). For real bulk writes you want them all-or-nothing:
 
-Example idea:
+```java
+conn.setAutoCommit(false);
+try (PreparedStatement ps = conn.prepareStatement(SQL)) {
+    for (Row r : rows) {
+        bindRow(ps, r);
+        ps.addBatch();
+    }
+    ps.executeBatch();
+    conn.commit();
+} catch (Exception e) {
+    conn.rollback();
+    throw e;
+} finally {
+    conn.setAutoCommit(true);
+}
+```
 
-preparedStatement.executeBatch();
-
-Very important performance-engineering concept.
-
----
-
-# Why Batching Improves Performance
-
-Batching reduces:
-- database round trips
-- network overhead
-- query execution overhead
-
-Very important scalability-awareness topic.
-
----
-
-# Common Batch Use Cases
-
-Examples:
-- bulk user imports
-- inventory updates
-- analytics ingestion
-- migration scripts
-- log persistence
-
-Very important enterprise-backend workflow awareness.
+This is the production pattern: batched writes inside a transaction.
 
 ---
 
-# Batch Processing and Transactions
+## Batch in chunks for very large data sets
 
-Batch operations are often combined with:
-# transaction management
+Trying to batch 10 million rows in one `addBatch` loop is a memory disaster — the driver buffers them all. Chunk into reasonable groups:
 
-If batch fails:
-# rollback may be required
+```java
+int CHUNK_SIZE = 1000;
+int counter = 0;
 
-Very important backend consistency concept.
+for (Row r : rows) {
+    bindRow(ps, r);
+    ps.addBatch();
+    counter++;
+    if (counter % CHUNK_SIZE == 0) {
+        ps.executeBatch();
+        // optionally commit here too, so a failure doesn't lose everything
+    }
+}
+ps.executeBatch();   // flush the last partial chunk
+```
 
----
-
-# Backend Engineering Connection
-
-Spring Boot systems heavily use batching for:
-- bulk persistence
-- scalable ingestion
-- migration workflows
-- enterprise data processing
-
-Very important backend engineering mindset.
-
----
-
-# Real-World Backend Examples
-
-Examples:
-- importing CSV users
-- updating millions of records
-- analytics pipelines
-- scheduled jobs
-- ETL workflows
-
-All heavily depend on:
-# batch processing
-
-Very important backend engineering awareness.
+`CHUNK_SIZE = 500–5000` is a typical range. Tune based on row size.
 
 ---
 
-# Production Importance
+## Partial failure: BatchUpdateException
 
-Poor bulk-operation handling may cause:
-- database overload
-- slow processing
-- memory issues
-- scalability bottlenecks
+If one row in the batch fails (e.g., duplicate primary key), the driver throws `BatchUpdateException`. What happened to the *other* rows depends on the database and the driver.
 
-Very important production-engineering topic.
+Possible behaviors:
+
+- The whole batch is aborted; nothing is inserted.
+- Earlier rows are inserted; later rows are skipped.
+- Every row is attempted, with the failed ones marked as errors in the return array.
+
+You read `BatchUpdateException.getUpdateCounts()` to find out which rows succeeded:
+
+```java
+try {
+    ps.executeBatch();
+} catch (BatchUpdateException e) {
+    int[] counts = e.getUpdateCounts();
+    for (int i = 0; i < counts.length; i++) {
+        if (counts[i] == Statement.EXECUTE_FAILED) {
+            System.out.println("Row " + i + " failed");
+        }
+    }
+}
+```
+
+**Best practice:** combine batching with a transaction. If any row fails, rollback the whole transaction, fix the data, retry. Don't try to clean up partial state — it gets messy fast.
 
 ---
 
-# Important Engineering Lesson
+## What batching is NOT good for
 
-Good backend engineering requires:
-# scalable bulk-processing mindset
-
-NOT:
-# blindly executing queries one-by-one
-
-Very important backend engineering mindset.
+- **Reading** — batching is only for writes. Reads (SELECTs) don't have a similar API; for big reads, you stream the ResultSet.
+- **Heterogeneous statements** — you batch one prepared statement at a time, not a mix.
+- **Real-time per-row responses** — if you need to know each row's generated ID one at a time, batching is awkward (you can do it but the API gets fiddly).
 
 ---
 
-# Industry Relevance
+## When to use it
 
-Modern backend systems fundamentally rely on:
-- scalable persistence
-- bulk database operations
-- optimized ingestion workflows
-- transaction-safe batching
-- enterprise data processing
+- Bulk imports (CSV → database)
+- Periodic syncs (replicate from one system to another)
+- Migrations (rewriting a million rows)
+- Event/log ingestion (high write throughput)
 
-JDBC batch processing is foundational for scalable backend engineering.
+For a normal API endpoint that creates one user at a time, you don't need batching. Use it when you have many writes happening together.
+
+---
+
+## Code examples
+
+1. `BatchInsertBasic.java` — the 3-line pattern with 1000 rows.
+2. `BatchVsLoopPerformance.java` — same 5000 inserts done one-at-a-time vs batched. Timed.
+3. `BatchWithTransaction.java` — batched inserts wrapped in a transaction.
+4. `PartialFailureHandling.java` — duplicate key in the middle of the batch. Read the `BatchUpdateException`.
+5. `ChunkedBatching.java` — break a huge batch into 1000-row chunks.
+
+---
+
+## Try this yourself
+
+1. In `BatchVsLoopPerformance.java`, increase the row count from 5000 to 50000. Does the speedup ratio grow?
+2. In `BatchWithTransaction.java`, throw an exception in the middle of the loop. Verify nothing was inserted.
+3. In `PartialFailureHandling.java`, change the duplicate row's position from the middle to the very last. Does the behavior change?
+
+---
+
+## Self-check
+
+1. What's the underlying reason batching is faster than a `for` loop of `executeUpdate` calls?
+2. Why combine batching with `setAutoCommit(false)` + `commit`?
+3. You have 10 million rows to insert. Why is one giant `addBatch` loop a bad idea, and what's the fix?

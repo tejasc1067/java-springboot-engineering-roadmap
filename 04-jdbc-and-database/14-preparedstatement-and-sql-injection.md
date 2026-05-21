@@ -1,203 +1,180 @@
-# PreparedStatement and SQL Injection
+# 14 — PreparedStatement and SQL Injection
 
-This topic focuses on:
-# secure JDBC querying and SQL injection prevention
+This is the most important topic in this module by impact. Get it wrong and you ship security holes. Get it right and an entire class of vulnerabilities can't exist in your code.
 
-Poor query handling may expose backend systems to:
-- database attacks
-- data leaks
-- authentication bypass
-- production security failures
-
-Very important backend engineering topic.
+The fix is *easier* than the broken pattern. There's no excuse for getting this wrong.
 
 ---
 
-# What is PreparedStatement?
+## The vulnerability
 
-PreparedStatement is:
-# precompiled SQL statement
+A login form. The user types an email and a password. The naïve backend builds the query like this:
 
-Used for:
-- secure querying
-- parameterized queries
-- SQL injection prevention
-- optimized query execution
+```java
+String email = request.getParameter("email");
+String password = request.getParameter("password");
 
-Very important JDBC-security foundation.
+String sql = "SELECT id FROM users " +
+             "WHERE email = '" + email + "' " +
+             "AND password = '" + password + "'";
 
----
+ResultSet rs = stmt.executeQuery(sql);
+if (rs.next()) {
+    // valid login!
+}
+```
 
-# Why PreparedStatement Exists
+For a normal user typing `alice@example.com` / `secret123`, the SQL is:
 
-Building queries using string concatenation is:
-# dangerous
+```sql
+SELECT id FROM users WHERE email = 'alice@example.com' AND password = 'secret123'
+```
 
-Example:
+Fine. Now an attacker types `email = anything' OR '1'='1` and any password. The SQL becomes:
 
-String query =
-"SELECT * FROM users WHERE name='"
-+ userInput + "'";
+```sql
+SELECT id FROM users WHERE email = 'anything' OR '1'='1' AND password = '...'
+```
 
-Very important backend-security concept.
+`'1'='1'` is always true. Combined with `OR`, the WHERE clause matches **every user in the table**. The query returns the first one. **The attacker is now logged in as someone — usually the first user in the database, often the admin.**
 
----
-
-# What is SQL Injection?
-
-SQL Injection means:
-# malicious SQL manipulation
-
-Attackers inject:
-# harmful SQL input
-
-Very important production-security topic.
+That's SQL injection. The fix is simple. Let's see it.
 
 ---
 
-# SQL Injection Example
+## The fix: PreparedStatement with parameters
 
-Unsafe input:
+```java
+String sql = "SELECT id FROM users WHERE email = ? AND password = ?";
 
-' OR '1'='1
+try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    ps.setString(1, email);
+    ps.setString(2, password);
+    try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+            // valid login
+        }
+    }
+}
+```
 
-May manipulate queries and bypass:
-- authentication
-- authorization
-- validation
+Now if the attacker submits the same evil email `anything' OR '1'='1`, here's what happens:
 
-Very important backend-security awareness.
+1. The SQL string sent to the database is *literally* `SELECT id FROM users WHERE email = ? AND password = ?`. Untouched.
+2. The parameters are sent **separately** as data, not as SQL.
+3. The database treats the attacker's string as the *literal value to match against*. It looks for a user whose email is the string `anything' OR '1'='1`. No such user exists. Login fails.
 
----
-
-# Why SQL Injection is Dangerous
-
-SQL injection may cause:
-- data leaks
-- unauthorized access
-- database corruption
-- account compromise
-
-Very important production-engineering topic.
-
----
-
-# Parameterized Query
-
-PreparedStatement uses:
-# placeholders
-
-Example:
-
-SELECT * FROM users
-WHERE email = ?
-
-Very important secure-querying foundation.
+The attack is *structurally impossible* with PreparedStatement. There's no string concatenation for an attacker to break out of.
 
 ---
 
-# PreparedStatement Workflow
+## Why this works (the protocol-level reason)
 
-Typical workflow:
+When you `executeUpdate` a plain `Statement`, the entire SQL text is sent to the database, which parses it into a plan. Any quote-breaking trickery in the input becomes part of the SQL.
 
-Create PreparedStatement
-↓
-Set Parameters
-↓
-Execute Query
-↓
-Process Result
+When you `executeQuery` a `PreparedStatement`, two things happen:
 
-Very important persistence-security workflow.
+1. The SQL template (with `?` placeholders) is sent and **parsed first**. The plan is fixed.
+2. Parameters are sent separately, as typed values. They never get parsed as SQL; they only get *bound* to the placeholders in the existing plan.
+
+The parser never sees the attacker's data, so the attacker has nothing to inject into. Injection is impossible at the protocol level.
 
 ---
 
-# Why PreparedStatement is Safe
+## What if I "escape" the input myself?
 
-PreparedStatement separates:
-# SQL logic
-and
-# user input
+You can't. Or rather, you almost certainly will get it wrong.
 
-Database treats input as:
-# data
-NOT:
-# executable SQL
+People hand-write escaping (replace `'` with `''`, strip semicolons, etc.) thinking they're safe. They aren't:
 
-Very important backend-security concept.
+- Different databases escape differently.
+- Different *contexts* within SQL escape differently (string vs. identifier vs. comment).
+- Unicode and encoding tricks bypass naïve escapers.
+- "Looks safe" lists like "strip semicolons" miss every modern attack vector.
 
----
-
-# Performance Benefits
-
-PreparedStatement also improves:
-- query reuse
-- execution efficiency
-- database optimization
-
-Very important backend-performance awareness.
+**The only correct fix is PreparedStatement.** Don't hand-roll escaping. The database driver knows how to handle every type for every database it ships with. Trust it.
 
 ---
 
-# Backend Engineering Connection
+## When parameters can't help: dynamic columns/tables
 
-Spring Boot systems heavily depend on:
-- parameterized queries
-- secure persistence workflows
-- safe authentication queries
-- injection prevention
+`?` placeholders only bind **values** — strings, numbers, dates. They cannot bind **identifiers** (column names, table names, ORDER BY direction).
 
-Very important backend engineering mindset.
+```java
+// This DOES NOT work — `?` cannot be a column name.
+String sql = "SELECT * FROM users ORDER BY ?";
+ps.setString(1, "email");
+// Error: invalid SQL.
+```
 
----
+If you genuinely need a dynamic identifier (e.g., user picks which column to sort by), you can't use a parameter. So you have to validate against an allow-list:
 
-# Real-World Backend Examples
+```java
+String userInput = request.getParameter("sortBy");
+Set<String> allowed = Set.of("id", "name", "email", "created_at");
+if (!allowed.contains(userInput)) {
+    throw new IllegalArgumentException("invalid sort column");
+}
+String sql = "SELECT * FROM users ORDER BY " + userInput;
+```
 
-Examples:
-- login systems
-- payment systems
-- admin panels
-- user registration
-- search systems
-
-All fundamentally require:
-# secure query execution
-
-Very important backend engineering awareness.
+The allow-list ensures only known-safe strings reach the SQL. **This is the only acceptable string-concatenation pattern in SQL.** And even here you should treat it nervously — try to design APIs so users pick sort options from a known list (e.g. an enum), not arbitrary strings.
 
 ---
 
-# Production Importance
+## Other places injection hides
 
-Poor query handling may cause:
-- severe security breaches
-- database compromise
-- production outages
-- customer-data leaks
+SQL injection isn't only in login forms. Watch for:
 
-Very important production-engineering topic.
+- Search filters that build dynamic WHERE clauses
+- Reporting tools that take user-typed criteria
+- Admin tools that "let you run any SQL" — still vulnerable to higher-level abuse
+- ORM string-template features (e.g. JPQL/HQL injection — yes, ORMs aren't automatically safe if you use their string-concatenation features)
 
----
-
-# Important Engineering Lesson
-
-Good backend engineering requires:
-# security-first persistence mindset
-
-NOT:
-# blindly concatenating queries
-
-Very important backend engineering mindset.
+The mental model: **anywhere user input becomes part of a query string, you have potential injection.** Anywhere it becomes a *parameter*, you don't.
 
 ---
 
-# Industry Relevance
+## Performance bonus
 
-Modern backend systems fundamentally rely on:
-- secure querying
-- parameterized SQL
-- injection prevention
-- scalable persistence security
-- reliable authentication workflows
+PreparedStatement isn't only safer — it's often faster. The database parses and plans the query *once* when you prepare it. Each subsequent execution skips that work, just binding new parameters and running.
 
-PreparedStatement is foundational for secure backend engineering.
+For a query you run thousands of times (typical in a web app), this is a real difference. The safer pattern is also the faster pattern.
+
+---
+
+## A defensive habit
+
+When you write any SQL in Java, before you finish, ask:
+
+> "Where does the data in this query come from?"
+
+If any part of the query *string* (not parameter) comes from outside your code — request parameter, header, cookie, file, anything — stop and rewrite it as a parameterized PreparedStatement or validate against an allow-list. Make this a reflex.
+
+---
+
+## Code examples
+
+1. `StringConcatVulnerable.java` — login form with string concatenation. Looks innocent.
+2. `SqlInjectionExploit.java` — same code, attacker input, login bypass demonstrated.
+3. `PreparedStatementSafe.java` — fixed. Same attacker input now fails (correctly).
+4. `MultipleParameters.java` — binding strings, numbers, and dates together.
+5. `DynamicSqlSafely.java` — when the column name itself is user-controlled. Allow-list pattern.
+
+**Run them in order.** The injection example is real — you'll see it work. The fix is real — you'll see it not work. That contrast is the lesson.
+
+---
+
+## Try this yourself
+
+1. In `SqlInjectionExploit.java`, try different attacker inputs. `'; DROP TABLE users; --` is the classic XKCD attack — does H2 allow stacked statements?
+2. In `PreparedStatementSafe.java`, observe that the SAME attacker input that worked in 02 now returns "login failed."
+3. In `DynamicSqlSafely.java`, remove the allow-list check. Construct a malicious input that bypasses the missing check.
+
+---
+
+## Self-check
+
+1. In one sentence, why is `PreparedStatement` immune to SQL injection at a protocol level?
+2. You need a query that lets the user choose the ORDER BY column. Why can't a `?` placeholder do this, and what's the safe alternative?
+3. Your teammate wrote a query that "escapes the apostrophe" themselves and asks if it's safe now. What's your reply?
