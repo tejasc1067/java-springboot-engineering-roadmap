@@ -1,241 +1,121 @@
-# Introduction to Databases
+# 01 — Introduction to Databases
 
-This topic focuses on:
-# understanding actual database systems
+Topic 00 made the case for why databases exist. This topic introduces the actual vocabulary you'll use for the rest of the module.
 
-In the previous topic, we learned:
-# why databases exist
-
-Now we understand:
-# what databases actually are
-
-Very important backend engineering progression.
+No code yet. The terms here are foundational — every later topic assumes you know them.
 
 ---
 
-# What is a Database?
+## Database vs. DBMS
 
-A database is:
-# organized collection of data
+These are two different things and confusing them will trip you up later.
 
-Used for:
-- storing
-- retrieving
-- updating
-- managing data efficiently
+- **Database** = the data itself plus the structure that organizes it. The thing you query.
+- **DBMS** (Database Management System) = the program that runs the database. The thing you talk to.
 
-Very important backend engineering foundation.
+So when someone says "PostgreSQL is a database," they're being loose. PostgreSQL is technically a DBMS. The actual database is the collection of tables you create inside it (e.g., the `appdb` database that holds your `users` and `orders` tables).
 
----
+In practice everyone says "database" for both. Just know the distinction exists.
 
-# What is DBMS?
+**Common DBMSes you'll see in backend jobs:**
 
-DBMS means:
-# Database Management System
-
-Software used to:
-- manage databases
-- store data
-- query data
-- maintain consistency
-- handle concurrency
-
-Very important backend engineering concept.
+- **PostgreSQL** — modern default for new projects. Free, open source, very capable.
+- **MySQL** — extremely common, especially in older systems and WordPress-adjacent stacks.
+- **SQLite** — embedded, runs as part of your app, not a separate server. Used in mobile apps and small tools.
+- **H2** — in-memory Java database. Used heavily in development and tests. **This is what we'll use in this module.**
+- **Oracle, SQL Server** — enterprise. You'll meet them in banks, governments, big corps.
 
 ---
 
-# Popular DBMS Examples
+## The vocabulary of a relational database
 
-Examples:
-- PostgreSQL
-- MySQL
-- Oracle
-- SQL Server
+A relational database organizes data into **tables**. A table looks like a spreadsheet:
 
-Very important backend ecosystem awareness.
+```
+users table
 
----
++----+------------+----------------------+
+| id | name       | email                |
++----+------------+----------------------+
+|  1 | Alice      | alice@example.com    |
+|  2 | Bob        | bob@example.com      |
+|  3 | Carol      | carol@example.com    |
++----+------------+----------------------+
+```
 
-# Database Components
+- **Table** = the whole grid (here: `users`).
+- **Row** (also called a **record**) = one horizontal line. One row = one user.
+- **Column** (also called a **field** or **attribute**) = one vertical line. Here: `id`, `name`, `email`.
+- **Schema** = the structure: which tables exist, what columns each has, what types those columns are, what the rules are.
 
-Main database components:
-- tables
-- rows
-- columns
-- relationships
-- constraints
-
-Very important relational-database foundation.
-
----
-
-# Tables
-
-Databases organize data into:
-# tables
-
-Examples:
-- Users Table
-- Orders Table
-- Products Table
-
-Very important relational modeling concept.
+Schema is the **definition**. Rows are the **data**. You define the schema once (with `CREATE TABLE`), then insert/update/delete rows over the life of the app.
 
 ---
 
-# Rows
+## CRUD: the four operations
 
-Each row represents:
-# single record
+Every database operation you'll do for the rest of your career falls into one of four buckets:
 
-Example:
+| Op | SQL keyword | What it does |
+|----|-------------|--------------|
+| **C**reate | `INSERT` | Adds a new row |
+| **R**ead | `SELECT` | Fetches existing rows |
+| **U**pdate | `UPDATE` | Modifies existing rows |
+| **D**elete | `DELETE` | Removes rows |
 
-User:
-ID = 1
-Name = Tejas
+That's it. Almost every REST API endpoint in your future maps to one of these:
 
-Very important data-storage understanding.
+```
+POST   /users         → INSERT
+GET    /users/42      → SELECT WHERE id = 42
+PUT    /users/42      → UPDATE WHERE id = 42
+DELETE /users/42      → DELETE WHERE id = 42
+```
 
----
-
-# Columns
-
-Columns represent:
-# attributes/properties
-
-Examples:
-- id
-- name
-- email
-- phone
-
-Very important schema foundation.
+When people say "build a CRUD app," they mean an app whose backend mostly translates HTTP requests to one of these four operations. **Most backend code is, fundamentally, CRUD plus some business rules.**
 
 ---
 
-# Records
+## What makes it "relational"
 
-Record means:
-# complete row of data
+The word "relational" doesn't mean "tables are related to each other" (though they often are). It comes from *relational algebra*, a 1970 mathematical model. Practically, it means:
 
-Very important database terminology.
+1. Data lives in tables (called **relations** in the math).
+2. Tables can reference each other by ID (foreign keys — covered in topic 03).
+3. You query the data with **declarative** SQL: *what* you want, not *how* to get it. The database figures out the *how*.
 
----
+That last point matters. In Java you write:
 
-# Schema
+```java
+List<User> result = new ArrayList<>();
+for (User u : users) {
+    if (u.age >= 18) result.add(u);
+}
+```
 
-Schema defines:
-# database structure
+You're telling the program *how* to filter, step by step.
 
-Includes:
-- tables
-- columns
-- relationships
-- constraints
+In SQL you write:
 
-Very important backend persistence concept.
+```sql
+SELECT * FROM users WHERE age >= 18;
+```
 
----
-
-# Relational Database Overview
-
-Relational databases:
-# organize data into related tables
-
-Example:
-
-Users
-↕
-Orders
-
-Very important backend engineering foundation.
+You're declaring *what* you want. The database decides how to find it efficiently — using an index, scanning the table, whatever's fastest. **That's the relational model's superpower.**
 
 ---
 
-# CRUD Operations
+## Common confusions
 
-Core database operations:
-- CREATE
-- READ
-- UPDATE
-- DELETE
-
-Almost every backend API eventually performs:
-# CRUD operations
-
-Very important backend persistence foundation.
+- **"Database = MySQL"** — no, MySQL is a DBMS. A MySQL installation can host many databases.
+- **"Schema and database are the same thing"** — in PostgreSQL they're different (a database contains schemas which contain tables); in MySQL they're synonyms. Just know it varies.
+- **"Row and record are different"** — they're synonyms.
+- **"NoSQL means no SQL"** — historically yes, now most NoSQL systems have SQL-like query languages too. It really means "not relational."
 
 ---
 
-# Backend Engineering Connection
+## Self-check
 
-Backend applications constantly:
-- store data
-- fetch data
-- update data
-- delete data
-
-Very important persistence workflow awareness.
-
----
-
-# Real-World Backend Examples
-
-Examples:
-- user registration
-- login systems
-- order systems
-- payment systems
-- inventory systems
-
-All heavily depend on:
-# database operations
-
-Very important backend engineering awareness.
-
----
-
-# Database Consistency Importance
-
-Databases help maintain:
-# reliable consistent state
-
-Very important transactional-system foundation.
-
----
-
-# Databases and Scalability
-
-As applications grow:
-- data increases
-- requests increase
-- concurrent users increase
-
-Databases must scale efficiently.
-
-Very important production awareness.
-
----
-
-# Important Engineering Lesson
-
-Backend systems fundamentally depend on:
-# persistence workflows
-
-Without databases:
-backend systems cannot reliably operate.
-
-Very important engineering mindset.
-
----
-
-# Industry Relevance
-
-Modern backend systems fundamentally rely on:
-- structured persistence
-- relational databases
-- CRUD workflows
-- scalable querying
-- transactional consistency
-
-Database systems are foundational for backend engineering.
+1. What's the difference between a database and a DBMS? Give an example of each.
+2. A REST endpoint `GET /products/15` is most likely doing which CRUD operation in SQL?
+3. In what sense is SQL "declarative"? Give one example contrasting it with imperative code.
