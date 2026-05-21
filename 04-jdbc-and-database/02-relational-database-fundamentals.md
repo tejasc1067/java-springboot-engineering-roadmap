@@ -1,241 +1,164 @@
-# Relational Database Fundamentals
+# 02 — Relational Database Fundamentals
 
-This topic focuses on:
-# relational database foundations
+You know what tables, rows, and columns are (topic 01). Now: how tables connect to each other, and why "relational" thinking is different from "list of objects" thinking.
 
-Relational databases are one of the most important concepts in backend engineering.
-
-They become foundational for:
-- SQL
-- joins
-- transactions
-- JDBC
-- JPA/Hibernate
-- Spring Data JPA
-- backend persistence engineering
-
-Very important backend engineering topic.
+This is the mental model JPA, Hibernate, and Spring Data JPA all assume you have. Getting it solid here saves months later.
 
 ---
 
-# What is a Relational Database?
+## Why one big table doesn't work
 
-A relational database:
-# stores data in related tables
+Imagine an orders table where each row stores everything:
 
-Examples:
-- Users Table
-- Orders Table
-- Products Table
+```
+orders (the wrong way)
 
-Tables are connected using:
-# relationships
++----+-------------+-------------------+----------+----------+----------+
+| id | customer    | customer_email    | product  | price    | quantity |
++----+-------------+-------------------+----------+----------+----------+
+|  1 | Alice       | alice@example.com | Laptop   | 1200.00  | 1        |
+|  2 | Alice       | alice@example.com | Mouse    | 25.00    | 2        |
+|  3 | Bob         | bob@example.com   | Keyboard | 80.00    | 1        |
+|  4 | Alice       | alice@x.com       | Cable    | 10.00    | 3        |
++----+-------------+-------------------+----------+----------+----------+
+```
 
-Very important persistence foundation.
+Look at row 4. Alice's email changed (she updated it somewhere), but only on this row. Now `customer = 'Alice'` has two different emails depending on which row you read.
 
----
+This is **data duplication causing inconsistency**. The same fact ("Alice's email is X") is stored in many places, and they can drift apart. Multiply by millions of rows and your reports start lying to you.
 
-# Why Relational Databases Matter
-
-Backend systems require:
-- structured data
-- consistency
-- relationships
-- transactions
-- reliable querying
-
-Relational databases solve these efficiently.
-
-Very important backend engineering concept.
+The fix: split into separate tables that *reference* each other.
 
 ---
 
-# Relational Model
+## The same data, modeled relationally
 
-The relational model organizes:
-# data into tables with relationships
+```
+customers
++----+-------+-------------------+
+| id | name  | email             |
++----+-------+-------------------+
+|  1 | Alice | alice@example.com |
+|  2 | Bob   | bob@example.com   |
++----+-------+-------------------+
 
-Each table represents:
-# entity
+products
++----+-----------+--------+
+| id | name      | price  |
++----+-----------+--------+
+| 10 | Laptop    | 1200.0 |
+| 11 | Mouse     |   25.0 |
+| 12 | Keyboard  |   80.0 |
+| 13 | Cable     |   10.0 |
++----+-----------+--------+
 
-Examples:
-- Users
-- Orders
-- Payments
-- Products
+orders
++----+-------------+------------+----------+
+| id | customer_id | product_id | quantity |
++----+-------------+------------+----------+
+|  1 |           1 |         10 |        1 |
+|  2 |           1 |         11 |        2 |
+|  3 |           2 |         12 |        1 |
+|  4 |           1 |         13 |        3 |
++----+-------------+------------+----------+
+```
 
-Very important database architecture foundation.
+Now Alice's email lives in exactly **one place**: `customers.id = 1`. The orders table just references her by ID. Update her email once, every order automatically reflects the new value.
 
----
-
-# Entity Thinking
-
-An entity represents:
-# real-world object/data
-
-Examples:
-- user
-- order
-- product
-- payment
-
-Very important backend modeling mindset.
-
----
-
-# Table Relationships
-
-Tables are connected through:
-# relationships
-
-Example:
-
-User
-↕
-Order
-
-Very important relational-database foundation.
+The `customer_id` column in `orders` is a **foreign key** — it points to a row in another table. (Foreign keys get their own topic next.)
 
 ---
 
-# One-to-One Relationship
+## The three kinds of relationships
 
-One record relates to:
-# one record
+Every relationship between two tables falls into one of three patterns. Knowing them is half of database design.
 
-Example:
+### One-to-one (1:1)
 
-User
-↔
-Passport
+Each row in table A matches exactly one row in table B, and vice versa.
 
-Very important relational modeling concept.
+```
+users  ←→  user_profiles
+(one user has one profile, one profile belongs to one user)
+```
 
----
+Rare in practice. Usually you'd just make them one table. Common reasons to split:
 
-# One-to-Many Relationship
+- One side is huge/optional (e.g. `users` + `user_kyc_documents` where most users haven't uploaded docs).
+- Performance — wide rows get split so common reads don't pull in rarely-needed columns.
 
-One record relates to:
-# multiple records
+### One-to-many (1:N)
 
-Example:
+Each row in table A matches many rows in table B. Each row in table B matches exactly one row in A.
 
-User
-↕
-Orders
+```
+customers  ←→  orders
+(one customer has many orders, each order has one customer)
+```
 
-One user can place many orders.
+This is the most common relationship by a mile. ~70% of relationships in a typical schema are 1:N.
 
-Very important backend engineering relationship.
+**How it's stored:** the "many" side has a foreign key to the "one" side. `orders.customer_id → customers.id`.
 
----
+### Many-to-many (M:N)
 
-# Many-to-Many Relationship
+Rows in A can match many in B, and rows in B can match many in A.
 
-Multiple records relate to:
-# multiple records
+```
+students  ←→  courses
+(one student takes many courses, one course has many students)
+```
 
-Example:
+**You can't store this in two tables.** You need a third — a **junction table** (also called a join table or bridge table):
 
-Students
-↔
-Courses
+```
+students                courses                 enrollments
++----+-------+          +----+----------+       +------------+-----------+
+| id | name  |          | id | title    |       | student_id | course_id |
++----+-------+          +----+----------+       +------------+-----------+
+|  1 | Alice |          | 10 | Math     |       |          1 |        10 |
+|  2 | Bob   |          | 11 | Physics  |       |          1 |        11 |
+|  3 | Carol |          | 12 | Biology  |       |          2 |        10 |
++----+-------+          +----+----------+       |          3 |        12 |
+                                                +------------+-----------+
+```
 
-Very important relational-modeling concept.
-
----
-
-# Relational Integrity
-
-Relational databases maintain:
-# relationship consistency
-
-This prevents:
-- invalid references
-- inconsistent relationships
-- orphan records
-
-Very important backend persistence concept.
+The junction table holds the relationship. Each row says "this student is in this course." Add a new enrollment = add a row. Cancel one = delete a row.
 
 ---
 
-# Structured Querying
+## Why relational thinking is different from object thinking
 
-Relational databases use:
-# SQL
+In Java you might write:
 
-This becomes important later during:
-- joins
-- filtering
-- aggregation
-- transactions
+```java
+class Customer {
+    String name;
+    List<Order> orders;  // a customer owns a list of orders
+}
+class Order {
+    Product product;     // an order has a product reference
+}
+```
 
-Very important backend persistence foundation.
+The customer *contains* the orders. The order *contains* the product.
 
----
+In a relational database, **nothing contains anything**. Every table is flat. Relationships are inferred from foreign keys. To get "Alice's orders," you query the orders table where `customer_id = 1`.
 
-# Transactional Reliability
-
-Relational databases heavily support:
-# transactions
-
-Critical for:
-- banking systems
-- payment systems
-- order systems
-
-Very important backend engineering foundation.
+This is why ORMs (like Hibernate) exist: they translate between "object graph" thinking and "flat tables with foreign keys" thinking. When you learn JPA later, you'll see annotations like `@OneToMany` and `@ManyToMany` — they're just declaring which of these three patterns you're using.
 
 ---
 
-# Backend Engineering Connection
+## Common confusions
 
-Spring Boot backend systems heavily depend on:
-- relational modeling
-- entity relationships
-- transactions
-- relational persistence
-
-Very important persistence-engineering mindset.
+- **"Tables 'connected' by relationships"** — they're not physically connected. The 'relationship' is just a foreign key column. The database has no special data structure storing the link.
+- **"Many-to-many needs only two tables"** — no. You always need three (the junction table).
+- **"The 'many' side has the foreign key"** — yes, always. Memorize: *the many points to the one*.
 
 ---
 
-# Real-World Backend Examples
+## Self-check
 
-Examples:
-- users and orders
-- customers and payments
-- products and inventory
-- students and courses
-
-All require:
-# relational modeling
-
-Very important backend engineering awareness.
-
----
-
-# Important Engineering Lesson
-
-Good backend engineering requires:
-# good relational modeling
-
-Poor relationships create:
-- query complexity
-- scalability issues
-- maintenance problems
-
-Very important engineering awareness.
-
----
-
-# Industry Relevance
-
-Modern backend systems fundamentally rely on:
-- relational persistence
-- transactional consistency
-- structured relationships
-- scalable querying
-- backend entity modeling
-
-Relational databases are foundational for backend engineering.
+1. A `posts` table and a `comments` table — which side holds the foreign key, and what's the relationship called?
+2. Why does many-to-many require a third table? What would go wrong if you tried to do it with two?
+3. Storing a customer's email on every order row leads to a specific kind of bug. Name it and explain how splitting into two tables fixes it.

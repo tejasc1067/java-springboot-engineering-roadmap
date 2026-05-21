@@ -1,231 +1,204 @@
-# Primary Key, Foreign Key and Constraints
+# 03 — Primary Keys, Foreign Keys, and Constraints
 
-This topic focuses on:
-# keys and constraints in relational databases
+These are the rules the database enforces about what your data is allowed to look like. They're not optional polish — without them, "the data" becomes "whatever junk anyone managed to write."
 
-These concepts are foundational for:
-- relational integrity
-- consistency
-- joins
-- transactions
-- JPA/Hibernate mappings
-- backend persistence engineering
-
-Very important backend engineering topic.
+The fundamental principle: **enforce invariants at the database, not in the application.** Application code changes, gets bypassed, has bugs. The database is the one place every write must go through. Rules belong there.
 
 ---
 
-# What is a Primary Key?
+## Primary key
 
-Primary key:
-# uniquely identifies each row
+A **primary key** is a column (or combination of columns) that uniquely identifies each row in a table.
 
-Examples:
-- user_id
-- order_id
-- product_id
+Required properties:
 
-A primary key must be:
-- unique
-- not null
+1. **Unique** — no two rows can have the same value.
+2. **Not null** — every row must have one.
+3. **Stable** — the value should not change over the lifetime of the row.
 
-Very important relational-database foundation.
+```sql
+CREATE TABLE users (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(200)
+);
+```
 
----
+`id` is the primary key. Two rows with `id = 1` cannot exist — the database will reject the second insert.
 
-# Why Primary Keys Matter
+### Why every table needs one
 
-Without primary keys:
-- duplicate records occur
-- relationships break
-- querying becomes unreliable
+Without a primary key, you can't reliably:
 
-Very important backend persistence concept.
+- Update a single row (`UPDATE users SET name = 'X' WHERE ???`)
+- Delete a single row
+- Reference the row from another table (foreign keys point to primary keys)
+- Trust that "your row" is actually unique — you might have duplicates and not know it
 
----
+Tables without a primary key are almost always a bug. The few exceptions (high-volume log/event tables) are advanced cases.
 
-# Primary Key Example
+### Natural vs. surrogate keys
 
-Users Table
+Two schools of thought:
 
-user_id | name
-1       | Tejas
-2       | Rahul
+- **Natural key** — use an existing meaningful value, e.g. `email` for users, `isbn` for books.
+- **Surrogate key** — use an artificial value with no business meaning, e.g. an auto-incrementing `id`.
 
-Each row is uniquely identifiable.
+Surrogate keys win in practice. Why: business values change. Emails change. ISBNs get corrected. If you keyed everything off `email` and Alice updates her email, every foreign key everywhere has to be updated too. With a surrogate `id`, the email changes and nothing else has to.
 
----
+**Default to surrogate keys.** Use natural keys only when you have a specific reason.
 
-# What is a Foreign Key?
+### Auto-incrementing keys
 
-Foreign key:
-# connects tables together
+You don't usually pick primary key values by hand. The database generates them:
 
-Example:
+```sql
+-- H2, PostgreSQL syntax
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
+);
 
-Orders Table
+INSERT INTO users (name) VALUES ('Alice');  -- id becomes 1
+INSERT INTO users (name) VALUES ('Bob');    -- id becomes 2
+```
 
-order_id | user_id
-101      | 1
-
-Here:
-user_id
-
-references:
-Users.user_id
-
-Very important relational-modeling concept.
+The database tracks the next available number. You insert without specifying `id`, and it assigns one.
 
 ---
 
-# Why Foreign Keys Matter
+## Foreign key
 
-Foreign keys maintain:
-# relational integrity
+A **foreign key** is a column that references the primary key of another table. It says "this value must match an existing row in that other table."
 
-They prevent:
-- invalid references
-- orphan records
-- inconsistent relationships
+```sql
+CREATE TABLE customers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
+);
 
-Very important backend engineering foundation.
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
+    amount DECIMAL(10, 2),
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+```
 
----
+The `FOREIGN KEY` line tells the database: every value in `orders.customer_id` must correspond to an actual row in `customers.id`.
 
-# Relational Integrity
+### What this prevents
 
-Relational integrity means:
-# relationships remain valid and consistent
+Without the foreign key:
 
-Very important transactional-system foundation.
+```sql
+INSERT INTO orders (customer_id, amount) VALUES (9999, 50.00);
+```
 
----
+This inserts an order for customer 9999. Customer 9999 doesn't exist. The order is now an **orphan** — it refers to a customer that isn't there. Your application code that does `SELECT customer.name FROM customers WHERE id = 9999` returns nothing, and downstream code probably crashes or shows "null" to a user.
 
-# Unique Constraint
+With the foreign key, the database rejects the insert. The orphan can never exist.
 
-Unique constraint ensures:
-# duplicate values are not allowed
+### Cascading deletes
 
-Examples:
-- email
-- username
+What happens when you delete a customer who has orders? Three options:
 
-Very important backend consistency concept.
+```sql
+FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE RESTRICT
+-- Refuse to delete the customer if they have any orders. Safe default.
 
----
+FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+-- Automatically delete all their orders too. Dangerous — easy to lose data.
 
-# NOT NULL Constraint
+FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL
+-- Set the customer_id to NULL on those orders. Order survives, just orphaned.
+```
 
-NOT NULL constraint ensures:
-# value must exist
-
-Examples:
-- name
-- email
-- password
-
-Very important data-consistency concept.
-
----
-
-# Default Constraint
-
-Default constraint provides:
-# automatic default value
-
-Example:
-status = ACTIVE
-
-Very important backend workflow convenience.
+`RESTRICT` is the safest default. Use `CASCADE` only when you're sure the child rows are *meaningless* without the parent (e.g. a user's session tokens — deleting the user should delete their sessions).
 
 ---
 
-# Check Constraint
+## Other constraints
 
-Check constraint validates:
-# allowed values and rules
+### NOT NULL
 
-Example:
-age >= 18
+A column that cannot be empty.
 
-Very important data-validation awareness.
+```sql
+email VARCHAR(200) NOT NULL
+```
 
----
+Use it for every column that doesn't have a legitimate "no value" meaning. If a `users.email` is nullable, you'll spend the rest of your career writing `if (email != null)` checks. Make it required at the database level.
 
-# Backend Engineering Connection
+### UNIQUE
 
-Backend systems heavily depend on:
-- valid relationships
-- unique records
-- transactional consistency
-- data integrity
+A column whose values must all be distinct.
 
-Very important persistence-engineering mindset.
+```sql
+email VARCHAR(200) NOT NULL UNIQUE
+```
 
----
+Now no two users can have the same email. Try to insert a duplicate and the database rejects it.
 
-# Real-World Backend Examples
+A primary key is implicitly `NOT NULL UNIQUE`. The `UNIQUE` constraint is for *other* columns that should also be distinct but aren't the primary key.
 
-Examples:
-- unique email in user system
-- valid order-user relationships
-- non-null passwords
-- valid payment status
+### CHECK
 
-All depend on:
-# constraints
+A custom rule the value must satisfy.
 
-Very important backend engineering awareness.
+```sql
+CREATE TABLE products (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    price DECIMAL(10, 2),
+    CHECK (price >= 0)
+);
+```
 
----
+Now `INSERT INTO products VALUES (1, 'X', -5.00)` will be rejected. Negative prices were impossible at the database level.
 
-# Production Importance
+### DEFAULT
 
-Constraints help prevent:
-- corrupted data
-- invalid relationships
-- inconsistent transactions
-- broken backend workflows
+A value to use when the insert doesn't specify one.
 
-Very important production-engineering topic.
+```sql
+status VARCHAR(20) DEFAULT 'PENDING'
+```
 
----
-
-# JPA and Hibernate Connection
-
-Later in:
-- Hibernate
-- Spring Data JPA
-
-you will map:
-- primary keys
-- foreign keys
-- relationships
-- constraints
-
-Very important learning progression.
+`INSERT INTO orders (customer_id, amount) VALUES (1, 100)` gives the new order `status = 'PENDING'` without you having to mention it.
 
 ---
 
-# Important Engineering Lesson
+## Why this matters: the rule belongs at the bottom
 
-Good backend engineering requires:
-# strong data integrity
+Imagine your `users.email` is *not* `UNIQUE` at the database level. Your Java code checks for duplicates before inserting:
 
-Backend consistency starts from:
-# proper database constraints
+```java
+if (userRepository.findByEmail(email) == null) {
+    userRepository.save(new User(email));
+}
+```
 
-Very important engineering mindset.
+This works… **most of the time**. Now two users sign up with the same email at the exact same millisecond. Both Java threads run the check at the same time. Both see "no existing user." Both insert. **Two users now exist with the same email.** The application thought it had a uniqueness rule. It didn't.
+
+A `UNIQUE` constraint at the database makes this impossible. Both inserts can't both succeed — one is guaranteed to fail.
+
+**Lesson:** application-level checks are convenience. Database-level constraints are guarantees. You need both, but only one is non-negotiable.
 
 ---
 
-# Industry Relevance
+## Common pitfalls
 
-Modern backend systems fundamentally rely on:
-- relational integrity
-- valid relationships
-- transactional consistency
-- reliable persistence
-- constraint-driven validation
+- **Table with no primary key.** Almost always a bug. Add one.
+- **Using application-generated IDs (e.g. UUIDs) without making them PK.** UUIDs work fine as primary keys; just declare them as such.
+- **Foreign key declared but referenced column isn't unique/primary.** Some databases let you do this; don't. Foreign keys should always point to a PK or unique column.
+- **No `NOT NULL` on columns that obviously can't be null.** A `users.created_at` that's nullable is a sign nobody thought about it.
+- **`ON DELETE CASCADE` everywhere.** One accidental `DELETE FROM customers` and you lose every order in the system. Default to `RESTRICT` and opt in to `CASCADE` only where it's clearly correct.
 
-Keys and constraints are foundational for backend engineering.
+---
+
+## Self-check
+
+1. You're designing a `payments` table. What columns would you put `NOT NULL` on, and which would be the primary key? Why?
+2. A junior dev removes a `UNIQUE` constraint to "fix a bug" where the insert was failing. What's likely actually going wrong in their code, and what's the danger of removing the constraint?
+3. Explain in one sentence why a `CHECK (price >= 0)` constraint is better than a Java `if (price < 0) throw ...` check at the API layer. (Hint: you need both, but for different reasons.)
