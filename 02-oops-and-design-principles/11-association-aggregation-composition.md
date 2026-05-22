@@ -1,202 +1,201 @@
-# Association, Aggregation, and Composition in Java
+# 11 — Association, Aggregation, Composition
 
-Modern backend systems are built using:
-# object relationships
+Three names for "this class has a relationship with another class," with shades of meaning. The distinction matters when you're modeling a real domain: is the relationship loose, or is the dependent object's lifecycle tied to the parent?
 
-Real-world applications rely heavily on:
-- association
-- aggregation
-- composition
-
-These concepts are very important for:
-- backend architecture
-- entity modeling
-- scalable systems
-- maintainable applications
-
-Modern systems usually prefer:
-# composition over inheritance
-
-Very important engineering principle.
+Same words as topic 02 from module 04 (relational modeling) — the parallel between OOP and database design is not a coincidence.
 
 ---
 
-# 1. What is Association?
+## Association: any "uses" relationship
 
-Association means:
-# one object uses another object
+The loosest form. Class A *uses* class B — usually as a method parameter or short-lived collaborator.
 
-General relationship between objects.
-
-Examples:
-- Customer uses Bank
-- Doctor treats Patient
-- Student studies in College
-
-Objects are connected but independent.
-
----
-
-# 2. Association Characteristics
-
-Association:
-- represents relationship
-- objects remain independent
-- lifecycle is independent
-
-Very common in backend systems.
-
----
-
-# 3. What is Aggregation?
-
-Aggregation is:
-# weak HAS-A relationship
-
-Parent contains child,
-but child may exist independently.
-
-Example:
-
-```text
-Department has Employees
+```java
+class EmailSender {
+    void send(EmailMessage msg) {     // uses an EmailMessage
+        // ...
+    }
+}
 ```
 
-Employees may exist without department.
+`EmailSender` is *associated with* `EmailMessage`. It doesn't own one; it just operates on them. Neither lifecycle depends on the other.
+
+Most "X interacts with Y" relationships in a system are associations. The pattern is so common that "association" by itself is rarely the design choice — it's just *what relationships are*. The interesting distinctions are below.
 
 ---
 
-# 4. Aggregation Characteristics
+## Aggregation: "has-a," but loose
 
-Aggregation:
-- weak ownership
-- child lifecycle independent
-- reusable child objects
+A "whole-part" relationship where the parts can exist independently of the whole.
 
-Very important backend modeling concept.
+```java
+class Library {
+    private List<Book> books;
 
----
+    Library(List<Book> books) {
+        this.books = books;
+    }
+}
 
-# 5. What is Composition?
+class Book {
+    String title;
+}
 
-Composition is:
-# strong HAS-A relationship
+// Books exist on their own.
+Book b1 = new Book(); b1.title = "Dune";
+Book b2 = new Book(); b2.title = "Foundation";
 
-Child lifecycle depends on parent.
-
-Example:
-
-```text
-House has Rooms
+// The library holds them — but they could be moved to another library,
+// sold, lent out, etc. Their existence isn't tied to this Library.
+Library lib = new Library(List.of(b1, b2));
 ```
 
-If house is destroyed,
-rooms are also destroyed.
+If you destroy the `Library` object, `b1` and `b2` still exist. They were passed in from outside; the library doesn't own them.
 
-Very important OOP concept.
-
----
-
-# 6. Composition Characteristics
-
-Composition:
-- strong ownership
-- child lifecycle dependent
-- tighter relationship
-
-Modern backend systems heavily use composition.
+**UML term:** "aggregation" (often drawn with a hollow diamond).
 
 ---
 
-# 7. HAS-A Relationship
+## Composition: "has-a," tight
 
-Aggregation and composition both represent:
-# HAS-A relationship
+A "whole-part" relationship where the parts cannot exist without the whole. The parent **owns** the parts; destroying the parent destroys them.
 
-Examples:
-- Car HAS-A Engine
-- User HAS-A Address
-- Order HAS-A Product
+```java
+class House {
+    private final List<Room> rooms;
 
-Very important modeling principle.
+    House() {
+        // Rooms are CREATED inside the house. They don't exist outside it.
+        this.rooms = List.of(
+            new Room("kitchen"),
+            new Room("bedroom"),
+            new Room("bathroom")
+        );
+    }
+}
 
----
+class Room {
+    private final String name;
+    Room(String name) { this.name = name; }
+}
+```
 
-# 8. Inheritance vs Composition
+The `Room` instances are born and die with the `House`. They aren't shared, they aren't passed in, they aren't accessible to anyone else. The relationship is tight.
 
-## Inheritance
-
-Represents:
-- IS-A relationship
-
-Example:
-Dog IS-A Animal
-
----
-
-## Composition
-
-Represents:
-- HAS-A relationship
-
-Example:
-Car HAS-A Engine
-
-Modern systems usually prefer composition.
+**UML term:** "composition" (filled diamond).
 
 ---
 
-# 9. Why Composition is Preferred?
+## Aggregation vs. composition — the practical test
 
-Composition improves:
-- flexibility
-- loose coupling
-- maintainability
-- scalability
+Ask: **can the part exist independently of the whole, and be transferred to another whole?**
 
-Very important backend engineering lesson.
+- "A Library has Books" — yes, books can be moved between libraries. **Aggregation.**
+- "A House has Rooms" — no, you can't move a room to another house. **Composition.**
+- "An Order has LineItems" — no, line items don't exist outside their order. **Composition.**
+- "A Team has Players" — yes, players get traded. **Aggregation.**
+- "A Person has a Heart" — sort of (transplants). Mostly composition, but the world is messy.
 
----
-
-# 10. Real-World Backend Examples
-
-These relationships are heavily used in:
-- JPA entities
-- Hibernate
-- microservices
-- backend domain models
-
-Examples:
-- Order HAS-A Customer
-- Department HAS-A Employees
-- User HAS-A Address
+The line isn't always crisp. The point is to think clearly about whose responsibility it is to create, destroy, and own the related objects.
 
 ---
 
-# 11. Common Beginner Confusions
+## "Composition over inheritance"
 
-Beginners often:
-- overuse inheritance
-- ignore composition
-- confuse aggregation and composition
+The most repeated piece of OOP design advice. We touched it in topic 04. Here's the fuller picture.
 
-Remember:
+Two ways to reuse a class's behavior in another class:
 
-Aggregation:
-weak ownership.
+```java
+// Inheritance: Manager IS-A Employee
+class Manager extends Employee { ... }
 
-Composition:
-strong ownership.
+// Composition: Manager HAS-A Employee
+class Manager {
+    private final Employee profile;     // a Manager has an Employee profile
+    Manager(Employee profile) { this.profile = profile; }
+}
+```
+
+Inheritance has problems:
+
+- **Tight coupling.** Every change to `Employee`'s public surface ripples to `Manager`.
+- **No flexibility.** A `Manager` is committed to *being* an `Employee` for its entire life. You can't change it.
+- **Multiple inheritance not allowed.** A `Manager` can extend only one class.
+- **Exposes too much surface.** All of `Employee`'s public methods become part of `Manager`'s interface, even ones that don't make sense.
+
+Composition avoids all of these:
+
+- The `Manager` exposes only the methods *it chooses* to expose.
+- The composed `Employee` can be swapped out (e.g. a `MockEmployee` for tests).
+- The `Manager` can compose multiple objects, not just one parent.
+- Coupling is limited to the public methods you actually call.
+
+**Default to composition.** Use inheritance only when the *is-a* relationship is real AND you want the parent's whole interface to be part of the child's.
+
+Spring is built almost entirely on composition (dependency injection wires composed objects together). Spring uses inheritance very sparingly.
 
 ---
 
-# 12. Industry Relevance
+## Practical patterns
 
-Association, aggregation, and composition are foundational for:
-- scalable backend systems
-- enterprise architectures
-- microservices
-- domain-driven design
-- maintainable systems
+**Service composes repository:**
+```java
+class UserService {
+    private final UserRepository repo;    // composition
+    UserService(UserRepository repo) { this.repo = repo; }
+}
+```
 
-Modern backend engineering heavily prefers composition-based design.
+**Controller composes service:**
+```java
+class UserController {
+    private final UserService service;    // composition
+    UserController(UserService service) { this.service = service; }
+}
+```
+
+**Decorator pattern (composition + interface):**
+```java
+class CachingUserRepository implements UserRepository {
+    private final UserRepository delegate;     // wraps another repository
+    private final Cache cache;
+    // adds caching behavior without modifying the wrapped class
+}
+```
+
+These shapes are everywhere in real backend code. They're all composition.
+
+---
+
+## Common pitfalls
+
+- **Pedantically obsessing over aggregation vs. composition.** They blur in real codebases. The bigger question is: *who owns the lifecycle*, and have you been deliberate about it?
+- **Using inheritance to share code with a class that's not a real subtype.** Composition with delegation does this without the inheritance baggage.
+- **Composing too widely.** A class that holds 8 collaborators is doing too much — split it (the **S** in SOLID; topic 14).
+- **Composing through public fields.** Same problem as topic 03 — outside code can replace the collaborator at will. Compose through `final` private fields, set in the constructor.
+
+---
+
+## Code examples
+
+1. `Association.java` — `EmailSender` uses `EmailMessage` as a parameter.
+2. `Aggregation.java` — `Library` aggregates `Book`s passed from outside.
+3. `Composition.java` — `House` creates and owns its `Room`s.
+4. `CompositionOverInheritance.java` — same goal expressed both ways for comparison.
+
+---
+
+## Try this yourself
+
+1. In `Aggregation.java`, transfer a book to a new library. Show that the original library no longer has it, but the book itself is unchanged.
+2. In `Composition.java`, try to expose the internal `Room` list with a getter. Then return an unmodifiable view instead (topic 03 pattern).
+3. In `CompositionOverInheritance.java`, add a method that should be on `Manager` but doesn't make sense to inherit from `Employee`. See how composition lets you control what's exposed.
+
+---
+
+## Self-check
+
+1. Aggregation vs. composition — give one example of each from real life (not from the markdown).
+2. "Composition over inheritance" — name one specific cost of inheritance that composition avoids.
+3. In Spring, a `UserService` field of type `UserRepository` is set via constructor. Is this association, aggregation, or composition? Why?
