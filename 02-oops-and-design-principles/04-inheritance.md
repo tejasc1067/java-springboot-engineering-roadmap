@@ -1,261 +1,196 @@
-# Inheritance in Java
+# 04 — Inheritance
 
-Inheritance is one of the core pillars of Object-Oriented Programming.
+Inheritance lets one class take all the fields and methods of another and add to them. The keyword is `extends`. The relationship is called "subclass extends superclass" or "child extends parent."
 
-Inheritance allows:
-# one class to acquire properties and behavior of another class.
-
-It helps:
-- code reuse
-- hierarchy creation
-- extensibility
-- cleaner architecture
-
-Inheritance is heavily used in:
-- enterprise Java
-- framework design
-- Spring applications
-- exception hierarchies
-
-However:
-inheritance must be used carefully.
-
-Overusing inheritance may create tightly coupled systems.
+It's one of the four OOP pillars, and it's also the one most often misused. Most code that *looks* like it wants inheritance actually wants composition. We'll cover both — and how to tell which you need.
 
 ---
 
-# 1. What is Inheritance?
-
-Inheritance means:
-a child class acquires variables and methods from parent class.
-
-Example:
+## The mechanics
 
 ```java
 class Animal {
+    String name;
 
+    void eat() {
+        System.out.println(name + " is eating");
+    }
 }
 
 class Dog extends Animal {
+    void bark() {
+        System.out.println(name + " is barking");
+    }
+}
 
+Dog d = new Dog();
+d.name = "Rex";
+d.eat();      // inherited from Animal
+d.bark();     // defined on Dog
+```
+
+`Dog` inherits `name` and `eat()` from `Animal` automatically. It also defines `bark()` of its own. A `Dog` is everything an `Animal` is, plus more.
+
+Java supports **single inheritance** only — a class can extend exactly one superclass. (For multiple inheritance of behavior, Java uses interfaces — topic 09.)
+
+---
+
+## Every class extends `Object`
+
+If you don't write `extends X`, you implicitly extend `Object`:
+
+```java
+class Animal { }
+// equivalent to:
+class Animal extends Object { }
+```
+
+That's why every Java object has `toString()`, `equals()`, `hashCode()` — they come from `Object`. (Topic 10 goes into these.)
+
+---
+
+## Constructor chaining: `super(...)`
+
+When you create a subclass instance, the *superclass's* constructor runs first. Java does this for you implicitly if the superclass has a no-arg constructor:
+
+```java
+class Animal {
+    Animal() {
+        System.out.println("Animal constructor");
+    }
+}
+
+class Dog extends Animal {
+    Dog() {
+        System.out.println("Dog constructor");
+    }
+}
+
+new Dog();
+// Output:
+//   Animal constructor
+//   Dog constructor
+```
+
+If the superclass has *only* parameterized constructors, you must call one explicitly with `super(...)`:
+
+```java
+class Animal {
+    String name;
+    Animal(String name) { this.name = name; }
+}
+
+class Dog extends Animal {
+    Dog(String name) {
+        super(name);              // must be first statement; no default ctor exists
+    }
 }
 ```
 
-Here:
-- Animal → parent class
-- Dog → child class
+Constructor chaining is covered in detail in topic 05 (`super` keyword).
 
 ---
 
-# 2. Parent and Child Classes
+## What gets inherited
 
-## Parent Class
-
-Also called:
-- superclass
-- base class
-
-Contains common behavior.
+- **`public` and `protected`** members of the parent — yes.
+- **package-private** members — yes if the subclass is in the same package.
+- **`private`** members — present in memory, but not directly accessible from subclass code. (You'd need a `protected` getter or similar to read them.)
+- **Constructors** — *not* inherited. The subclass must define its own (or get the implicit default).
 
 ---
 
-## Child Class
+## The "is-a" test
 
-Also called:
-- subclass
-- derived class
+Before extending, ask: **"Is a Dog an Animal?"** If yes, inheritance is fine. If no, it's wrong.
 
-Acquires parent behavior and may add new functionality.
+This sounds obvious but is the source of nearly every inheritance disaster. Some examples:
+
+| Relationship | Use inheritance? | Reason |
+|--------------|------------------|--------|
+| Dog **is-a** Animal | yes | Dog truly is a kind of Animal. |
+| SavingsAccount **is-a** Account | yes | Genuine subtype. |
+| Stack **is-a** ArrayList | **no** | Stack isn't "a kind of resizable array." It's *implemented using* one. |
+| Engine **is-a** Car | no | Engine is part of a Car (composition). |
+| HashMap **is-a** Hashtable | sort of, in Java's standard library; widely considered a historical mistake. |
+
+The "Stack extends Vector" pattern in Java's own standard library is the textbook bad-inheritance example. `Stack` inherited every list method, including `add(0, x)`, `remove(index)` — operations that don't make sense for a stack. The class became unfixable.
+
+**Rule of thumb:** if subtyping just to reuse code (not because the *is-a* relationship is real), prefer composition (topic 11).
 
 ---
 
-# 3. extends Keyword
+## The Liskov Substitution Principle (in plain English)
 
-Inheritance is achieved using:
+A subclass should be usable wherever its superclass is expected, without breaking the program. This is the **L** in SOLID (topic 14).
+
+Concretely: if a method expects an `Animal` and you pass a `Dog`, everything that worked with `Animal` should still work with `Dog`. A `Dog` shouldn't suddenly refuse to `eat()`, or `eat()` in a way that violates the parent class's contract.
+
+The famous counterexample: a `Square extends Rectangle`. A `Rectangle` allows setting width and height independently. A `Square` can't (they must stay equal), so setting width on a "square" silently breaks expectations of code that was written against `Rectangle`. The hierarchy is unsound.
+
+If subclassing forces you to violate the parent's contract, the inheritance is wrong. Step back and reconsider — maybe an interface (topic 09), or composition.
+
+---
+
+## Inheritance vs. composition
+
+Two ways to reuse code from another class:
+
+**Inheritance (is-a):**
 
 ```java
-extends
+class Dog extends Animal {
+    // Dog automatically has everything Animal has
+}
 ```
 
-Example:
+**Composition (has-a):**
 
 ```java
-class Dog extends Animal
+class Car {
+    private final Engine engine;       // a Car HAS an Engine
+    Car(Engine engine) { this.engine = engine; }
+    void start() { engine.start(); }   // Car uses Engine's behavior
+}
 ```
 
----
+Composition gives you the same code reuse without the "every subclass automatically gets everything" coupling. You expose only the operations *you* want, even if internally you delegate to another object.
 
-# 4. Why Inheritance is Important?
+**Default to composition.** Use inheritance only when (a) the is-a test passes, and (b) you genuinely want every parent method to be part of the subclass's contract.
 
-Inheritance helps:
-- reduce duplicate code
-- improve reusability
-- create hierarchy
-- simplify maintenance
-
-Very important OOP principle.
+This is one of the most important design heuristics in OOP. Topic 11 goes deeper.
 
 ---
 
-# 5. IS-A Relationship
+## Common pitfalls
 
-Inheritance represents:
-# IS-A relationship
-
-Examples:
-- Dog IS-A Animal
-- Car IS-A Vehicle
-- Manager IS-A Employee
-
-Very important concept.
+- **Inheritance for code reuse.** "I have a method I want to reuse, so I'll extend." Composition does this without the inheritance baggage.
+- **Inheritance hierarchies more than ~3 levels deep.** Hard to reason about. Each level multiplies behavior; subtle bugs hide.
+- **Subclasses that override methods to do "nothing" or "the opposite."** A sign the inheritance relationship is wrong — the parent's contract isn't right for this subclass.
+- **Adding fields to the parent that only some subclasses need.** Every subclass pays for the field. Push the field down to the subclass that actually uses it, or restructure.
 
 ---
 
-# 6. Inherited Members
+## Code examples
 
-Child classes inherit:
-- variables
-- methods
-
-Example:
-
-```java
-displayInfo()
-```
-
-defined in parent class can be reused in child class.
+1. `SimpleInheritance.java` — Animal/Dog, the textbook example.
+2. `InheritanceChain.java` — three levels: Animal → Mammal → Dog.
+3. `ConstructorOrder.java` — prove that superclass constructors run before subclass ones.
+4. `WrongInheritanceBroken.java` — a Stack-like class extending ArrayList; show how inheritance leaks operations that shouldn't exist.
+5. `CompositionFixed.java` — same Stack rebuilt as a class that *contains* an ArrayList instead of being one.
 
 ---
 
-# 7. Types of Inheritance in Java
+## Try this yourself
 
-## Single Inheritance
-
-One child inherits from one parent.
-
----
-
-## Multilevel Inheritance
-
-Inheritance chain across multiple levels.
-
-Example:
-
-```text
-Animal → Dog → Puppy
-```
+1. In `InheritanceChain.java`, add a `Puppy extends Dog` class and override one of its methods. Run and trace the call.
+2. In `WrongInheritanceBroken.java`, call the methods inherited from `ArrayList` that don't make sense for a stack (like `add(0, x)`, `get(0)`). Confirm they exist and corrupt the stack.
+3. In `CompositionFixed.java`, try to use any of those leaky methods — they're not on the composed class.
 
 ---
 
-## Hierarchical Inheritance
+## Self-check
 
-Multiple child classes inherit from same parent.
-
-Example:
-
-```text
-Vehicle → Car
-Vehicle → Bike
-```
-
----
-
-# 8. Multiple Inheritance in Java
-
-Java does NOT support multiple inheritance using classes.
-
-Example not allowed:
-
-```text
-class A
-class B
-class C extends A, B
-```
-
-This avoids ambiguity problems.
-
-Java supports multiple inheritance using interfaces.
-
----
-
-# 9. Constructor Behavior in Inheritance
-
-When child object is created:
-parent constructor executes first.
-
-Very important inheritance behavior.
-
-Later:
-`super()` keyword handles this explicitly.
-
----
-
-# 10. Real-World Backend Examples
-
-Inheritance is used in:
-- framework extension
-- exception hierarchies
-- reusable models
-- enterprise architectures
-
-Examples:
-- RuntimeException
-- IOException
-- JpaRepository
-
----
-
-# 11. Problems with Excessive Inheritance
-
-Too much inheritance may create:
-- tight coupling
-- rigid architecture
-- difficult debugging
-- maintainability problems
-
-Modern backend systems often prefer:
-# composition over inheritance
-
-Very important engineering principle.
-
----
-
-# 12. Inheritance vs Composition
-
-Inheritance:
-IS-A relationship.
-
-Composition:
-HAS-A relationship.
-
-Composition usually provides:
-- better flexibility
-- loose coupling
-- easier maintenance
-
-Very important backend engineering concept.
-
----
-
-# 13. Common Beginner Confusions
-
-Beginners often:
-- overuse inheritance
-- create deep inheritance trees
-- confuse inheritance with composition
-
-Good software design requires careful inheritance usage.
-
----
-
-# 14. Industry Relevance
-
-Inheritance is foundational for:
-- enterprise Java
-- framework design
-- Spring Framework
-- exception handling systems
-- reusable architectures
-
-However:
-modern scalable systems use inheritance carefully.
+1. Apply the "is-a" test to: `Manager extends Employee`. `SortedList extends ArrayList`. `Truck extends Vehicle`. Which are sound?
+2. Why does Java force you to call `super(...)` first in a constructor, before any other statements?
+3. Give one specific reason "composition over inheritance" is the standard advice.

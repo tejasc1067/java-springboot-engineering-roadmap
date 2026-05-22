@@ -1,238 +1,164 @@
-# Classes and Objects in Java
+# 01 — Classes and Objects
 
-Object-Oriented Programming (OOP) is one of the most important concepts in Java.
+Object-oriented programming is built on one idea: bundle the *data* and the *behavior that operates on that data* together. In Java that bundle is a **class**, and instances of it are **objects**.
 
-Backend systems are built using:
-- classes
-- objects
-- object interactions
-
-Understanding classes and objects properly is essential for backend engineering.
+This topic makes sure you have the mental model right before anything else. The rest of the module rests on it.
 
 ---
 
-# 1. What is a Class?
+## The two-line definition
 
-A class is a blueprint or template used to create objects.
+- A **class** is a blueprint. It defines what data its objects will hold and what they can do.
+- An **object** (also called an *instance*) is the actual thing built from that blueprint. It has its own copy of the data.
 
-A class defines:
-- state (variables)
-- behavior (methods)
-
-Example:
+You write the class once. You create as many objects as you like from it.
 
 ```java
-class Student {
+class Car {
+    String brand;
+    int year;
 
-    String name;
+    void describe() {
+        System.out.println(year + " " + brand);
+    }
+}
 
-    void display() {
+Car a = new Car();
+a.brand = "Toyota"; a.year = 2018; a.describe();   // 2018 Toyota
 
-        System.out.println(name);
+Car b = new Car();
+b.brand = "Ford";   b.year = 2020; b.describe();   // 2020 Ford
+```
+
+One class (`Car`). Two objects (`a` and `b`). Each object has its own `brand` and `year`. Both objects use the same `describe()` method, but the method reads *that object's* data when called.
+
+This is the entire foundation.
+
+---
+
+## What `new` actually does
+
+```java
+Car a = new Car();
+```
+
+Reading that line:
+
+1. `new Car()` — allocates a fresh chunk of memory for a `Car` object. Initializes each field to a default value (`null` for objects, `0` for numbers, `false` for booleans). Returns a reference to the new object.
+2. `Car a` — declares a variable named `a` that can hold a reference to a `Car`.
+3. `=` — stores the reference (returned by `new`) into the variable.
+
+So `a` doesn't *contain* the `Car`. It contains a **reference** (a pointer) to the `Car`, which lives somewhere in memory.
+
+This distinction matters the moment you do:
+
+```java
+Car a = new Car();
+a.brand = "Toyota";
+Car b = a;              // copies the reference, NOT the object
+b.brand = "Ford";       // changes the same Car
+System.out.println(a.brand);   // prints "Ford"
+```
+
+`a` and `b` are two variables pointing at the **same object**. If this is news to you, run the `ReferenceVsValue.java` example below — seeing the output makes it stick.
+
+---
+
+## Object identity, not value
+
+Two objects with identical field values are still distinct objects:
+
+```java
+Car x = new Car(); x.brand = "Toyota";
+Car y = new Car(); y.brand = "Toyota";
+System.out.println(x == y);   // false — different objects, same data
+```
+
+The `==` operator compares *references*. To compare *values*, you need `equals()` — covered in topic 10.
+
+---
+
+## Instance fields vs. local variables
+
+```java
+class Car {
+    String brand;          // instance field — one per Car
+
+    void rename(String s) {
+        String temp = s;   // local variable — exists only while rename() runs
+        brand = temp;
     }
 }
 ```
 
+- **Instance fields** live as long as the object lives. Each object gets its own copy.
+- **Local variables** live only during the method call they appear in. They disappear when the method returns.
+
+Forget this and you'll be confused why "saving a value" only works sometimes. Save to an instance field if you want it to persist; use a local variable for scratch work.
+
 ---
 
-# 2. What is an Object?
-
-An object is a real instance of a class.
-
-Example:
+## Null: a reference pointing to nothing
 
 ```java
-Student student1 = new Student();
+Car c;                 // declared but not initialized → defaults to null (for fields)
+c.brand = "Toyota";    // NullPointerException
 ```
 
-Here:
-- Student → class
-- student1 → object
+A reference variable can hold `null` — meaning "this variable doesn't refer to any object." Calling a method or accessing a field through a `null` reference throws `NullPointerException` (NPE), the most famous Java bug.
 
-Objects contain actual data.
+Two defenses:
 
----
-
-# 3. State and Behavior
-
-Objects contain:
-
-## State
-Represented using variables/fields.
-
-Example:
-- name
-- age
-- salary
-
-## Behavior
-Represented using methods.
-
-Example:
-- displayInfo()
-- calculateSalary()
-- login()
-
-Very important OOP concept.
+1. **Initialize references when you declare them.** `Car c = new Car();` instead of `Car c;`.
+2. **Check for null before dereferencing**, when there's a legitimate chance the reference is null.
 
 ---
 
-# 4. Creating Objects
+## Where the data lives (one level deeper)
 
-Objects are created using `new` keyword.
+Java uses two main memory regions:
 
-Example:
+- **Stack**: holds local variables and references. Fast, automatically cleaned up when methods return.
+- **Heap**: holds the actual objects you create with `new`. Garbage-collected when no references remain.
 
 ```java
-Student student1 = new Student();
+Car a = new Car();
 ```
 
-The `new` keyword:
-- allocates memory
-- creates object
-- returns object reference
+`a` (the reference) lives on the stack. The `Car` object itself lives on the heap. When the method ends, `a` goes away. If no other reference points to the `Car`, the garbage collector eventually reclaims it.
+
+You'll see this picture again in module 03 (JVM internals). For now: variables on the stack point to objects on the heap.
 
 ---
 
-# 5. Accessing Object Members
+## Common pitfalls
 
-Dot operator (`.`) is used to access:
-- variables
-- methods
-
-Example:
-
-```java
-student1.name = "Tejas";
-
-student1.display();
-```
+- **Confusing reference assignment with copying.** `b = a` doesn't duplicate the object. To copy an object's data, you write a copy constructor or use a `clone`-like method.
+- **Comparing objects with `==`.** This only checks "same reference." Use `.equals()` for value equality.
+- **Treating uninitialized references as safe.** An uninitialized instance field defaults to `null`, and that NPE is waiting.
+- **Putting things in instance fields that should be local.** A field used only inside one method should usually just be a local variable in that method.
 
 ---
 
-# 6. Multiple Objects
+## Code examples
 
-A class can create multiple objects.
-
-Example:
-
-```java
-Student student1 = new Student();
-
-Student student2 = new Student();
-```
-
-Each object maintains separate state.
+1. `ClassAndObject.java` — define a class, create one object, set its fields, call its method.
+2. `MultipleInstances.java` — create three objects of the same class, show they have independent state.
+3. `ReferenceVsValue.java` — assign one reference to another and modify; observe the shared mutation.
+4. `NullReference.java` — what happens when you use a `null` reference, with the fix.
 
 ---
 
-# 7. Object References
+## Try this yourself
 
-Objects are stored in heap memory.
-
-Variables like:
-
-```java
-Student student1
-```
-
-store references to objects.
-
-This is very important for understanding:
-- memory
-- object sharing
-- backend behavior
+1. In `MultipleInstances.java`, add a static counter field that increments every time a new object is created. Print the total at the end.
+2. In `ReferenceVsValue.java`, write a `copy(Car other)` method that copies all fields from `other` into `this`, then show that modifying one no longer affects the other.
+3. In `NullReference.java`, deliberately call a method on the `null` reference and catch the `NullPointerException`. Print a clean error message instead of crashing.
 
 ---
 
-# 8. Heap Memory Basics
+## Self-check
 
-Example:
-
-```java
-Student student1 = new Student();
-```
-
-What happens internally:
-1. object created in heap memory
-2. reference stored in stack memory
-3. object becomes accessible through reference
-
----
-
-# 9. Object Interaction
-
-Objects can interact with other objects.
-
-Example:
-- Order object uses Product object
-- Payment object uses User object
-
-Backend systems are built using object collaboration.
-
----
-
-# 10. Why Classes Matter in Backend Engineering?
-
-Spring Boot applications heavily depend on classes.
-
-Examples:
-- Controllers
-- Services
-- Repositories
-- DTOs
-- Entities
-
-Backend engineering is fundamentally object-oriented.
-
----
-
-# 11. Real-World Backend Examples
-
-Examples of backend classes:
-
-```text
-User
-Product
-Order
-Payment
-Employee
-Invoice
-Customer
-```
-
-These classes represent business entities.
-
----
-
-# 12. Common Beginner Confusions
-
-Many beginners confuse:
-- class
-- object
-- reference
-
-Remember:
-
-Class:
-Blueprint
-
-Object:
-Real instance
-
-Reference:
-Variable pointing to object
-
----
-
-# 13. Industry Relevance
-
-Classes and objects are foundational for:
-- Spring Boot
-- Hibernate
-- microservices
-- REST APIs
-- enterprise backend systems
-
-Without strong OOP understanding:
-backend engineering becomes difficult.
+1. You write `Car a = new Car()`. Walk through what `new` does, step by step.
+2. After `Car b = a; b.brand = "Ford";` — what happened? Did anything change about `a`?
+3. Why does `x == y` return `false` for two `Car` objects with identical field values?
