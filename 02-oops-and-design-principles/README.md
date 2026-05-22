@@ -1,207 +1,93 @@
-# OOP and Design Principles
+# 02 — Object-Oriented Programming and Design Principles
 
-## Overview
+Java is fundamentally an object-oriented language. The Spring ecosystem you'll meet in modules 07-10 assumes you can think in objects, model relationships, design interfaces, and reason about coupling. This module builds that thinking.
 
-This module introduces Object-Oriented Programming (OOP) and software design principles used in real backend engineering.
+By the end you won't just know "what an `abstract class` is." You'll know when to reach for one vs. an interface, when inheritance is the wrong tool, and what "good" object-oriented design looks like in real backend code.
 
-The focus is not only on learning OOP syntax, but also on understanding:
-- object-oriented design
-- maintainable architecture
-- scalable systems
-- clean coding practices
-- backend entity modeling
-- abstraction and loose coupling
+## Who this is for
 
-This module forms the foundation for:
-- enterprise Java
-- Spring Framework
-- Spring Boot
-- REST API development
-- microservices architecture
+- You've finished module 01 (or are comfortable with basic Java syntax: variables, methods, loops, classes-as-data-holders).
+- You can write a Java program with a `main` method and a few methods.
 
----
+If "class" and "object" still feel unclear, work through module 01 first.
 
-# Module Goals
+## What you'll be able to do at the end
 
-After completing this module, you should be able to:
+Concrete outcomes. Check each off as you go.
 
-✅ Understand object-oriented programming deeply  
-✅ Design clean and maintainable classes  
-✅ Understand inheritance and polymorphism  
-✅ Build loosely coupled systems  
-✅ Understand abstraction layers  
-✅ Model real-world backend entities  
-✅ Understand SOLID principles  
-✅ Design scalable object-oriented systems
+- [ ] Explain the difference between a class and an object without reaching for analogies.
+- [ ] Write a properly encapsulated class and explain *why* fields shouldn't be `public`.
+- [ ] Decide between inheritance and composition for a given design problem, and justify the choice.
+- [ ] Implement `equals()` and `hashCode()` together, and explain why one without the other is a bug.
+- [ ] Make a class immutable and explain three things you had to do beyond just adding `final`.
+- [ ] Define each SOLID principle in one sentence and recognize when code violates one.
+- [ ] Recognize "this looks like inheritance but should be composition" in code review.
 
----
+## Prerequisites
 
-# Topics Covered
+Before starting, you should be able to:
 
-## Core OOP Concepts
+- Write a basic Java class with fields and methods (module 01).
+- Run a `.java` file from the command line or IntelliJ (no external libraries needed — module 02 uses only the standard library).
+- Understand `static` vs. instance methods (module 01).
 
-- Classes and Objects
-- Constructors
-- Encapsulation
-- Inheritance
-- super Keyword
-- Method Overloading vs Overriding
-- Polymorphism
-- Abstraction
-- Interfaces
+## How this module is organized
 
----
+Topics 01–02 cover the building blocks: classes, objects, constructors.
 
-## Backend-Oriented Design Concepts
+Topics 03–09 are the four pillars of OOP — encapsulation, inheritance, polymorphism, abstraction — plus the supporting tools (`super`, overloading vs. overriding, interfaces).
 
-- Object Class Methods
-- Association
-- Aggregation
-- Composition
-- final Keyword in OOP
-- Immutability
-- SOLID Principles
+Topics 10–13 cover the things every Java class secretly does (`Object` methods), relationship modeling (composition vs. aggregation), and one of the most important design ideas in backend code: immutability.
 
----
-
-# Folder Structure
+Topic 14 (SOLID) is the bridge into Spring: every Spring pattern you'll later learn assumes you've internalized these five principles.
 
 ```text
-02-oops-and-design-principles/
-│
-├── README.md
-│
-├── 01-classes-and-objects.md
-├── 02-constructors.md
-├── 03-encapsulation.md
-├── 04-inheritance.md
-├── 05-super-keyword.md
-├── 06-method-overloading-vs-overriding.md
-├── 07-polymorphism.md
-├── 08-abstraction.md
-├── 09-interfaces.md
-├── 10-object-class-methods.md
-├── 11-association-aggregation-composition.md
-├── 12-final-keyword-in-oop.md
-├── 13-immutability.md
-├── 14-solid-principles.md
-│
-├── CODE_EXAMPLES/
-│   ├── 01-classes-and-objects/
-│   ├── 02-constructors/
-│   ├── 03-encapsulation/
-│   ├── 04-inheritance/
-│   ├── 05-super-keyword/
-│   ├── 06-method-overloading-vs-overriding/
-│   ├── 07-polymorphism/
-│   ├── 08-abstraction/
-│   ├── 09-interfaces/
-│   ├── 10-object-class-methods/
-│   ├── 11-association-aggregation-composition/
-│   ├── 12-final-keyword-in-oop/
-│   ├── 13-immutability/
-│   └── 14-solid-principles/
-│
-├── INTERVIEW_QNA.md
-└── COMMON_MISTAKES.md
+01-classes-and-objects                       ← the foundation
+02-constructors
+03-encapsulation                             ← four pillars begin
+04-inheritance
+05-super-keyword
+06-method-overloading-vs-overriding
+07-polymorphism
+08-abstraction
+09-interfaces                                ← four pillars end
+10-object-class-methods                      ← what every class secretly has
+11-association-aggregation-composition       ← relationships
+12-final-keyword-in-oop
+13-immutability
+14-solid-principles                          ← design for change
 ```
 
----
+## How to run the code
 
-# Learning Approach
+No external dependencies — just the JDK. From the repo root:
 
-Each topic is designed with:
+```bash
+java 02-oops-and-design-principles/CODE_EXAMPLES/04-inheritance/AnimalKingdom.java
+```
 
-✅ beginner-friendly explanations  
-✅ backend engineering relevance  
-✅ real-world examples  
-✅ production awareness  
-✅ clean architecture thinking  
-✅ interview preparation  
-✅ common mistakes awareness  
-✅ scalability understanding
+Inside each topic's `CODE_EXAMPLES/` folder, files are named in PascalCase. Reading order is in each topic markdown's "Code examples" section (alphabetical file order does not match reading order). Files with `Broken` in their names are intentionally bad — the next file listed fixes them. Run both, in the markdown's listed order.
 
-This module focuses on:
-# software design thinking
+## Working through a topic
 
-not just:
-# syntax learning
+For each topic file:
 
----
+1. Read the markdown.
+2. Run the first listed code example. Read it. Modify it.
+3. Run the next listed example. Compare.
+4. Do the "Try this yourself" exercise at the end of the markdown.
+5. Answer the "Self-check" questions out loud, in your own words.
 
-# Why OOP Matters in Backend Engineering?
+If you can't answer all three self-check questions, re-read the topic before moving on. The next topic almost always assumes you have.
 
-Modern backend systems are built using:
-- objects
-- services
-- interfaces
-- abstraction layers
-- reusable components
+## Module checkpoint
 
-Spring Boot applications heavily depend on:
-- dependency injection
-- interfaces
-- polymorphism
-- loose coupling
+Before moving on to module 03 (Advanced Java), you should be able to answer these aloud:
 
-Strong OOP understanding is essential for:
-- scalable systems
-- maintainable architecture
-- enterprise backend development
+1. A junior dev makes every field `public` "for convenience." What's the actual cost, and what should they do instead?
+2. You see `class Stack extends ArrayList`. What's wrong with this, and what's the fix?
+3. A teammate adds a setter to a class declared `final` with all `final` fields, "for flexibility." Why is this a contradiction?
+4. Walk through what happens if you override `equals()` but not `hashCode()`. What breaks, specifically?
+5. Define each of S, O, L, I, D in one sentence. Then point to a real Java library/framework that obeys each one.
 
----
-
-# Interview Preparation
-
-`INTERVIEW_QNA.md` will contain:
-- core OOP interview questions
-- inheritance questions
-- polymorphism questions
-- SOLID principle questions
-- backend design discussions
-
----
-
-# Common Mistakes
-
-`COMMON_MISTAKES.md` will contain:
-- beginner OOP mistakes
-- inheritance misuse
-- poor object modeling
-- tight coupling issues
-- scalability mistakes
-
----
-
-# Difficulty Level
-
-🟡 Intermediate Foundation
-
----
-
-# Prerequisites
-
-Before starting this module, learners should understand:
-- Java fundamentals
-- methods
-- arrays
-- collections basics
-- Java syntax
-
----
-
-# End Goal
-
-By the end of this module, learners should be able to:
-
-✅ design object-oriented backend systems  
-✅ understand enterprise Java architecture  
-✅ build maintainable object models  
-✅ understand abstraction and scalability  
-✅ prepare for advanced Java and Spring Boot
-
-This module acts as the bridge between:
-# Java fundamentals
-
-and:
-# professional backend engineering
+If those are easy, you're ready. If any feel shaky, the corresponding topic is 03, 04 (or 11), 13, 10, and 14.
