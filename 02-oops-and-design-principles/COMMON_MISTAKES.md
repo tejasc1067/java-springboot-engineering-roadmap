@@ -1,709 +1,402 @@
-## 1. Confusing Class and Object
+# Common Mistakes — OOP and Design Principles
 
-Class:
-Blueprint.
+Real bugs in OOP-shaped code: the kind that compile, look right, pass casual review, and produce subtle failures later. Each mistake names a specific bad pattern and shows the fix.
 
-Object:
-Actual instance.
-
----
-
-## 2. Forgetting Object Creation
-
-Methods and variables cannot be accessed without object creation for non-static members.
-
----
-
-## 3. Accessing Object Members Incorrectly
-
-Dot operator is required to access object members.
-
----
-
-## 4. Assuming Multiple Objects Share State Automatically
-
-Each object maintains separate state unless references are shared.
-
----
-
-## 5. Confusing Object Reference with Actual Object
-
-Reference variable points to object.
-
-It is not the object itself.
-
----
-
-## 6. Forgetting new Keyword
-
-Without `new`, object is not created.
-
----
-
-## 7. Misunderstanding Reference Assignment
-
-Assigning one object reference to another may point both references to same object.
-
----
-
-## 8. Ignoring Object Modeling Quality
-
-Poor object design leads to poor backend architecture.
-
----
-
-## 9. Giving Return Type to Constructor
-
-Constructors cannot have return type.
-
----
-
-## 10. Constructor Name Not Matching Class Name
-
-Constructor name must exactly match class name.
-
----
-
-## 11. Forgetting Object Initialization
-
-Objects should be initialized properly using constructors.
-
----
-
-## 12. Misusing Constructor Overloading
-
-Too many overloaded constructors may reduce readability.
-
----
-
-## 13. Incorrect Constructor Chaining
-
-`this()` must be first statement inside constructor.
-
----
-
-## 14. Creating Invalid Object State
-
-Constructors should initialize meaningful values.
-
----
-
-## 15. Confusing Constructor with Method
-
-Constructors initialize objects.
-
-Methods perform behavior.
-
----
-
-## 16. Ignoring Backend Object Validity
-
-Improper initialization may create unstable backend systems.
-
----
-
-## 17. Making All Variables Public
-
-Public variables reduce encapsulation and security.
-
----
-
-## 18. Using Setters Without Validation
-
-Setters should validate important business rules.
-
----
-
-## 19. Confusing Encapsulation with Only Getters/Setters
-
-Real encapsulation protects object integrity.
-
----
-
-## 20. Exposing Sensitive Data Directly
-
-Sensitive information should not be directly modifiable.
-
----
-
-## 21. Creating Uncontrolled Object State
-
-Objects should always remain in valid state.
-
----
-
-## 22. Excessive Setter Usage
-
-Too many setters may weaken object safety.
-
----
-
-## 23. Ignoring Backend Validation Logic
-
-Validation is critical in enterprise systems.
-
----
-
-## 24. Violating Object Integrity
-
-Objects should not allow invalid updates.
-
----
-
-## 25. Overusing Inheritance
-
-Too much inheritance creates tightly coupled systems.
-
----
-
-## 26. Creating Deep Inheritance Hierarchies
-
-Deep inheritance trees reduce maintainability.
-
----
-
-## 27. Confusing IS-A and HAS-A Relationships
-
-Inheritance represents IS-A relationship.
-
-Composition represents HAS-A relationship.
-
----
-
-## 28. Misusing Inheritance for Code Reuse Only
-
-Inheritance should model logical hierarchy, not just reuse.
-
----
-
-## 29. Ignoring Composition
-
-Modern backend systems often prefer composition over inheritance.
-
----
-
-## 30. Accessing Inherited Members Incorrectly
-
-Child objects can access inherited public/protected members only.
-
----
-
-## 31. Expecting Multiple Inheritance with Classes
-
-Java does not support multiple inheritance using classes.
-
----
-
-## 32. Creating Rigid Architectures
-
-Poor inheritance design reduces scalability and flexibility.
-
----
-
-## 33. Confusing this and super
-
-this:
-Current object.
-
-super:
-Parent object.
-
----
-
-## 34. Calling super() Incorrectly
-
-`super()` must be first statement inside constructor.
-
----
-
-## 35. Assuming super Accesses Private Members
-
-Private parent members cannot be directly accessed.
-
----
-
-## 36. Forgetting Parent Constructor Execution Order
-
-Parent constructor executes before child constructor.
-
----
-
-## 37. Overusing Inheritance with super
-
-Excessive inheritance creates rigid architectures.
-
----
-
-## 38. Ignoring Constructor Chaining Behavior
-
-Improper constructor chaining may create invalid initialization flow.
-
----
-
-## 39. Shadowing Variables Unnecessarily
-
-Using same variable names in parent and child may reduce readability.
-
----
-
-## 40. Creating Complex Inheritance Hierarchies
-
-Complex inheritance trees become difficult to maintain.
-
 ---
 
-## 41. Confusing Overloading and Overriding
+## Classes and objects
 
-Overloading:
-Different parameters.
+### 1. Confusing reference assignment with copying
 
-Overriding:
-Same signature with inheritance.
+```java
+// BAD — caller mutates the original
+List<String> internal = new ArrayList<>();
+internal.add("Alice");
+List<String> copy = internal;          // not a copy; same list
+copy.add("Bob");
+// internal now also has "Bob"
+```
 
----
-
-## 42. Changing Only Return Type in Overloading
-
-Return type alone cannot overload methods.
-
----
-
-## 43. Forgetting Inheritance Requirement for Overriding
-
-Overriding requires parent-child relationship.
-
----
-
-## 44. Incorrect Method Signature in Overriding
-
-Method signature must match parent method.
-
----
-
-## 45. Ignoring @Override Annotation
-
-Using @Override helps prevent mistakes.
-
----
-
-## 46. Confusing Compile-Time and Runtime Polymorphism
-
-Overloading:
-Compile-time.
-
-Overriding:
-Runtime.
-
----
-
-## 47. Overusing Method Overloading
-
-Too many overloaded methods may reduce readability.
-
----
-
-## 48. Misunderstanding Runtime Dispatch
-
-Actual overridden method is selected during runtime.
-
----
-
-## 49. Confusing Inheritance with Polymorphism
-
-Inheritance creates hierarchy.
-
-Polymorphism provides flexible behavior.
-
----
-
-## 50. Ignoring Parent Reference Child Object Concept
-
-This is foundational for runtime polymorphism.
-
----
-
-## 51. Assuming Parent Reference Can Access All Child Members
-
-Parent reference accesses only parent-visible members.
-
----
-
-## 52. Misunderstanding Dynamic Dispatch
-
-Actual overridden method is selected during runtime.
-
----
-
-## 53. Creating Tightly Coupled Systems
-
-Without polymorphism systems become rigid.
-
----
-
-## 54. Ignoring Loose Coupling Principles
-
-Loose coupling improves scalability and maintainability.
-
----
-
-## 55. Overusing Concrete Implementations
-
-Programming directly to implementations reduces flexibility.
-
----
-
-## 56. Ignoring Interface-Driven Design
-
-Modern backend systems heavily depend on abstractions and polymorphism.
-
----
-
-## 57. Confusing Abstraction with Encapsulation
-
-Encapsulation protects data.
-
-Abstraction hides complexity.
-
----
-
-## 58. Trying to Instantiate Abstract Class
-
-Abstract classes cannot be instantiated directly.
-
----
-
-## 59. Forgetting to Implement Abstract Methods
-
-Child classes must implement inherited abstract methods.
-
----
-
-## 60. Overusing Inheritance Instead of Proper Abstraction
-
-Poor abstraction design reduces maintainability.
-
----
+**Fix:** create a real copy when you mean "copy."
+```java
+List<String> copy = new ArrayList<>(internal);
+```
 
-## 61. Ignoring Abstraction Layers
+### 2. Comparing objects with `==`
 
-Large backend systems require layered abstraction.
+```java
+String a = readUserInput();
+String b = "expected";
+if (a == b) { ... }       // sometimes works, often doesn't
+```
 
----
-
-## 62. Creating Highly Coupled Architectures
-
-Without abstraction systems become rigid and tightly coupled.
-
----
-
-## 63. Exposing Internal Complexity
-
-Abstraction should simplify system usage.
-
----
-
-## 64. Ignoring Enterprise Design Principles
-
-Modern frameworks heavily depend on abstraction-driven architecture.
-
----
-
-## 65. Confusing Interface and Abstract Class
-
-Interface:
-behavior contract.
-
-Abstract class:
-partial implementation.
-
----
-
-## 66. Forgetting to Implement Interface Methods
-
-Implementation classes must implement required methods.
-
----
-
-## 67. Ignoring Loose Coupling Principles
-
-Interfaces help reduce tight coupling.
-
----
-
-## 68. Programming Directly to Implementations
-
-Programming to interfaces improves flexibility.
-
----
-
-## 69. Overusing Concrete Classes
-
-Concrete-only architecture becomes rigid.
-
----
-
-## 70. Ignoring Dependency Injection Benefits
-
-Interfaces are foundational for dependency injection.
-
----
-
-## 71. Misunderstanding Multiple Inheritance
-
-Java supports multiple inheritance using interfaces only.
+`==` compares references. For strings (and any other class with meaningful value equality) use `.equals()`.
 
----
-
-## 72. Creating Tightly Coupled Backend Services
-
-Without interfaces systems become difficult to scale and maintain.
-
----
+**Fix:**
+```java
+if (a.equals(b)) { ... }
+// Or, null-safe:
+if (Objects.equals(a, b)) { ... }
+```
 
-## 73. Confusing == and equals()
+### 3. Treating uninitialized references as safe
 
-==:
-reference comparison.
+```java
+class Service {
+    UserRepository repo;        // never assigned → null
+    User load(long id) {
+        return repo.findById(id);   // NPE
+    }
+}
+```
 
-equals():
-logical comparison.
+**Fix:** initialize in the constructor (or use dependency injection). Make fields `final` when possible — the compiler forces you to set them.
 
 ---
 
-## 74. Overriding equals() Without hashCode()
+## Constructors
 
-This breaks collection behavior.
+### 4. Writing your own constructor and forgetting the implicit no-arg is gone
 
----
+```java
+class Car {
+    Car(String brand) { ... }
+}
 
-## 75. Breaking equals() and hashCode() Contract
+new Car();    // compile error — no zero-arg constructor exists
+```
 
-Equal objects must have same hashCode.
+Common surprise when you upgrade `Car` from "no constructors" to "one constructor." Every existing `new Car()` breaks.
 
----
+**Fix:** if you want a no-arg form, declare it explicitly: `Car() { this("unknown"); }`.
 
-## 76. Ignoring toString() Override
+### 5. Constructors that do heavy work
 
-Readable object output improves debugging and logging.
+```java
+class UserService {
+    UserService() {
+        loadConfigFromDisk();
+        connectToDatabase();
+        warmCaches();
+    }
+}
+```
 
----
+Construction can now fail in many ways, takes seconds, blocks the calling thread, and is hard to test.
 
-## 77. Using Mutable Fields in hashCode() Incorrectly
+**Fix:** constructor just assigns fields; provide a static factory or `init()` method for heavy work. Better, inject dependencies fully-formed.
 
-Mutable fields may create inconsistent hashing behavior.
+### 6. Calling overridable methods from a constructor
 
----
+```java
+class Parent {
+    Parent() { onCreated(); }   // calls subclass override before subclass is initialized
+    protected void onCreated() { }
+}
+class Child extends Parent {
+    private final List<String> tags = new ArrayList<>();
+    @Override protected void onCreated() {
+        tags.add("hi");          // NPE — `tags` not assigned yet
+    }
+}
+```
 
-## 78. Incorrect Type Casting in equals()
+Famously subtle. The parent constructor runs first, then field initializers in the child, then the child constructor body. If the parent calls `onCreated()`, the child's override runs against uninitialized fields.
 
-Unsafe casting may cause runtime exceptions.
+**Fix:** never call overridable methods from constructors. If you must, mark them `final`.
 
 ---
-
-## 79. Ignoring Collection Behavior Impact
 
-equals() and hashCode() directly affect HashMap and HashSet behavior.
+## Encapsulation
 
----
+### 7. Public fields
 
-## 80. Poor Entity Equality Design
+`public String name;` means anyone can set it to anything, anytime. Rules can't be enforced.
 
-Improper equality logic may create severe backend bugs.
+**Fix:** `private` fields, methods that maintain invariants.
 
----
+### 8. Setters that don't actually validate
 
-## 81. Overusing Inheritance Instead of Composition
+```java
+public void setAge(int age) {
+    this.age = age;            // accepts -50, 9999, anything
+}
+```
 
-Modern systems usually prefer composition.
+Encapsulation in name only.
 
----
+**Fix:** if a setter exists, it should enforce rules. If there are no rules, ask whether the field should even be mutable.
 
-## 82. Confusing Aggregation and Composition
+### 9. Returning the internal mutable collection
 
-Aggregation:
-weak ownership.
+```java
+public List<Item> getItems() { return items; }   // caller can clear/add at will
+```
 
-Composition:
-strong ownership.
+**Fix:** return an unmodifiable view or a defensive copy.
+```java
+return Collections.unmodifiableList(items);
+// or
+return new ArrayList<>(items);
+```
 
 ---
 
-## 83. Ignoring Lifecycle Dependency
+## Inheritance
 
-Composition child lifecycle depends on parent.
+### 10. Inheriting for code reuse, not "is-a"
 
----
+```java
+class Stack<T> extends ArrayList<T> { ... }     // Stack inherits add(int, T), get(int), remove(int)
+```
 
-## 84. Creating Tightly Coupled Relationships
+The relationship "Stack is a kind of ArrayList" isn't actually true — a Stack has a contract (LIFO) the ArrayList doesn't enforce.
 
-Poor object relationships reduce scalability.
+**Fix:** composition. `class Stack<T> { private final List<T> items = new ArrayList<>(); ... }`.
 
----
+### 11. Calling super(...) too late
 
-## 85. Misunderstanding HAS-A Relationship
+```java
+Dog(String name, String breed) {
+    this.breed = breed;     // ← can't be here
+    super(name);            // ← must be first
+}
+```
 
-HAS-A relationship represents object containment.
+`super(...)` and `this(...)` must be the first statement. Compile error.
 
----
+**Fix:** call `super(...)` first, then do your work.
 
-## 86. Using Inheritance for Everything
+### 12. Overriding without `@Override`
 
-Inheritance should not replace proper composition.
+```java
+class Dog extends Animal {
+    void Speak() { ... }      // typo — capital S; doesn't override anything
+}
+```
 
----
+The compiler can't catch this without `@Override`. The "override" is silently a brand-new method that nobody calls.
 
-## 87. Ignoring Backend Entity Modeling
+**Fix:** always annotate overrides with `@Override`. The compiler verifies.
 
-Proper relationships are critical in backend architecture.
+### 13. Narrowing access in an override
 
----
+```java
+class Parent {
+    public void process() { ... }
+}
+class Child extends Parent {
+    private void process() { ... }    // compile error
+}
+```
 
-## 88. Designing Poor Domain Models
+You can widen access in an override (`protected` → `public`), never narrow.
 
-Weak object modeling creates maintainability issues.
+**Fix:** match or widen access. If you really don't want subclasses to expose it, mark the parent `final`.
 
 ---
 
-## 89. Confusing final Reference with Immutable Object
+## Polymorphism
 
-final reference does not guarantee immutable object state.
-
----
+### 14. Excessive `instanceof` checks
 
-## 90. Trying to Override final Methods
+```java
+for (Animal a : animals) {
+    if (a instanceof Dog d) d.bark();
+    else if (a instanceof Cat c) c.purr();
+    else if (a instanceof Cow cw) cw.moo();
+}
+```
 
-final methods cannot be overridden.
+This is a giant dispatch table you wrote by hand — exactly what polymorphism is meant to replace.
 
----
+**Fix:** put a common method on `Animal` (or an interface):
+```java
+abstract void makeSound();
+// each subclass implements it
+for (Animal a : animals) a.makeSound();
+```
 
-## 91. Trying to Extend final Classes
+### 15. Static methods masquerading as overrides
 
-final classes cannot be inherited.
+```java
+class Animal { static void info() { System.out.println("animal"); } }
+class Dog extends Animal { static void info() { System.out.println("dog"); } }
 
----
+Animal a = new Dog();
+a.info();   // prints "animal" — static methods aren't polymorphic
+```
 
-## 92. Confusing final, finally, and finalize()
+Static methods are resolved by reference type, not object type. They don't override.
 
-These are completely different concepts.
+**Fix:** if you need polymorphism, use an instance method.
 
 ---
 
-## 93. Ignoring Immutability Benefits
+## Object methods
 
-Immutable design improves thread safety and stability.
+### 16. Overriding `equals` without `hashCode`
 
----
+The classic bug. The HashSet check returns false even though `equals` says yes.
 
-## 94. Overusing Mutable Shared Objects
+**Fix:** always override both together. Use the same fields in each. `Objects.hash(...)` makes `hashCode` trivial.
 
-Shared mutable state creates backend risks.
-
----
+### 17. Mutable fields participating in `equals`/`hashCode`
 
-## 95. Assuming final Makes Entire Object Immutable
+```java
+class User {
+    String name;        // mutable
+    @Override public int hashCode() { return name.hashCode(); }
+}
+Set<User> set = new HashSet<>(); set.add(user); user.name = "X";
+set.contains(user);   // false — hash changed
+```
 
-Only reference/value restriction occurs.
+**Fix:** make fields used in `equals`/`hashCode` immutable, or don't put mutable objects in hashed collections.
 
 ---
 
-## 96. Ignoring Enterprise Stability Principles
+## Immutability
 
-Modern backend systems heavily depend on stable immutable design.
+### 18. `final` doesn't mean immutable
 
----
+```java
+final List<String> names = new ArrayList<>();
+names.add("X");   // perfectly legal
+```
 
-## 97. Confusing final Reference with Immutable Object
+**Fix:** use immutable types (`List.copyOf`, `List.of`) when you want unmodifiability.
 
-final reference does not guarantee immutable object state.
+### 19. Forgetting defensive copying
 
----
+```java
+record User(String name, List<String> tags) { }   // tags is mutable through caller's reference
+```
 
-## 98. Adding Setters in Immutable Class
+Records don't defensively copy mutable fields.
 
-Immutable classes should avoid setters.
+**Fix:** copy in the compact constructor:
+```java
+record User(String name, List<String> tags) {
+    public User {
+        tags = List.copyOf(tags);
+    }
+}
+```
 
----
+### 20. Using `java.util.Date` (it's mutable)
 
-## 99. Forgetting Defensive Copying
+`java.util.Date` is mutable, deprecated for most uses, and a constant source of "why did this date change?" bugs.
 
-Mutable internal objects should be protected.
+**Fix:** `java.time.LocalDate` / `Instant` / `LocalDateTime`. All immutable.
 
 ---
 
-## 100. Returning Internal Mutable Objects Directly
+## Design / SOLID
 
-This breaks immutability.
-
----
+### 21. God classes
 
-## 101. Ignoring Thread Safety Benefits
+A class with 30 fields and 50 methods doing five unrelated jobs. Hard to test, hard to change safely.
 
-Immutable objects naturally improve thread safety.
+**Fix:** when a "Service" / "Manager" / "Helper" class pushes past ~200 lines, look for natural seams to split along.
 
----
+### 22. Hardcoded dependencies (`new` inside a class)
 
-## 102. Using Shared Mutable State Excessively
+```java
+class UserService {
+    private final UserRepository repo = new MySqlUserRepository();   // bolted to MySQL
+}
+```
 
-Shared mutable state creates concurrency risks.
+Can't test, can't swap, can't add caching without modifying this class.
 
----
+**Fix:** dependency injection.
+```java
+UserService(UserRepository repo) { this.repo = repo; }
+```
 
-## 103. Forgetting private final Fields
+### 23. Inheritance hierarchies more than 3 levels deep
 
-Immutable classes should use private final fields.
+```
+GenericEntity → AuditableEntity → SoftDeletableEntity → VersionedEntity → User
+```
 
----
+Each level multiplies behavior. Subtle bugs hide in the interaction.
 
-## 104. Ignoring Enterprise Immutable Design Principles
+**Fix:** flatten. Use composition or annotations/aspects for cross-cutting concerns instead of stacking inheritance.
 
-Modern scalable systems heavily prefer immutable architectures.
+### 24. Subclasses that throw `UnsupportedOperationException`
 
----
+```java
+class ReadOnlyList extends ArrayList<String> {
+    @Override public boolean add(String s) { throw new UnsupportedOperationException(); }
+}
+```
 
-## 105. Creating God Classes
+You inherited a contract you can't fulfill. Liskov violation.
 
-One class handling too many responsibilities violates SRP.
+**Fix:** either don't extend, or extend a parent whose contract you can honor. (Java's own `List.of` returns an unmodifiable list — fine — but it's documented as such and the JDK code carefully avoids contracts it can't keep.)
 
----
+### 25. One giant "Utility" or "Helper" class
 
-## 106. Modifying Stable Code Repeatedly
+A static-methods grab bag (`Utils`, `Helper`, `Common`) that grows over time. Becomes a coupling magnet.
 
-Violates Open/Closed Principle.
+**Fix:** name and group by purpose. `StringFormatter`, `DateParser`, etc. Static utility classes are fine when they're focused.
 
 ---
 
-## 107. Designing Unsafe Inheritance Hierarchies
+## Records and interfaces
 
-Violates Liskov Substitution Principle.
+### 26. Treating records as classes with JavaBean getters
 
----
+```java
+record User(String name, int age) { }
+user.getName();    // ← compile error; the accessor is name(), not getName()
+```
 
-## 108. Creating Giant Interfaces
+**Fix:** records use `name()` style accessors. If your team's framework demands JavaBean-style, use a regular class.
 
-Violates Interface Segregation Principle.
+### 27. Trying to subclass a record
 
----
+Records are implicitly `final` — they can't be extended.
 
-## 109. Depending Directly on Concrete Implementations
+**Fix:** if you need subtypes, use an interface or abstract class instead.
 
-Violates Dependency Inversion Principle.
+### 28. Interface with exactly one implementor that nobody mocks
 
----
+```java
+interface UserService { ... }
+class UserServiceImpl implements UserService { ... }
+```
 
-## 110. Creating Tightly Coupled Services
+Sometimes legitimate. Often over-engineering.
 
-Tightly coupled systems are difficult to scale and maintain.
+**Fix:** add the interface when there's a real reason — multiple implementations, testing isolation, public API stability. Otherwise just use the concrete class.
 
----
+### 29. "Constants interface"
 
-## 111. Ignoring Abstractions
+```java
+interface Limits {
+    int MAX_PAGE_SIZE = 100;
+}
+class Foo implements Limits { ... }   // "for short names"
+```
 
-Abstractions improve flexibility and maintainability.
+The `implements` is for behavior, not import shorthand. Pollutes the type hierarchy.
 
----
+**Fix:** put constants on a regular class with a private constructor; use `Limits.MAX_PAGE_SIZE` or `import static`.
 
-## 112. Ignoring Clean Architecture Principles
+### 30. Default method colliding across two interfaces
 
-Modern backend systems heavily depend on SOLID-driven architecture.
+```java
+interface A { default void op() { ... } }
+interface B { default void op() { ... } }
+class C implements A, B { }    // compile error — ambiguous
+```
 
----
+**Fix:** the implementing class must override and choose which to call:
+```java
+class C implements A, B {
+    @Override public void op() { A.super.op(); }
+}
+```
