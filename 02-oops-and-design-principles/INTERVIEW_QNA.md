@@ -1,1134 +1,218 @@
-## Q1. What is a class in Java?
+# Interview Questions — OOP and Design Principles
 
-A class is a blueprint used to create objects.
+Real interview questions on Java OOP. Each answer is what an interviewer is hoping to hear — not a one-line restatement of the question.
 
-It defines:
-- variables
-- methods
-- object behavior
+If you can answer these in your own words without looking, you're prepared for the OOP section of any Java backend interview.
 
 ---
 
-## Q2. What is an object in Java?
+## Fundamentals
 
-An object is an instance of a class.
+### Q1. What's the difference between a class and an object?
 
-Objects contain actual data and behavior.
+A class is a blueprint — it defines what fields and methods objects of that type have. An object is an actual instance created from the blueprint with `new`. You write the class once; you create many objects. Each object has its own copy of the instance fields.
 
----
-
-## Q3. Difference between class and object?
-
-Class:
-Blueprint/template.
-
-Object:
-Real instance created from class.
-
----
-
-## Q4. What are state and behavior in OOP?
-
-State:
-Variables/fields.
-
-Behavior:
-Methods/functions.
-
----
-
-## Q5. What does the new keyword do?
-
-The new keyword:
-- creates object
-- allocates heap memory
-- returns object reference
-
----
-
-## Q6. Where are objects stored in Java?
-
-Objects are stored in heap memory.
-
----
-
-## Q7. What is an object reference?
-
-Reference variable stores memory address/reference of object.
-
----
-
-## Q8. Can multiple references point to same object?
-
-Yes.
-
-Multiple references may point to same object in heap memory.
-
----
-
-## Q9. Why are classes important in backend engineering?
-
-Classes help model:
-- users
-- products
-- orders
-- services
-- entities
-
-Backend systems are heavily object-oriented.
-
----
-
-## Q10. What is object-oriented programming?
-
-OOP is programming paradigm based on:
-- objects
-- classes
-- encapsulation
-- inheritance
-- polymorphism
-- abstraction
-
----
-
-## Q11. What is a constructor in Java?
-
-A constructor is a special method used to initialize objects.
-
----
-
-## Q12. What are the rules of constructors?
-
-- same name as class
-- no return type
-- automatically executed
-
----
-
-## Q13. What is default constructor?
-
-If no constructor is defined,
-Java provides default constructor automatically.
-
----
-
-## Q14. What is parameterized constructor?
-
-Constructor that accepts parameters for object initialization.
-
----
-
-## Q15. What is constructor overloading?
-
-Creating multiple constructors with different parameter lists.
-
----
-
-## Q16. What is constructor chaining?
-
-Calling one constructor from another using `this()`.
-
----
-
-## Q17. What is the purpose of constructors?
-
-Constructors initialize valid object state.
-
----
-
-## Q18. Difference between constructor and method?
-
-Constructors initialize objects.
-
-Methods perform operations.
-
----
-
-## Q19. Can constructor have return type?
-
-No.
-
-Constructors cannot have return type.
-
----
-
-## Q20. Why are constructors important in backend engineering?
-
-Constructors are heavily used in:
-- dependency injection
-- DTO creation
-- immutable objects
-- entity initialization
-
----
-
-## Q21. What is encapsulation?
-
-Encapsulation means:
-- wrapping data and methods together
-- restricting direct access to data
-
----
-
-## Q22. Why is encapsulation important?
-
-Encapsulation improves:
-- security
-- maintainability
-- controlled access
-- object integrity
-
----
-
-## Q23. What is data hiding?
-
-Restricting direct access to internal object data.
-
-Usually achieved using private variables.
-
----
-
-## Q24. Why are variables usually private in Java?
-
-Private variables protect object integrity and prevent invalid modifications.
-
----
-
-## Q25. What are getters and setters?
-
-Getter:
-Reads data.
-
-Setter:
-Updates data.
-
----
-
-## Q26. Why are setters useful?
-
-Setters allow validation before updating data.
-
----
-
-## Q27. Difference between encapsulation and abstraction?
-
-Encapsulation:
-Data protection.
-
-Abstraction:
-Hiding implementation complexity.
-
----
-
-## Q28. Why is encapsulation important in backend engineering?
-
-Encapsulation protects:
-- backend entities
-- DTOs
-- business rules
-- object validity
-
----
-
-## Q29. Can encapsulation improve security?
-
-Yes.
-
-Encapsulation prevents unauthorized or invalid data modification.
-
----
-
-## Q30. What is controlled access?
-
-Allowing access to object data only through defined methods.
-
----
-
-## Q31. What is inheritance in Java?
-
-Inheritance allows one class to acquire properties and behavior of another class.
-
----
-
-## Q32. Which keyword is used for inheritance?
-
-`extends`
-
----
-
-## Q33. What is parent class?
-
-Class whose properties are inherited by another class.
-
-Also called superclass/base class.
-
----
-
-## Q34. What is child class?
-
-Class that inherits from parent class.
-
-Also called subclass/derived class.
-
----
-
-## Q35. What is IS-A relationship?
-
-Inheritance represents IS-A relationship.
-
-Example:
-Dog IS-A Animal.
-
----
-
-## Q36. What are advantages of inheritance?
-
-- code reuse
-- hierarchy creation
-- maintainability
-- extensibility
-
----
-
-## Q37. What are disadvantages of inheritance?
-
-- tight coupling
-- rigid design
-- maintainability problems if overused
-
----
-
-## Q38. Does Java support multiple inheritance using classes?
-
-No.
-
-Java supports multiple inheritance using interfaces only.
-
----
-
-## Q39. What are types of inheritance in Java?
-
-- single inheritance
-- multilevel inheritance
-- hierarchical inheritance
-
----
-
-## Q40. Why do modern backend systems avoid excessive inheritance?
-
-Because deep inheritance creates tightly coupled and difficult-to-maintain systems.
-
----
-
-## Q41. What is super keyword in Java?
-
-`super` refers to immediate parent class object.
-
----
-
-## Q42. Why is super keyword used?
-
-It is used to:
-- access parent variables
-- access parent methods
-- call parent constructors
-
----
-
-## Q43. How do you call parent constructor?
-
-Using:
-
-```java
-super();
-```
-
----
-
-## Q44. What is difference between this and super?
-
-this:
-Current class object.
-
-super:
-Parent class object.
-
----
-
-## Q45. Can super access private parent members?
-
-No.
-
-Private members are not directly accessible.
-
----
-
-## Q46. When does parent constructor execute?
-
-Parent constructor executes before child constructor.
-
----
-
-## Q47. Why must super() be first statement?
-
-Because parent initialization must happen before child initialization.
-
----
-
-## Q48. Can super call parent methods?
-
-Yes.
-
-Example:
-
-```java
-super.display();
-```
-
----
-
-## Q49. Is super keyword important in backend engineering?
-
-Yes.
-
-It is heavily used in:
-- framework extension
-- enterprise inheritance
-- reusable architectures
-
----
-
-## Q50. Can super and this be used together?
-
-Yes.
-
-But constructor rules must be followed properly.
-
----
-
-## Q51. What is method overloading?
-
-Method overloading means multiple methods with same name but different parameters.
-
----
-
-## Q52. What is method overriding?
-
-Method overriding means child class provides its own implementation of parent method.
-
----
-
-## Q53. What is compile-time polymorphism?
-
-Method overloading is compile-time polymorphism.
-
-Method resolution happens during compilation.
-
----
-
-## Q54. What is runtime polymorphism?
-
-Method overriding is runtime polymorphism.
-
-Method resolution happens during runtime.
-
----
-
-## Q55. Does overloading require inheritance?
-
-No.
-
-Overloading can happen inside same class.
-
----
-
-## Q56. Does overriding require inheritance?
-
-Yes.
-
-Overriding requires parent-child relationship.
-
----
-
-## Q57. Can methods be overloaded by changing only return type?
-
-No.
-
-Return type alone is insufficient.
-
----
-
-## Q58. What is dynamic method dispatch?
-
-JVM deciding actual overridden method execution during runtime.
-
----
-
-## Q59. Why is @Override annotation important?
-
-It improves:
-- readability
-- safety
-- maintainability
-
----
-
-## Q60. Why is overriding important in backend engineering?
-
-Overriding enables:
-- framework extensibility
-- runtime flexibility
-- custom implementations
-
----
-
-## Q61. What is polymorphism in Java?
-
-Polymorphism means one thing taking multiple forms.
-
----
-
-## Q62. What are types of polymorphism?
-
-- compile-time polymorphism
-- runtime polymorphism
-
----
-
-## Q63. Which concept provides compile-time polymorphism?
-
-Method overloading.
-
----
-
-## Q64. Which concept provides runtime polymorphism?
-
-Method overriding.
-
----
-
-## Q65. What is dynamic method dispatch?
-
-JVM deciding actual overridden method execution during runtime.
-
----
-
-## Q66. What is parent reference child object?
-
-Example:
-
-```java
-Animal animal = new Dog();
-```
-
-Parent reference points to child object.
-
----
-
-## Q67. Why is polymorphism important?
-
-Polymorphism improves:
-- flexibility
-- scalability
-- maintainability
-- loose coupling
-
----
-
-## Q68. What is loose coupling?
-
-Reducing dependency between components.
-
----
-
-## Q69. Why do frameworks heavily use polymorphism?
-
-Polymorphism enables:
-- extensibility
-- runtime flexibility
-- interchangeable implementations
-
----
-
-## Q70. Why is polymorphism important in backend engineering?
-
-Modern backend frameworks depend heavily on:
-- interfaces
-- runtime dispatch
-- dependency injection
-- flexible architectures
-
----
-
-## Q71. What is abstraction in Java?
-
-Abstraction means hiding implementation complexity and exposing essential behavior only.
-
----
-
-## Q72. What is abstract class?
-
-Abstract class is incomplete class that cannot be instantiated directly.
-
----
-
-## Q73. What is abstract method?
-
-Method without implementation.
-
-Child classes must implement it.
-
----
-
-## Q74. Can abstract class contain normal methods?
-
-Yes.
-
-Abstract classes may contain:
-- abstract methods
-- implemented methods
-
----
-
-## Q75. Can we create object of abstract class?
-
-No.
-
-Abstract classes cannot be instantiated directly.
-
----
-
-## Q76. What is partial abstraction?
-
-Abstract classes providing both:
-- implemented methods
-- abstract methods
-
----
-
-## Q77. Difference between abstraction and encapsulation?
-
-Encapsulation:
-protects data.
-
-Abstraction:
-hides complexity.
-
----
-
-## Q78. Why is abstraction important?
-
-Abstraction improves:
-- maintainability
-- scalability
-- loose coupling
-- flexibility
-
----
-
-## Q79. Why do frameworks heavily use abstraction?
-
-Abstraction enables:
-- extensibility
-- interchangeable implementations
-- hidden complexity
-
----
-
-## Q80. Why is abstraction important in backend engineering?
-
-Modern backend systems use abstraction heavily for:
-- service layers
-- repositories
-- scalable architectures
-- framework design
-
----
-
-## Q81. What is interface in Java?
-
-Interface is blueprint of behavior.
-
-It defines what should happen, not implementation details.
-
----
-
-## Q82. Which keyword is used to implement interface?
-
-`implements`
-
----
-
-## Q83. Why are interfaces important?
-
-Interfaces improve:
-- loose coupling
-- flexibility
-- maintainability
-- scalability
-
----
-
-## Q84. Can Java support multiple inheritance using interfaces?
-
-Yes.
-
-Java supports multiple inheritance using interfaces.
-
----
-
-## Q85. Difference between interface and abstract class?
-
-Interface:
-behavior contract.
-
-Abstract class:
-partial implementation.
-
----
-
-## Q86. Why do modern backend systems heavily use interfaces?
-
-Interfaces enable:
-- dependency injection
-- interchangeable implementations
-- scalability
-- testability
-
----
-
-## Q87. What is loose coupling?
-
-Reducing dependency between components using abstractions.
-
----
-
-## Q88. Why is programming to interfaces important?
-
-It improves:
-- flexibility
-- maintainability
-- scalability
-
----
-
-## Q89. Can interface contain implemented methods?
-
-Modern Java supports:
-- default methods
-- static methods
-
----
-
-## Q90. Why are interfaces important in Spring Framework?
-
-Spring heavily depends on interfaces for:
-- dependency injection
-- service abstraction
-- repository abstraction
-
----
-
-## Q91. What is Object class in Java?
-
-Object class is parent class of all Java classes.
-
----
-
-## Q92. Why is Object class important?
-
-It provides common methods like:
-- toString()
-- equals()
-- hashCode()
-
----
-
-## Q93. What is toString() method?
-
-Used to provide string representation of object.
-
----
-
-## Q94. What is equals() method?
-
-Used for logical equality comparison.
-
----
-
-## Q95. Difference between == and equals()?
-
-==:
-reference comparison.
-
-equals():
-logical/content comparison.
-
----
-
-## Q96. What is hashCode() method?
-
-Used for hashing-based collections.
-
-Examples:
-- HashMap
-- HashSet
-
----
-
-## Q97. What is equals() and hashCode() contract?
-
-If equals() returns true,
-hashCode() must be same.
-
----
-
-## Q98. Why are equals() and hashCode() important in backend engineering?
-
-They are heavily used in:
-- collections
-- caching
-- JPA entities
-- Hibernate
-
----
-
-## Q99. What happens if hashCode() contract is broken?
-
-It may create:
-- collection bugs
-- caching issues
-- inconsistent behavior
-
----
-
-## Q100. Why is toString() useful?
-
-Useful for:
-- logging
-- debugging
-- monitoring
-
----
-
-## Q101. What is association in Java?
-
-Association represents relationship between independent objects.
-
----
-
-## Q102. What is aggregation?
-
-Aggregation is weak HAS-A relationship.
-
-Child can exist independently.
+### Q2. What happens at `new Car()`?
 
----
-
-## Q103. What is composition?
-
-Composition is strong HAS-A relationship.
-
-Child lifecycle depends on parent.
-
----
-
-## Q104. Difference between aggregation and composition?
-
-Aggregation:
-weak ownership.
-
-Composition:
-strong ownership.
-
----
-
-## Q105. What is HAS-A relationship?
-
-Relationship where object contains another object.
-
----
-
-## Q106. Difference between inheritance and composition?
-
-Inheritance:
-IS-A relationship.
-
-Composition:
-HAS-A relationship.
-
----
-
-## Q107. Why do modern backend systems prefer composition?
-
-Composition improves:
-- flexibility
-- maintainability
-- loose coupling
-
----
-
-## Q108. Where are association and composition used in backend systems?
-
-Used in:
-- JPA entities
-- domain models
-- service architectures
-- microservices
-
----
-
-## Q109. Why is composition important in scalable systems?
-
-Composition reduces tight coupling and improves extensibility.
-
----
-
-## Q110. Which is preferred in modern architecture: inheritance or composition?
+The JVM allocates memory on the heap for a `Car`, initializes each field to its default (`null`/`0`/`false`), runs the constructor chain (parent constructors first, via `super(...)`), and returns a reference to the new object. The variable on the left of the `=` then holds that reference, not the object itself.
 
-Modern systems usually prefer composition over inheritance.
+### Q3. Why does `Car a = new Car(); Car b = a; b.brand = "Ford";` change what `a` sees?
 
----
+Because `b = a` copies the reference, not the object. Both variables now point to the same `Car` on the heap. Mutating through either variable changes the same underlying object. This is "reference assignment" — common gotcha for people coming from value-semantic languages.
 
-## Q111. What is final keyword in Java?
+### Q4. What's the difference between stack and heap memory?
 
-The `final` keyword represents restriction/non-modifiable behavior.
+The stack holds local variables and references — fast, automatically cleared when methods return. The heap holds the actual objects you create with `new` — garbage-collected when no references remain. A variable `Car a = new Car()` puts the reference `a` on the stack and the `Car` object on the heap.
 
 ---
-
-## Q112. What is final variable?
 
-A variable whose value cannot change after initialization.
+## Constructors
 
----
-
-## Q113. What is final method?
+### Q5. What's a constructor and why do you need one?
 
-Method that cannot be overridden.
+A constructor is a special method that runs when an object is created. Its job is to put the new object in a valid initial state. Without constructors (or with empty default ones), objects start with default field values and have to be set up by the caller — error-prone and easy to forget.
 
----
+### Q6. Why does writing your own constructor remove the no-arg default?
 
-## Q114. What is final class?
+Java only generates a default no-arg constructor when there are *no* constructors at all. Writing your own signals intent — you want construction to require specific inputs. If you also want a no-arg form, declare it explicitly.
 
-Class that cannot be inherited.
+### Q7. What's `this(...)` in a constructor?
 
----
+It calls another constructor of the same class. Used for constructor chaining — one main constructor does the work, others delegate after filling in defaults. Must be the first statement (only one of `this(...)` or `super(...)` per constructor).
 
-## Q115. Why is String class final?
+### Q8. Should you call methods from a constructor?
 
-For:
-- security
-- immutability
-- thread safety
-- performance
+Private final methods, yes. Overridable methods, no — a subclass's override might run before the subclass is fully initialized, accessing uninitialized fields. Famously subtle bug.
 
 ---
 
-## Q116. What is final reference variable?
+## Encapsulation
 
-Reference cannot point to another object.
+### Q9. What is encapsulation, beyond "use `private`"?
 
-Object contents may still change.
+Hiding internal state and exposing only the operations that maintain invariants. The point isn't `private` — the point is that the class controls how its state can change, so rules like "balance can't go negative" can actually be enforced. Public fields can't enforce anything; methods can.
 
----
+### Q10. Your teammate writes a class with `public` fields "because we control all the callers." What's the problem?
 
-## Q117. Difference between final and immutable object?
+"All the callers" today won't be the same in 6 months. Once the field is public, the class can never add a rule about how it's mutated without breaking callers. Encapsulation is cheap insurance against the future — making it `private` with appropriate methods costs ~5 minutes and keeps options open forever.
 
-final:
-reference/value restriction.
+### Q11. A class has `private List<Item> items` and `public List<Item> getItems()`. Why might this still leak encapsulation?
 
-Immutable:
-entire object state cannot change.
+The getter hands out a reference to the actual internal list. Callers can `.add(...)` or `.clear()` it, bypassing any rules. The class is private in name, mutable through the back door. Fix: return an unmodifiable view or a defensive copy.
 
 ---
-
-## Q118. Difference between final, finally, and finalize()?
 
-final:
-keyword.
+## Inheritance
 
-finally:
-exception block.
+### Q12. When should you use inheritance vs. composition?
 
-finalize():
-garbage collection related method.
+Inheritance when the relationship is genuinely "is-a" AND you want the parent's full public interface to be part of the child's. Composition for "has-a" relationships, or when you want fine control over what's exposed. Default to composition — it has fewer pitfalls, more flexibility, and is what every popular framework (Spring, Guice) uses heavily.
 
----
+### Q13. What's wrong with `Stack extends ArrayList`?
 
-## Q119. Why is final important in backend engineering?
+A `Stack` has a LIFO contract; an `ArrayList` does not. By inheriting, `Stack` also inherits `add(index, item)`, `remove(index)`, `get(index)` — operations that violate LIFO and can corrupt the stack from outside. Fix: composition. `Stack` should *contain* a list, not *be* one.
 
-final helps:
-- immutability
-- thread safety
-- stable architecture
-- safer backend systems
+### Q14. Explain Liskov Substitution Principle in your own words.
 
----
+If `B extends A`, then anywhere code expects an `A`, you should be able to substitute a `B` and the program should still work correctly. The subtype must respect the parent's behavioral contract, not just its method signatures. A famous counterexample: `Square extends Rectangle` — geometrically correct, code-wise broken because Square's `setWidth` also changes height, violating Rectangle's contract.
 
-## Q120. Why are immutable objects important?
+### Q15. Why must `super(...)` be the first statement in a constructor?
 
-Immutable objects are:
-- thread-safe
-- predictable
-- safer for scalable systems
+So the parent class is fully constructed before any subclass code runs. If you could do work before `super(...)`, you might access fields the parent hasn't initialized, or call methods that depend on parent state. Java's rule prevents that whole category of bug.
 
 ---
 
-## Q121. What is immutability in Java?
+## Polymorphism
 
-Immutability means object state cannot change after creation.
+### Q16. What's the difference between overloading and overriding?
 
----
+Overloading: same method name, different parameter lists, in the same class. Resolved at compile time by the argument types. Overriding: subclass provides its own version of a method inherited from the parent. Resolved at runtime by the actual object type. Different mechanisms, often confused.
 
-## Q122. Why are immutable objects important?
+### Q17. `Animal a = new Dog(); a.speak();` — explain what happens.
 
-Immutable objects are:
-- thread-safe
-- predictable
-- safer
-- easier to debug
+At compile time, the compiler sees `a` typed as `Animal` and checks that `Animal` has a `speak()` method (yes). At runtime, the JVM looks at the actual object — a `Dog` — and dispatches to `Dog.speak()` (the override). This is runtime polymorphism. The reference type controls what you can call; the object type controls what actually runs.
 
----
+### Q18. Why is `@Override` important even though it's optional?
 
-## Q123. How do you create immutable class?
+It tells the compiler "this is intended to override a parent method — error out if it doesn't." Catches typos and signature mismatches that silently turn an override into a new method. Costs nothing to add; prevents real bugs.
 
-Common rules:
-- make class final
-- make fields private final
-- initialize via constructor
-- provide only getters
-- avoid setters
+### Q19. Can a static method be overridden?
 
----
+No. Static methods belong to the class, not the instance, so they're resolved by reference type, not object type. A static method in a subclass with the same name *hides* the parent's, but isn't an override. There's no runtime dispatch for it.
 
-## Q124. Why is String immutable?
+### Q20. You have a `for` loop with `if (a instanceof Dog) ... else if (a instanceof Cat) ...`. What's the design smell?
 
-For:
-- security
-- thread safety
-- caching
-- performance
+You're doing manual dispatch by type — exactly what polymorphism is supposed to handle. Push the type-specific behavior onto the common parent or interface (`abstract void speak()`), and the loop becomes `for (Animal a : animals) a.speak();`. No casts needed.
 
 ---
 
-## Q125. What is defensive copying?
+## Abstraction
 
-Creating copies of mutable objects to prevent external modification.
+### Q21. When would you use an abstract class vs. an interface?
 
----
+Abstract class when subtypes share state (fields) or non-trivial implementation. Interface when you're describing a capability that might be implemented by unrelated classes, or when you want a class to have multiple capabilities (Java allows multiple interface inheritance, only single class inheritance). When unsure, start with an interface — lower commitment.
 
-## Q126. Why is immutability important in backend engineering?
+### Q22. Can an abstract class have a constructor?
 
-Immutability improves:
-- thread safety
-- scalability
-- predictable behavior
+Yes. It can't be called directly (you can't `new` an abstract class), but it runs when a concrete subclass is constructed (via implicit or explicit `super(...)`). Often used to enforce that subclasses provide certain values up front.
 
----
+### Q23. What's a default method on an interface and why was it added?
 
-## Q127. Are immutable objects thread-safe?
+A method declared on an interface with an implementation (`default void foo() { ... }`). Added in Java 8 to let interfaces evolve without breaking every existing implementation — you can add a new default method and all existing implementations inherit the default. Before Java 8, adding a method to a widely-used interface was a flag day.
 
-Yes.
+### Q24. What's a functional interface?
 
-Because state never changes.
+An interface with exactly one abstract method. Special status: you can implement it with a lambda expression. Examples: `Runnable`, `Comparator`, `Function`, `Predicate`. The `@FunctionalInterface` annotation is optional but tells the compiler to enforce the single-abstract-method rule.
 
 ---
-
-## Q128. Difference between mutable and immutable objects?
 
-Mutable:
-state can change.
+## Interfaces
 
-Immutable:
-state cannot change after creation.
-
----
+### Q25. "Program to an interface, not an implementation" — what does that mean in practice?
 
-## Q129. Does final reference guarantee immutability?
+Code should depend on the abstract type (`List`, `UserRepository`) rather than a specific class (`ArrayList`, `MySqlUserRepository`). That way you can swap the implementation later — for tests, for different databases, for performance — without changing the dependent code. This is the foundation of dependency injection and the **D** in SOLID.
 
-No.
+### Q26. A class implements two interfaces, both with `default void log()`. What happens?
 
-Object contents may still change.
+Compile error — Java can't pick. The class must override `log()` and explicitly call one (or do something else): `A.super.log();` or `B.super.log();`. The "diamond problem" exists in Java's default-method world too; Java requires you resolve it explicitly.
 
 ---
 
-## Q130. Where is immutability heavily used?
+## Object methods
 
-Used in:
-- DTOs
-- configuration objects
-- caching systems
-- distributed systems
+### Q27. What's the default `equals()` behavior, and why is it usually not what you want?
 
----
-
-## Q131. What are SOLID principles?
+Default `equals(Object o)` returns `this == o` — reference equality, same as `==`. For most domain classes you want value equality (two Users with the same name and age are equal). You override `equals` to compare fields.
 
-SOLID is a set of object-oriented design principles for scalable and maintainable systems.
+### Q28. State the equals/hashCode contract.
 
----
+If `a.equals(b)` is true, then `a.hashCode() == b.hashCode()` must also be true. The reverse doesn't need to hold (different objects can share a hash). If you override `equals` without `hashCode`, a `HashSet` or `HashMap` will misplace your objects — `set.contains(equivalentObject)` returns false.
 
-## Q132. What is Single Responsibility Principle (SRP)?
+### Q29. What does Java's `record` give you for free?
 
-One class should have only one reason to change.
+A `final` class with `final` fields, a canonical constructor, accessor methods (named after the components — `name()` not `getName()`), `equals`/`hashCode`/`toString` based on all fields, and immutability. Perfect for value classes / DTOs. Can't be subclassed.
 
 ---
 
-## Q133. What is Open/Closed Principle (OCP)?
+## Immutability
 
-Systems should be open for extension but closed for modification.
+### Q30. List the conditions for a class to be truly immutable.
 
----
+1. The class is `final`.
+2. All fields are `private final`.
+3. No setters or mutating methods.
+4. Mutable fields are defensively copied on the way in and on the way out (or wrapped in an unmodifiable view).
+5. The constructor fully initializes all fields.
 
-## Q134. What is Liskov Substitution Principle (LSP)?
+Miss any one and the class isn't really immutable.
 
-Child classes should safely replace parent classes.
+### Q31. Why is immutability valuable in concurrent code?
 
----
+Immutable objects can be shared across threads without locks. There's no state to corrupt, no visibility issue (the JVM's happens-before guarantees that final fields are visible after construction). For multithreaded backend code, immutable value objects are by far the easiest to reason about.
 
-## Q135. What is Interface Segregation Principle (ISP)?
+### Q32. `final List<String> names = new ArrayList<>(); names.add("X");` — does this compile?
 
-Clients should not depend on methods they do not use.
+Yes. `final` makes the reference immutable, not the object it points to. The variable can't be reassigned, but the underlying list is still mutable. For true immutability, use `List.of(...)` or `List.copyOf(...)`.
 
 ---
-
-## Q136. What is Dependency Inversion Principle (DIP)?
 
-Depend on abstractions instead of concrete implementations.
-
----
+## SOLID
 
-## Q137. Why are SOLID principles important?
+### Q33. Explain each letter of SOLID in one sentence.
 
-SOLID improves:
-- scalability
-- maintainability
-- flexibility
-- testability
+- **S** (Single Responsibility): a class should have only one reason to change.
+- **O** (Open/Closed): open for extension, closed for modification — add new behavior via new classes, not by editing existing ones.
+- **L** (Liskov): subtypes must be substitutable for their base types without breaking correctness.
+- **I** (Interface Segregation): many small focused interfaces are better than one big general one.
+- **D** (Dependency Inversion): depend on abstractions, not concrete implementations.
 
----
+### Q34. Give a concrete example of violating Single Responsibility, then fixing it.
 
-## Q138. Which SOLID principle powers dependency injection?
+`InvoiceService` does calculation, PDF rendering, email sending, and database persistence. Four reasons to change. Fix: split into `InvoiceCalculator`, `InvoicePdfRenderer`, `InvoiceEmailSender`, `InvoiceRepository` — each independently testable and changeable.
 
-Dependency Inversion Principle (DIP).
+### Q35. How does Spring embody Dependency Inversion?
 
----
+`UserService` declares a constructor parameter of type `UserRepository` (interface). Spring at startup finds an implementation (e.g. `MySqlUserRepository`), creates it, and passes it in. The service depends only on the abstraction. For tests, an in-memory fake is injected instead. The service code never changes.
 
-## Q139. Why do modern backend systems heavily follow SOLID?
+### Q36. What's the cost of over-applying SOLID?
 
-SOLID helps build:
-- scalable systems
-- loosely coupled architectures
-- maintainable codebases
+Over-engineering. Five tiny interfaces and seven classes for what could be one focused method. The goal isn't to maximize abstraction — it's to make code easier to change safely. Apply SOLID at boundaries (public APIs, things multiple modules depend on); be pragmatic on internal details.
 
 ---
 
-## Q140. Why are SOLID principles important in Spring Framework?
+## Rapid-fire (one-line answers)
 
-Spring heavily depends on:
-- abstractions
-- dependency injection
-- loose coupling
-- extensible architecture
-
----
+37. **Can Java have multiple inheritance?** Of state (classes), no. Of behavior (interfaces), yes.
+38. **What is `this` in a method?** A reference to the current object.
+39. **Difference between `final` and `static`?** `final` = can't change. `static` = belongs to the class, not an instance. Different things.
+40. **What's a marker interface?** An interface with no methods, used to tag a class with some property (e.g. `Serializable`).
+41. **Can constructors be private?** Yes. Common for singletons and factory-method-only classes.
+42. **Can interfaces have constructors?** No.
+43. **Can records be subclassed?** No. Records are implicitly `final`.
+44. **Difference between `extends` and `implements`?** `extends` for classes (single inheritance). `implements` for interfaces (multiple allowed).
+45. **What does `super.method()` do?** Calls the parent class's version of an overridden method.
+46. **Can `this` and `super` both appear as the first line of a constructor?** No, only one.
+47. **What's an anonymous class?** A class defined and instantiated inline, often used before lambdas existed for one-off implementations.
+48. **What's pass-by-value vs pass-by-reference in Java?** Java is always pass-by-value. For object types, the value passed is the reference (not a copy of the object).
+49. **Can `equals()` and `hashCode()` be different methods on different classes?** Yes — they only need to be consistent with each other within a class.
+50. **What's a record's "compact constructor"?** A constructor form that doesn't redeclare the parameters; runs after Java assigns the fields, used mostly for validation.
