@@ -1,231 +1,214 @@
-# Operators and Conditional Statements
+# 03 — Operators and Conditions
 
-Operators and conditional statements are used to perform calculations, comparisons, and decision-making in Java programs.
+Most lines of code are either *computing* a value or *deciding* what to do next. Operators are how you compute. Conditional statements (`if`, `switch`) are how you decide. They're the smallest possible "logic" your program can do.
 
-These concepts are heavily used in backend applications for:
-- validations
-- authentication
-- authorization
-- business logic
-- filtering conditions
+This topic is short because the syntax is simple. The traps are in the corner cases — short-circuit evaluation, integer division, `==` vs `equals`, switch fall-through. We'll spend time on those.
 
 ---
 
-# 1. What are Operators?
+## Arithmetic operators
 
-Operators are special symbols used to perform operations on variables and values.
+`+`, `-`, `*`, `/`, `%` — the usual suspects. Two gotchas:
 
-Example:
+**Integer division throws away the remainder.**
 
 ```java
-int sum = 10 + 20;
+int a = 7 / 2;       // 3, not 3.5
+double b = 7 / 2;    // 3.0 — because the division happened in int FIRST, then widened
+double c = 7.0 / 2;  // 3.5 — one operand is double, whole expression promoted
 ```
 
-Here:
-- `+` is an arithmetic operator
-- it adds two numbers
-
----
-
-# 2. Arithmetic Operators
-
-Arithmetic operators are used for mathematical calculations.
-
-| Operator | Description | Example |
-|----------|-------------|----------|
-| + | Addition | a + b |
-| - | Subtraction | a - b |
-| * | Multiplication | a * b |
-| / | Division | a / b |
-| % | Modulus | a % b |
-
-Example:
+**`%` is the modulo (remainder) operator.** Very useful: `n % 2 == 0` is "is n even", `i % 10 == 0` is "every 10th item."
 
 ```java
-int a = 10;
-int b = 5;
-
-System.out.println(a + b);
-System.out.println(a - b);
-System.out.println(a * b);
-System.out.println(a / b);
+System.out.println(17 % 5);   // 2
 ```
 
 ---
 
-# 3. Comparison Operators
+## Comparison operators
 
-Comparison operators compare values and return boolean results.
+`==`, `!=`, `<`, `<=`, `>`, `>=` — produce a `boolean`.
 
-| Operator | Description |
-|----------|-------------|
-| == | Equal to |
-| != | Not equal to |
-| > | Greater than |
-| < | Less than |
-| >= | Greater than or equal to |
-| <= | Less than or equal to |
-
-Example:
+`==` on primitives compares values. `==` on objects compares *references* — almost never what you want. For object value equality, use `.equals()`. Topic 07 covers this in detail for strings.
 
 ```java
-int age = 20;
+int a = 5, b = 5;
+System.out.println(a == b);       // true — value compare
 
-System.out.println(age >= 18);
-```
-
-Output:
-
-```text
-true
+String x = new String("hi");
+String y = new String("hi");
+System.out.println(x == y);       // false — different objects
+System.out.println(x.equals(y));  // true — value compare
 ```
 
 ---
 
-# 4. Logical Operators
+## Logical operators
 
-Logical operators are used to combine multiple conditions.
-
-| Operator | Description |
-|----------|-------------|
-| && | AND |
-| || | OR |
-| ! | NOT |
-
-Example:
+`&&` (and), `||` (or), `!` (not). They produce booleans and combine boolean expressions.
 
 ```java
-int age = 25;
-boolean hasLicense = true;
+if (age >= 18 && hasLicense) { ... }
+if (isAdmin || isOwner) { ... }
+if (!isLocked) { ... }
+```
 
-if (age >= 18 && hasLicense) {
+The important detail: `&&` and `||` **short-circuit**. They stop evaluating as soon as the answer is determined.
 
-    System.out.println("Eligible to drive");
-}
+```java
+if (user != null && user.isActive()) { ... }
+```
+
+If `user` is null, `&&` doesn't even evaluate `user.isActive()` — which would throw an NPE. This is a defensive idiom you'll write hundreds of times.
+
+The non-short-circuit versions `&` and `|` exist for booleans too, but they always evaluate both sides. You almost never want them. The exception is bitwise operations on integers — `5 & 3` is bitwise AND on the binary representation, which is a different feature with the same symbol.
+
+---
+
+## Operator precedence (the part to memorize)
+
+You don't need a full chart. Memorize the rough order:
+
+1. `!`, unary `-`
+2. `*`, `/`, `%`
+3. `+`, `-`
+4. `<`, `<=`, `>`, `>=`, `==`, `!=`
+5. `&&`
+6. `||`
+7. `=`, `+=`, ...
+
+In other words: arithmetic before comparison, comparison before `&&`, `&&` before `||`. When in doubt, **add parentheses**. A reader thanks you, the compiler doesn't care.
+
+```java
+if ((a + b) * 2 > 100 && !done) { ... }   // unambiguous to anyone reading
 ```
 
 ---
 
-# 5. Conditional Statements
-
-Conditional statements help programs make decisions.
-
-Java supports:
-- if
-- if-else
-- else-if
-- switch
-
----
-
-# 6. if Statement
-
-The `if` statement executes code only if condition is true.
-
-Example:
+## if, else if, else
 
 ```java
-int marks = 80;
-
-if (marks >= 40) {
-
-    System.out.println("Pass");
-}
-```
-
----
-
-# 7. if-else Statement
-
-Example:
-
-```java
-int marks = 30;
-
-if (marks >= 40) {
-
-    System.out.println("Pass");
-
+if (score >= 90) {
+    grade = "A";
+} else if (score >= 75) {
+    grade = "B";
 } else {
-
-    System.out.println("Fail");
+    grade = "F";
 }
 ```
 
+The conditions are checked top to bottom. The first one that matches wins; the rest are skipped. Use braces even for one-line bodies — it prevents a class of bugs where someone adds a second line and the indentation lies about which statements are inside.
+
 ---
 
-# 8. Nested if Statement
+## The ternary operator
 
-Nested if means placing one if statement inside another.
-
-Example:
+A short form of `if/else` that produces a value.
 
 ```java
-int age = 25;
-boolean hasId = true;
+String label = (age >= 18) ? "adult" : "minor";
+```
 
-if (age >= 18) {
+Equivalent to:
 
-    if (hasId) {
+```java
+String label;
+if (age >= 18) label = "adult";
+else label = "minor";
+```
 
-        System.out.println("Entry Allowed");
-    }
+Use ternary for *one* value-producing decision. Don't nest them — `a ? b : c ? d : e` is fine in theory and unreadable in practice.
+
+---
+
+## switch
+
+`switch` is for choosing one of many fixed values. You'll see two forms in modern Java.
+
+**Classic form (the one you'll meet in legacy code):**
+
+```java
+String day;
+switch (dayNumber) {
+    case 1:  day = "Monday";  break;
+    case 2:  day = "Tuesday"; break;
+    case 3:  day = "Wednesday"; break;
+    default: day = "unknown"; break;
 }
 ```
 
----
+The `break` matters. Without it, control "falls through" into the next case — sometimes deliberate, almost always a bug. The compiler doesn't warn you.
 
-# 9. switch Statement
-
-Switch is useful when checking multiple fixed values.
-
-Example:
+**Switch expression (Java 14+, the form you should use in new code):**
 
 ```java
-int day = 2;
+String day = switch (dayNumber) {
+    case 1 -> "Monday";
+    case 2 -> "Tuesday";
+    case 3 -> "Wednesday";
+    default -> "unknown";
+};
+```
 
-switch (day) {
+No `break`. Cases are arrow-style. The whole `switch` produces a value, which you assign in one go. Much harder to write a fall-through bug.
 
-    case 1:
-        System.out.println("Monday");
-        break;
+Switch works on `int`, `String`, enums, and (since Java 21) on pattern-matched types. Not on arbitrary objects.
 
-    case 2:
-        System.out.println("Tuesday");
-        break;
+---
 
-    default:
-        System.out.println("Invalid Day");
+## Vulnerable / broken patterns
+
+**Bug 1 — assignment in a condition.**
+
+```java
+if (loggedIn = true) { ... }    // assigns true to loggedIn, expression evaluates to true → always enters
+```
+
+Java's compiler catches this for non-boolean assignments (`if (a = 5)` won't compile), but `if (b = true)` does compile because the assignment evaluates to a boolean. Always double-check `==` in conditions.
+
+**Bug 2 — float comparison with `==`.**
+
+```java
+double a = 0.1 + 0.2;
+if (a == 0.3) { ... }   // false; a is 0.30000000000000004
+```
+
+Use a tolerance, or use `BigDecimal` for money.
+
+**Bug 3 — forgetting `break` in classic switch.**
+
+```java
+switch (status) {
+    case "OK":   handleOk();    // no break — falls into ERROR
+    case "ERROR": handleError();
 }
 ```
 
----
-
-# 10. Ternary Operator
-
-Ternary operator is a short form of if-else.
-
-Example:
-
-```java
-int age = 20;
-
-String result = (age >= 18) ? "Adult" : "Minor";
-
-System.out.println(result);
-```
+A real bug surface. The arrow-form switch expression eliminates this class entirely.
 
 ---
 
-# 11. Real Backend Engineering Importance
+## Code examples
 
-Operators and conditions are heavily used in:
-- API validations
-- login systems
-- role-based access
-- filtering data
-- authentication checks
-- business rules
-- request processing
+1. `Operators.java` — arithmetic, comparison, logical, modulo. The integer-division surprise. Short-circuit demonstration.
+2. `IfElse.java` — score-to-grade decision, with the "always use braces" rule shown.
+3. `Ternary.java` — short-form if/else producing a value.
+4. `SwitchClassic.java` — old-style switch with `break`. Includes a deliberate fall-through bug, then the fix.
+5. `SwitchExpression.java` — the modern arrow form. Cleaner, same result.
 
-Almost every backend application depends on conditional logic.
+---
+
+## Try this yourself
+
+1. Change `Operators.java`'s integer division to use doubles. Watch the output change. Then make only *one* operand a double — observe that still works (the int gets promoted).
+2. In `SwitchClassic.java`, remove a `break`. Run it and see what unexpected output appears. Add it back.
+3. Rewrite `IfElse.java`'s grade ladder as a `switch` expression that takes the first digit of the score. (Hint: `score / 10`.)
+
+---
+
+## Self-check
+
+1. Why does `7 / 2` produce `3` in Java but `3.5` in most calculators?
+2. Walk through what happens in `user != null && user.getName().isEmpty()` when `user` is null. Why doesn't this throw?
+3. A teammate writes `if (status = "OK")`. Will it compile? What's the bug, and what would the fix be?
