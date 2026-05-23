@@ -1,246 +1,159 @@
-# Exception Handling in Java
+# 01 — Exception Handling (Deep Dive)
 
-Exception handling is one of the most important concepts in backend engineering.
+Module 01 covered the mechanics — `try`, `catch`, `finally`, `throw`, `throws`. This topic is about the judgment calls: chaining causes, translating exceptions across layers, suppressed exceptions in try-with-resources, the real cost of `throw`, and when checked vs. unchecked is the right call.
 
-Production systems constantly face:
-- database failures
-- API failures
-- invalid inputs
-- network issues
-- file handling problems
-- runtime errors
-
-Exception handling helps applications:
-- fail gracefully
-- avoid crashes
-- improve debugging
-- improve reliability
-
-Very important production engineering concept.
+If you've never seen `try` / `catch` before, go back to module 01 topic 12 first.
 
 ---
 
-# 1. What is Exception?
+## The problem this solves
 
-An exception is:
-# runtime abnormal condition
+A REST endpoint calls a service, which calls a repository, which calls JDBC. JDBC throws `SQLException`. What does the endpoint return? "500 Internal Server Error" with no detail leaks the database schema. A 400 misleads the client. And if you just `catch (Exception e) {}` and return `null`, you've created a silent bug.
 
-that interrupts normal program execution.
-
-Examples:
-- division by zero
-- null pointer access
-- file not found
-- database connection failure
+Exception handling at scale is about three things: **preserving the original cause**, **translating to the right abstraction at each layer**, and **deciding what to surface to the caller**.
 
 ---
 
-# 2. Why Exception Handling is Important?
+## Exception chaining: never lose the cause
 
-Without proper exception handling:
-systems may:
-- crash unexpectedly
-- expose sensitive details
-- corrupt data
-- fail unpredictably
-
-Proper handling improves:
-- reliability
-- maintainability
-- resilience
-- debugging
-
-Very important backend engineering principle.
-
----
-
-# 3. Exception Hierarchy
-
-Top-level class:
-
-```text
-Throwable
-```
-
-Main categories:
-- Error
-- Exception
-
-Very important Java architecture concept.
-
----
-
-# 4. Error
-
-Errors represent:
-# serious system-level failures
-
-Examples:
-- OutOfMemoryError
-- StackOverflowError
-
-Applications usually should not attempt aggressive recovery.
-
----
-
-# 5. Exception
-
-Exceptions represent:
-# application/runtime problems
-
-These are generally handled by applications.
-
----
-
-# 6. Checked Exceptions
-
-Checked exceptions are checked at:
-# compile time
-
-Examples:
-- IOException
-- SQLException
-
-Compiler forces handling.
-
-Very important Java feature.
-
----
-
-# 7. Unchecked Exceptions
-
-Unchecked exceptions occur at:
-# runtime
-
-Examples:
-- NullPointerException
-- ArithmeticException
-
-Usually indicate:
-- programming mistakes
-- invalid assumptions
-
-Very important distinction.
-
----
-
-# 8. try-catch Block
-
-Used to safely handle exceptions.
-
-Example:
+When you catch an exception and throw a new one, **pass the original as the cause**. Otherwise the stack trace stops at the wrapping line — you lose where the actual failure happened.
 
 ```java
+// BAD — original SQLException is gone
 try {
-
+    repo.save(user);
+} catch (SQLException e) {
+    throw new UserSaveException("could not save user");
 }
-catch(Exception e) {
 
+// GOOD — chain it
+try {
+    repo.save(user);
+} catch (SQLException e) {
+    throw new UserSaveException("could not save user", e);
 }
 ```
 
-Very important runtime safety mechanism.
+The stack trace for the second version shows both exceptions, separated by `Caused by:`. That's how you find the actual SQL error two layers down.
+
+Every custom exception should expose a `(String, Throwable)` constructor for this reason.
 
 ---
 
-# 9. finally Block
+## Exception translation across layers
 
-The finally block executes:
-# whether exception occurs or not
+A common rule: **catch low, throw high**. Each layer translates exceptions into something the next layer up understands.
 
-Commonly used for:
-- cleanup
-- closing resources
-- releasing connections
+```text
+JDBC layer       throws SQLException                (low-level, technology-specific)
+Repository       catches → throws DataAccessException (data abstraction)
+Service          catches → throws UserNotFoundException, etc. (domain)
+Controller       catches → returns HTTP 404         (transport)
+```
 
-Very important backend engineering practice.
-
----
-
-# 10. throw vs throws
-
-## throw
-
-Used to explicitly throw exception.
+Why bother? The controller shouldn't know that the database is SQL. If you migrate to MongoDB, only the repository changes. The service still throws `UserNotFoundException`, the controller still returns 404. Spring's `DataAccessException` hierarchy is built exactly on this idea.
 
 ---
 
-## throws
+## Suppressed exceptions (try-with-resources)
 
-Used to declare possible exceptions.
+`try-with-resources` closes resources for you. But what if both the `try` body *and* the `close()` throw? In old `finally` code, the close exception would mask the original — disaster for debugging.
 
-Very important interview topic.
+Java 7+ keeps both. The original exception propagates; the close exception is attached as a **suppressed** exception.
 
----
+```java
+try (var conn = openConnection()) {
+    conn.executeBadQuery();   // throws SQLException ←  primary
+}                              // close() also throws ← suppressed onto the SQLException
 
-# 11. Exception Propagation
+// Stack trace prints:
+//   Exception in thread "main" java.sql.SQLException: bad query
+//     ...
+//     Suppressed: java.sql.SQLException: connection close failed
+//     ...
+```
 
-If exception is not handled:
-# it propagates up call stack
-
-Very important debugging concept.
-
-Exception propagation is heavily important for:
-- API debugging
-- production troubleshooting
-- stack trace analysis
-
----
-
-# 12. Stack Trace
-
-Stack trace shows:
-# execution path of exception
-
-Backend engineers constantly analyze stack traces in production systems.
-
-Very important debugging skill.
+Access them programmatically with `Throwable.getSuppressed()`. If you write `finally { resource.close(); }` by hand instead of try-with-resources, you have to call `Throwable.addSuppressed()` yourself — easy to forget, which is why try-with-resources is the strict default.
 
 ---
 
-# 13. Real-World Backend Examples
+## Checked vs. unchecked: when each is right
 
-Exception handling is heavily used in:
-- REST APIs
-- database operations
-- file handling
-- network communication
-- microservices
+Module 01 explained the mechanical difference. The judgment call is *when to use which*.
 
-Very important production engineering topic.
+**Use checked when** the caller can plausibly recover and you want to *force* them to acknowledge it. Classic example: `IOException` reading a config file — caller might retry, fall back to defaults, or fail fast with a clear message.
 
----
+**Use unchecked when** the error indicates a programming bug or an unrecoverable state. Classic example: `IllegalArgumentException` on a negative price — the caller passed invalid input; no try/catch will fix that.
 
-# 14. Good Exception Handling Practices
+Modern Java (Spring, JPA, most newer libraries) leans heavily unchecked. The argument: checked exceptions force `throws` clauses up every call chain, polluting signatures. In practice most "I can't recover here" code just rethrows. Unchecked exceptions let callers handle errors at the level that *can* recover — usually the request boundary — instead of every layer in between.
 
-Good exception handling should:
-- log useful information
-- avoid hiding root causes
-- fail gracefully
-- avoid crashing entire systems
-
-Very important backend mindset.
+A reasonable default for your own code: **unchecked, with a custom exception type per error category**.
 
 ---
 
-# 15. Common Beginner Confusions
+## The real cost of throwing
 
-Beginners often confuse:
-- Error vs Exception
-- throw vs throws
-- checked vs unchecked exceptions
+Throwing an exception is expensive. The JVM has to capture the stack trace at the moment of throw — walking up the frames, recording line numbers. This is fine for genuine error paths but disastrous if you use exceptions for control flow.
 
-These distinctions are very important for enterprise Java development.
+```java
+// SLOW — throws and catches once per non-integer in a 10M-string list
+for (String s : strings) {
+    try {
+        nums.add(Integer.parseInt(s));
+    } catch (NumberFormatException ignored) { }
+}
+```
+
+Two fixes: validate first (`s.matches("-?\\d+")`), or use a parse-with-result API. Either way, **don't pay stack-trace tax for an expected outcome**.
+
+(For genuinely rare errors — once per request, not once per element — the cost is negligible. Don't optimize prematurely; just don't write the loop above.)
 
 ---
 
-# 16. Industry Relevance
+## When to catch vs. let it propagate
 
-Exception handling is foundational for:
-- backend APIs
-- Spring Boot applications
-- microservices
-- distributed systems
-- production debugging
+The fact that you *can* catch an exception doesn't mean you should. Catch when you can:
 
-Modern backend engineering heavily depends on reliable exception handling.
+1. **Recover** (retry, fall back, return a sensible default).
+2. **Translate** to a more meaningful exception for callers (see translation above).
+3. **Add context** (rethrow with extra info: the user ID, the file path).
+4. **Cross a boundary** that callers don't understand the original type at (e.g. controller boundary turning exceptions into HTTP responses).
+
+If none of those apply, let it propagate. A `catch (Exception e) { log.error(e); throw e; }` that adds nothing is just noise — and it puts the log line at a confusing place in the stack.
+
+---
+
+## Common pitfalls
+
+- **Swallowing without logging.** `catch (Exception e) {}` — the silent killer. Hours of debugging await. Minimum: log with stack trace and the operation context.
+- **Catching `Throwable`.** Catches `OutOfMemoryError`, `StackOverflowError`, your own assertions. You can't sensibly recover from these. Catch `Exception` at most, and usually something more specific.
+- **Logging *and* rethrowing.** Now the same error appears twice in the logs at different stack depths. Pick one: either handle it (log + don't rethrow) or propagate it (rethrow + don't log). Log at the top boundary only.
+- **`throw new RuntimeException(e.getMessage())`.** Two bugs: lost the cause, *and* you copied only the message — the inner stack is gone. Use `throw new RuntimeException("context", e)`.
+- **`finally` that throws.** A `throw` inside `finally` replaces any in-flight exception. The original error vanishes. Don't throw from `finally` unless you genuinely mean to.
+
+---
+
+## Code examples
+
+1. `ExceptionChaining.java` — wrapping with cause vs. without; reading `Caused by:` in the stack trace.
+2. `TryWithResourcesAndSuppressed.java` — what happens when both `try` body and `close()` throw.
+3. `ExceptionTranslation.java` — a 3-layer (jdbc → repo → service) translation chain.
+4. `CheckedVsUncheckedChoice.java` — same operation, two designs, when each makes sense.
+5. `ExceptionAsControlFlowSlow.java` paired with `ValidateFirstFast.java` — the perf cost and the fix.
+6. `FinallySwallowsOriginal.java` — the bug where `finally` discards an in-flight exception.
+
+---
+
+## Try this yourself
+
+1. In `ExceptionChaining.java`, comment out the `, e` cause argument. Run it and compare the stack trace — note how everything below the wrap line disappears.
+2. In `TryWithResourcesAndSuppressed.java`, switch from try-with-resources to a manual `finally { close(); }` and observe that the close exception now masks the body exception.
+3. Run `ExceptionAsControlFlowSlow.java` and `ValidateFirstFast.java` with the same input list of 1 million strings. Time them. The difference should be roughly 10–100×.
+
+---
+
+## Self-check
+
+1. You catch a `SQLException` in your repository and want to throw a `RepositoryException`. Write the line that preserves the original cause. Why does omitting the cause hurt debugging?
+2. A `try-with-resources` block's body throws `SQLException`, and the resource's `close()` also throws. Which exception does the caller see? How do they retrieve the other one?
+3. Give one concrete case where a checked exception is the right choice, and one where unchecked is the right choice. Explain the reasoning in one sentence each.
