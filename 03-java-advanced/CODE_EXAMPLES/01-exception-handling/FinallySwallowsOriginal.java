@@ -18,14 +18,14 @@ public class FinallySwallowsOriginal {
 
     public static void main(String[] args) {
         System.out.println("buggy() returned: " + buggy());
-        System.out.println("  (the real bug was never seen — return from finally killed it)");
+        System.out.println("  (the real bug was never seen -- return from finally killed it)");
         System.out.println();
 
         try {
             worseBuggy();
         } catch (RuntimeException e) {
             System.out.println("worseBuggy() threw: " + e.getMessage());
-            System.out.println("  (the real bug was replaced — never reached the caller)");
+            System.out.println("  (the real bug was replaced -- never reached the caller)");
         }
     }
 }

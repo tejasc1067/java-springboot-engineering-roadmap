@@ -22,7 +22,7 @@ public class SynchronizedListIterationCme {
                 }
                 System.out.println("reader finished, sum=" + sum);
             } catch (java.util.ConcurrentModificationException e) {
-                System.out.println("CME during iteration — wrapping the list does not protect iteration");
+                System.out.println("CME during iteration -- wrapping the list does not protect iteration");
             }
         });
 

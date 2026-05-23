@@ -54,6 +54,6 @@ public class HashCollisionDegrades {
         System.out.println();
         System.out.println("BadHash funnels every element into bucket 0.");
         System.out.println("Java 8+ treeifies long bucket chains, so it's O(log n) instead of O(n)");
-        System.out.println("— but still much slower than the constant-time GoodHash case.");
+        System.out.println("-- but still much slower than the constant-time GoodHash case.");
     }
 }

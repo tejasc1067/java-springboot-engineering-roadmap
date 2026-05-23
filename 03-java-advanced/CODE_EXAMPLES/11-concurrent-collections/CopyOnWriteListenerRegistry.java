@@ -28,12 +28,12 @@ public class CopyOnWriteListenerRegistry {
         try { reader.join(); writer.join(); } catch (InterruptedException ignored) {}
 
         System.out.println();
-        System.out.println("now firing again — listener-C is included this time:");
+        System.out.println("now firing again -- listener-C is included this time:");
         for (EventListener l : listeners) {
             l.onEvent("second-pass-event");
         }
         System.out.println();
-        System.out.println("the first reader's iteration was a snapshot — no CME, no listener-C.");
+        System.out.println("the first reader's iteration was a snapshot -- no CME, no listener-C.");
         System.out.println("trade-off: every add() copied the array. Fine for rarely-changing registries.");
     }
 }

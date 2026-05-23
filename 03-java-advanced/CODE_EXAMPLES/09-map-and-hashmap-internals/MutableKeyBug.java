@@ -27,12 +27,12 @@ public class MutableKeyBug {
         CompositeKey k = new CompositeKey(1, "users");
         map.put(k, "user-data");
 
-        System.out.println("before mutation: get → " + map.get(k));
+        System.out.println("before mutation: get -> " + map.get(k));
 
         k.tenantId = 2;
 
-        System.out.println("after mutation:  get → " + map.get(k)
-                + "   ← null! same reference, can't find itself");
+        System.out.println("after mutation:  get -> " + map.get(k)
+                + "   <-- null! same reference, can't find itself");
         System.out.println("map still claims size: " + map.size());
 
         System.out.println();

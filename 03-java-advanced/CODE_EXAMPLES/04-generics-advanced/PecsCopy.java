@@ -21,7 +21,7 @@ public class PecsCopy {
         System.out.println("Object target after copying Doubles: " + objTarget);
 
         System.out.println();
-        System.out.println("Producer (src) extends — read T's out.");
-        System.out.println("Consumer (dest) super — write T's in.");
+        System.out.println("Producer (src) extends -- read T's out.");
+        System.out.println("Consumer (dest) super -- write T's in.");
     }
 }

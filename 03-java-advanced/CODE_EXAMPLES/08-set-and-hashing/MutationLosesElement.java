@@ -32,10 +32,10 @@ public class MutationLosesElement {
         u.setEmail("new@example.com");
 
         System.out.println("contains after mutation:  " + users.contains(u)
-                + "   ← false! same reference, can't find itself");
+                + "   <-- false! same reference, can't find itself");
         System.out.println("set still claims size:    " + users.size());
         System.out.println();
-        System.out.println("The element is in the set, but at the wrong bucket — lookup misses it.");
+        System.out.println("The element is in the set, but at the wrong bucket -- lookup misses it.");
         System.out.println("This is why fields used in hashCode/equals should be final (or use records).");
     }
 }

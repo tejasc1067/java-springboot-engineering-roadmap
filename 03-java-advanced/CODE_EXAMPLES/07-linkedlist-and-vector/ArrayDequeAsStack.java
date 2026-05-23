@@ -19,6 +19,6 @@ public class ArrayDequeAsStack {
 
         System.out.println();
         System.out.println("Deque.push/pop is the modern stack pattern.");
-        System.out.println("java.util.Stack (lowercase) is legacy — use ArrayDeque instead.");
+        System.out.println("java.util.Stack (lowercase) is legacy -- use ArrayDeque instead.");
     }
 }

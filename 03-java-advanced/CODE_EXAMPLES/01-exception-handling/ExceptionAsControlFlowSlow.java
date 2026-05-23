@@ -15,7 +15,7 @@ public class ExceptionAsControlFlowSlow {
             try {
                 parsed.add(Integer.parseInt(s));
             } catch (NumberFormatException ignored) {
-                // expected for half the inputs — exceptions used as a filter
+                // expected for half the inputs -- exceptions used as a filter
             }
         }
         long elapsedMs = (System.nanoTime() - start) / 1_000_000;

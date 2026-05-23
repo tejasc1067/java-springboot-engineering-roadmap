@@ -19,7 +19,7 @@ public class IntSubtractionOverflow {
 
         System.out.println();
         System.out.println("MAX - MIN overflows and wraps. The 'difference' goes negative.");
-        System.out.println("So MAX sorts BEFORE MIN — wildly wrong order.");
+        System.out.println("So MAX sorts BEFORE MIN -- wildly wrong order.");
         System.out.println();
         System.out.println("See IntegerCompareSafe.java for the fix.");
     }

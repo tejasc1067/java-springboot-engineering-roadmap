@@ -4,7 +4,7 @@ public class ArrayListInternals {
 
     public static void main(String[] args) {
         ArrayList<Integer> list = new ArrayList<>();
-        System.out.println("freshly created — size=" + list.size());
+        System.out.println("freshly created -- size=" + list.size());
 
         for (int i = 1; i <= 13; i++) {
             list.add(i);
@@ -13,7 +13,7 @@ public class ArrayListInternals {
 
         System.out.println();
         System.out.println("default initial capacity is 10. Adding the 11th element triggers a");
-        System.out.println("grow to ~15 (1.5x). You can't query capacity directly — it's internal.");
+        System.out.println("grow to ~15 (1.5x). You can't query capacity directly -- it's internal.");
         System.out.println();
 
         list.add(7, 999);

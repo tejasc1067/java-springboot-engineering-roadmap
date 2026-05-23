@@ -15,10 +15,10 @@ public class MessageOnlyAntiPattern {
             return "200 OK";
         } catch (RuntimeException e) {
             String msg = e.getMessage();
-            if (msg.contains("not found")) return "404 — " + msg;
-            if (msg.contains("locked"))    return "423 — " + msg;
-            if (msg.contains("forbidden")) return "403 — " + msg;
-            return "500 — " + msg;
+            if (msg.contains("not found")) return "404 -- " + msg;
+            if (msg.contains("locked"))    return "423 -- " + msg;
+            if (msg.contains("forbidden")) return "403 -- " + msg;
+            return "500 -- " + msg;
         }
     }
 

@@ -24,11 +24,11 @@ public class TypedExceptionProper {
             serviceCall(scenario);
             return "200 OK";
         } catch (UserNotFoundException e) {
-            return "404 — " + e.getMessage();
+            return "404 -- " + e.getMessage();
         } catch (UserLockedException e) {
-            return "423 — " + e.getMessage();
+            return "423 -- " + e.getMessage();
         } catch (UnauthorizedException e) {
-            return "403 — " + e.getMessage();
+            return "403 -- " + e.getMessage();
         }
     }
 
@@ -37,6 +37,6 @@ public class TypedExceptionProper {
         System.out.println(robustController(2));
         System.out.println(robustController(3));
         System.out.println();
-        System.out.println("Message text can change freely — types are the contract.");
+        System.out.println("Message text can change freely -- types are the contract.");
     }
 }

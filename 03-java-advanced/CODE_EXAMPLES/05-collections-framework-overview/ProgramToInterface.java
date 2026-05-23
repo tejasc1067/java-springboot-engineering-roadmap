@@ -26,7 +26,7 @@ public class ProgramToInterface {
         System.out.println();
         System.out.println("too-specific form accepts ArrayList:  " + sumSizesTooSpecific(arrayList));
         // sumSizesTooSpecific(linkedList);
-        // ↑ compile error — LinkedList is not an ArrayList, even though both are List
-        System.out.println("too-specific form REJECTS LinkedList — caller is locked in.");
+        // ^ compile error -- LinkedList is not an ArrayList, even though both are List
+        System.out.println("too-specific form REJECTS LinkedList -- caller is locked in.");
     }
 }

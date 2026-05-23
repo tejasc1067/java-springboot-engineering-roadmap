@@ -19,7 +19,7 @@ public class RawTypeDanger {
             }
         } catch (ClassCastException e) {
             System.out.println("CRASH: " + e.getMessage());
-            System.out.println("the cast at runtime was unsafe — compiler couldn't help");
+            System.out.println("the cast at runtime was unsafe -- compiler couldn't help");
         }
     }
 }

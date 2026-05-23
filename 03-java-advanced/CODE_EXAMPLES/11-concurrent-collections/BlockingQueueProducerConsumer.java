@@ -38,6 +38,6 @@ public class BlockingQueueProducerConsumer {
         System.out.println();
         System.out.println("Producer fills the queue, blocks on put when full (capacity 5).");
         System.out.println("Consumer takes one at a time, blocks on take when empty.");
-        System.out.println("No wait/notify plumbing — the queue handles it.");
+        System.out.println("No wait/notify plumbing -- the queue handles it.");
     }
 }

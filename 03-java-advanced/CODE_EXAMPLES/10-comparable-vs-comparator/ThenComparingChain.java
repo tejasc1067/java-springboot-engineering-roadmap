@@ -22,10 +22,10 @@ public class ThenComparingChain {
 
         users.sort(order);
 
-        System.out.println("sorted by status → signupDate desc → name:");
+        System.out.println("sorted by status -> signupDate desc -> name:");
         users.forEach(u -> System.out.println("  " + u));
 
         System.out.println();
-        System.out.println("Notice Alice/Charlie share status and date — name breaks the tie.");
+        System.out.println("Notice Alice/Charlie share status and date -- name breaks the tie.");
     }
 }

@@ -18,8 +18,8 @@ public class InvarianceProof {
 
         List<Integer> ints = List.of(1, 2, 3);
         // sumNumbersInvariant(ints);
-        // ↑ compile error: List<Integer> is NOT a List<Number>
-        //   generics are invariant — see UpperBoundProducer.java for the fix.
-        System.out.println("could not pass List<Integer> directly — would not compile.");
+        // ^ compile error: List<Integer> is NOT a List<Number>
+        //   generics are invariant -- see UpperBoundProducer.java for the fix.
+        System.out.println("could not pass List<Integer> directly -- would not compile.");
     }
 }

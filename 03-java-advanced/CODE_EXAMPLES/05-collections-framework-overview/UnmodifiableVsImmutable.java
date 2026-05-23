@@ -11,11 +11,11 @@ public class UnmodifiableVsImmutable {
         try {
             view.add("Charlie");
         } catch (UnsupportedOperationException e) {
-            System.out.println("view.add() rejected — view itself is unmodifiable.");
+            System.out.println("view.add() rejected -- view itself is unmodifiable.");
         }
 
         backing.add("Charlie");
-        System.out.println("but the original is still mutable — view now shows: " + view);
+        System.out.println("but the original is still mutable -- view now shows: " + view);
         System.out.println("  (unmodifiable wraps; it doesn't isolate)");
 
         System.out.println();
@@ -23,7 +23,7 @@ public class UnmodifiableVsImmutable {
         List<String> immutable = List.copyOf(backing);
         backing.add("Dana");
         System.out.println("backing has: " + backing);
-        System.out.println("immutable copy has: " + immutable + "   (snapshot — won't change)");
+        System.out.println("immutable copy has: " + immutable + "   (snapshot -- won't change)");
 
         try {
             immutable.add("Eve");
