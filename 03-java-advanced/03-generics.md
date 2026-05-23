@@ -1,186 +1,194 @@
-# Generics in Java
+# 03 — Generics
 
-Generics are one of the most important features in modern Java.
+Generics let one piece of code work with many types while keeping type safety. `List<String>` and `List<Integer>` share the same `ArrayList` implementation, but the compiler stops you from mixing them up. Before generics (pre-Java 5), collections held `Object`, so you had to cast every element and any cast could blow up at runtime.
 
-Generics help create:
-- type-safe code
-- reusable components
-- cleaner APIs
-- maintainable systems
-
-Modern backend systems heavily depend on generics.
-
-Examples:
-- collections
-- Spring repositories
-- service layers
-- DTO wrappers
-- REST responses
-
-Very important enterprise Java topic.
+This topic covers the everyday side: generic classes, generic methods, the diamond operator, why generics matter for type safety. Wildcards, bounds, and PECS are in [topic 04](04-generics-advanced.md).
 
 ---
 
-# 1. What are Generics?
+## The problem this solves
 
-Generics allow:
-# parameterized types
-
-Classes, interfaces, and methods can work safely with multiple data types.
-
-Example:
+Without generics, every collection holds `Object`:
 
 ```java
-List<String>
+// Pre-Java 5 style — still legal but dangerous
+List list = new ArrayList();
+list.add("hello");
+list.add(42);                          // no compile error
+
+String s = (String) list.get(1);       // ClassCastException at runtime
 ```
 
-Very important Java feature.
+The bug: `list.get(1)` returns `Object`. You cast to `String`. It explodes. The compiler couldn't help because the list was untyped.
 
----
-
-# 2. Why Generics Were Introduced?
-
-Before generics:
-collections stored:
-# Object
-
-Problems:
-- runtime type errors
-- explicit casting
-- unsafe code
-
-Generics improved:
-- type safety
-- readability
-- maintainability
-
-Very important Java evolution.
-
----
-
-# 3. Type Safety
-
-Generics provide:
-# compile-time type checking
-
-Example:
+With generics:
 
 ```java
-List<String>
+List<String> list = new ArrayList<>();
+list.add("hello");
+list.add(42);                          // ← compile error, caught immediately
 ```
 
-Only strings are allowed.
-
-This prevents invalid object insertion.
-
-Very important safety feature.
+Type errors caught at compile time, not at 3 AM in production.
 
 ---
 
-# 4. Generic Class
+## Generic classes
 
-Classes can accept:
-# type parameters
-
-Example:
+You write `<T>` (or any name — `T`, `E`, `K`, `V` by convention) as a placeholder. The compiler stamps out a type-checked version for each use.
 
 ```java
-class Box<T>
+public class Box<T> {
+    private T value;
+    public void set(T value) { this.value = value; }
+    public T get()           { return value; }
+}
+
+Box<String> sb = new Box<>();
+sb.set("hello");
+String s = sb.get();                   // no cast needed
+
+Box<Integer> ib = new Box<>();
+ib.set(42);
+// sb.set(42);                         // compile error — type-safe
 ```
 
-`T` represents generic type.
+The `<>` on the right is the **diamond operator** (Java 7+). The compiler infers `<String>` from the left-hand side.
 
-Very important syntax.
+Convention for parameter names:
+- `T` — type
+- `E` — element (for collections)
+- `K`, `V` — key, value (for maps)
+- `R` — return type
+- `T1`, `T2`, ... if you need multiple unrelated types
 
 ---
 
-# 5. Generic Method
+## Generic methods
 
-Methods can also use generics.
-
-Example:
+A method can have its own type parameter, independent of any class type parameters. Declared before the return type.
 
 ```java
-<T> void printData(T data)
+public static <T> T firstOrNull(List<T> list) {
+    return list.isEmpty() ? null : list.get(0);
+}
+
+String s = firstOrNull(List.of("a", "b"));      // T inferred as String
+Integer i = firstOrNull(List.of(1, 2, 3));      // T inferred as Integer
 ```
 
-Very useful reusable design pattern.
+The `<T>` before the return type declares the parameter. It's scoped just to that method.
+
+Useful when:
+- The method works with a type that's unrelated to the class's own generics.
+- You want to express "input and output share a type" without committing the whole class.
 
 ---
 
-# 6. Generic Interface
-
-Interfaces can also use:
-# type parameters
-
-Very important for:
-- repositories
-- APIs
-- service abstractions
-
-Modern backend systems heavily use this.
-
----
-
-# 7. Generics and Collections
-
-Collections framework heavily depends on:
-# generics
-
-Examples:
+## Multiple type parameters
 
 ```java
-List<String>
-Map<Integer, String>
-Set<User>
+public class Pair<K, V> {
+    private final K key;
+    private final V value;
+    public Pair(K key, V value) { this.key = key; this.value = value; }
+    public K getKey()   { return key; }
+    public V getValue() { return value; }
+}
+
+Pair<String, Integer> p = new Pair<>("age", 30);
 ```
 
-Very important backend engineering foundation.
+Standard library examples: `Map<K, V>`, `BiFunction<T, U, R>`, `Function<T, R>`.
 
 ---
 
-# 8. Code Reusability
+## Generic interfaces
 
-Generics improve:
-- reusable code
-- maintainability
-- cleaner APIs
+```java
+public interface Repository<T, ID> {
+    T findById(ID id);
+    void save(T entity);
+}
 
-Very important architecture principle.
+public class UserRepository implements Repository<User, Long> {
+    public User findById(Long id)   { ... }
+    public void save(User entity)   { ... }
+}
+```
 
----
-
-# 9. Real-World Backend Examples
-
-Generics are heavily used in:
-- Spring repositories
-- REST response wrappers
-- DTO containers
-- collections
-- service layers
-
-Very important enterprise Java topic.
+A single interface declares the contract; each implementation fixes the type parameters. This is exactly how Spring Data's `JpaRepository<T, ID>` works.
 
 ---
 
-# 10. Common Beginner Confusions
+## Type erasure: what the JVM actually sees
 
-Beginners often:
-- confuse generic syntax
-- misuse Object instead of generics
-- ignore type safety
-- overuse raw types
+This is the surprising part. **At runtime, the type parameters are gone.** The JVM sees `List` everywhere, not `List<String>` or `List<Integer>`. Java does this for backward compatibility with code from before generics existed.
 
-Understanding generics properly is very important.
+Consequences:
+
+```java
+List<String> a = new ArrayList<>();
+List<Integer> b = new ArrayList<>();
+System.out.println(a.getClass() == b.getClass());   // true — both are ArrayList.class
+
+if (someList instanceof List<String>) { ... }       // ← won't compile (mostly; raw List<?> works)
+
+T value = new T();                                  // ← won't compile — no type info at runtime
+```
+
+The compiler erases `<T>` and inserts casts where needed. From the JVM's perspective, a `List<String>` is just a `List`. This shows up in topic 04 with wildcards, and again later with reflection.
+
+Practical implication: don't write code that needs the actual generic type at runtime. If you do (e.g. JSON deserialization frameworks), you'll need a `Class<T>` token or `TypeReference`-style hack.
 
 ---
 
-# 11. Industry Relevance
+## The raw type trap
 
-Modern enterprise Java heavily depends on:
-- generics
-- type-safe APIs
-- reusable abstractions
-- collections safety
+You can still write `List list = new ArrayList();` without generics — a "raw type." The compiler will warn, but it'll compile. Don't do this in new code. Once you mix raw and parameterized types, type safety collapses and you get unchecked warnings everywhere.
 
-Backend engineering strongly relies on generic-based architecture.
+```java
+List raw = new ArrayList<String>();
+raw.add(42);                                        // compiles, corrupts the list
+List<String> typed = raw;                           // now typed has an Integer in it
+String s = typed.get(0);                            // ClassCastException
+```
+
+Always parameterize. If you mean "any type," use `List<Object>` or `List<?>` (covered in topic 04), not raw `List`.
+
+---
+
+## Common pitfalls
+
+- **Forgetting the diamond on the right.** `List<String> list = new ArrayList();` compiles with a raw-type warning. Always `new ArrayList<>()`.
+- **Trying to `new T()` inside a generic class.** Erasure means there's no `T` at runtime. Pass a `Class<T>` if you need to instantiate, or accept a `Supplier<T>`.
+- **Generic arrays.** `T[] arr = new T[10];` won't compile. The standard workaround is `@SuppressWarnings("unchecked") T[] arr = (T[]) new Object[10];` — but using `ArrayList<T>` is almost always cleaner.
+- **Casting between parameterized types.** `List<Object> != List<String>`. Even though `Object` is a supertype of `String`, the lists are not assignable. Topic 04 (wildcards) is the right tool for this.
+- **`Object` as a substitute for generics.** `List<Object>` accepts everything but loses all type info. Pick the actual type or use wildcards.
+
+---
+
+## Code examples
+
+1. `RawTypeDanger.java` paired with `GenericsTypeSafe.java` — the pre-Java 5 bug vs. the generic fix.
+2. `BoxGenericClass.java` — a basic `Box<T>` used with multiple types.
+3. `GenericMethod.java` — a generic method (`<T> T firstOrNull`) used independently of any class generics.
+4. `PairTwoParams.java` — multiple type parameters (`<K, V>`).
+5. `GenericRepositoryInterface.java` — generic interface with implementations fixing the parameters.
+6. `TypeErasureProof.java` — `List<String>.class == List<Integer>.class` and what that means.
+
+---
+
+## Try this yourself
+
+1. In `RawTypeDanger.java`, add a print after every `add` and `get`. Trace which line actually fails. (It's not the line you'd expect.)
+2. In `GenericMethod.java`, call `firstOrNull` with a `List<Object>` containing mixed types. Now narrow the parameter to `List<String>`. Notice how the type system tightens automatically.
+3. In `TypeErasureProof.java`, try to add an `instanceof List<String>` check. Read the compile error and rephrase it using `List<?>` instead — note what information you lose.
+
+---
+
+## Self-check
+
+1. Why is `List<Object>` not a supertype of `List<String>`? (Hint: think about what `list.add(new Object())` would do.)
+2. The JVM doesn't know the generic type at runtime. Give one concrete consequence of this in code you might write.
+3. You want a method that takes a list of any type and returns the first element. Write the signature. Why does the type parameter go before the return type?
