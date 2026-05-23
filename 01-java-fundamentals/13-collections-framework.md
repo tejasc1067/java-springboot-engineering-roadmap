@@ -1,504 +1,222 @@
-# Collections Framework in Java
+# 13 — Collections Framework
 
-The Java Collections Framework provides ready-made data structures for storing and processing data efficiently.
+Arrays are fine when you know the size upfront. In real backend code, you usually don't. You're holding a list of users that grows as requests come in. You're caching a lookup by ID. You're tracking which roles a user has. For all of that, you reach for a **collection** — `ArrayList`, `HashMap`, `HashSet`, `LinkedList`, and the rest.
 
-Collections are one of the MOST IMPORTANT topics in backend engineering because backend applications constantly process:
-- users
-- API requests
-- database records
-- logs
-- configurations
-- transactions
-- cache data
-
-Strong collections knowledge directly impacts:
-- backend performance
-- scalability
-- maintainability
-- memory efficiency
+This topic is the most important one in module 01 for day-to-day backend work. Most of your code will be moving things in and out of these.
 
 ---
 
-# 1. What are Collections?
+## The big picture
 
-Collections are dynamic data structures used to store groups of objects.
+Java's collections live under `java.util` and are organized by interface:
 
-Unlike arrays:
-- collections can grow dynamically
-- collections provide built-in utility methods
-- collections support flexible data handling
-
-Example:
-
-```java
-ArrayList<String> users = new ArrayList<>();
+```text
+Collection                              Map
+ ├── List          (ordered, dups OK)    ├── HashMap     (unordered)
+ │    ├── ArrayList                       ├── LinkedHashMap (insertion order)
+ │    └── LinkedList                      └── TreeMap     (sorted by key)
+ ├── Set           (no duplicates)
+ │    ├── HashSet
+ │    ├── LinkedHashSet
+ │    └── TreeSet
+ └── Queue         (FIFO-ish)
+      └── ArrayDeque
 ```
 
----
+Read it as: **List = ordered sequence with duplicates**. **Set = no duplicates**. **Map = key→value lookup**. **Queue = ordered processing (FIFO usually)**.
 
-# 2. Why Collections are Important?
-
-Without collections:
-- handling large datasets becomes difficult
-- resizing arrays manually becomes necessary
-- backend processing becomes inefficient
-
-Collections improve:
-- flexibility
-- readability
-- scalability
-- maintainability
+`Map` is *not* a `Collection`; it lives in its own hierarchy.
 
 ---
 
-# 3. Collection Framework Hierarchy
+## ArrayList — the everyday list
 
-Main interfaces:
-- List
-- Set
-- Queue
-- Map
-
-Important implementations:
-- ArrayList
-- LinkedList
-- HashSet
-- HashMap
-
----
-
-# 4. Array vs ArrayList
-
-## Array
-- fixed size
-- faster for primitive storage
-- less flexible
-
-Example:
+Backed by a resizable array. Fast at the end, slow at the front (inserting at index 0 means shifting everything).
 
 ```java
-int[] numbers = new int[5];
+List<String> names = new ArrayList<>();
+names.add("alice");
+names.add("bob");
+names.add("carol");
+
+names.get(1);            // "bob"
+names.set(1, "BOB");     // replace at index 1
+names.remove(0);         // remove "alice", shifting others
+names.contains("carol"); // true
+names.size();            // 2
+names.isEmpty();         // false
 ```
+
+The declared type on the left is `List<String>` (the interface), the constructor on the right is `new ArrayList<>()`. This is idiomatic — **program to the interface**. If you decide to switch to `LinkedList` later, only one line changes.
+
+`List.of("a", "b", "c")` creates an **immutable** list. Useful for constants and method arguments. You can't add or remove from it.
 
 ---
 
-## ArrayList
-- dynamic size
-- built-in methods
-- easier data management
+## LinkedList — when?
 
-Example:
+Backed by a doubly-linked node chain. Fast at both ends, slow at random index access.
 
 ```java
-ArrayList<String> names = new ArrayList<>();
+LinkedList<String> queue = new LinkedList<>();
+queue.addLast("a");
+queue.addFirst("b");
+queue.removeFirst();    // O(1) — no shifting
 ```
 
----
-
-# 5. List Interface
-
-List:
-- maintains insertion order
-- allows duplicates
-- supports index access
-
-Common implementations:
-- ArrayList
-- LinkedList
+In practice you reach for it rarely. `ArrayList` is the default; `ArrayDeque` is better than `LinkedList` for queue/deque use cases. `LinkedList` shows up mostly in interview questions.
 
 ---
 
-# 6. ArrayList
+## HashSet — uniqueness
 
-ArrayList internally uses dynamic arrays.
-
-Advantages:
-- fast random access
-- dynamic resizing
-- easy traversal
-
-Best for:
-- read-heavy operations
-- API response processing
-- user lists
-
----
-
-# 7. LinkedList
-
-LinkedList uses node-based structure.
-
-Advantages:
-- fast insertion/deletion
-- efficient modifications
-
-Best for:
-- queue-like operations
-- frequent insertions
-
----
-
-# 8. Set Interface
-
-Set:
-- stores unique values
-- removes duplicates automatically
-
-Common implementation:
-- HashSet
-
-Backend usage:
-- unique roles
-- unique email IDs
-- duplicate filtering
-
----
-
-# 9. HashSet
-
-HashSet:
-- unordered
-- unique values only
-- fast lookup
-
-Example:
+Stores unique values. No ordering. Add a duplicate and it's silently ignored.
 
 ```java
-HashSet<String> roles = new HashSet<>();
+Set<String> seen = new HashSet<>();
+seen.add("alice");
+seen.add("bob");
+seen.add("alice");      // ignored — already in the set
+seen.size();            // 2
+seen.contains("alice"); // true
 ```
+
+Use a `HashSet` when you need to ask "have I seen this?" or "is this one of the allowed values?". Lookup, add, and remove are all O(1) on average.
+
+Order matters? Use `LinkedHashSet` (insertion order) or `TreeSet` (sorted).
 
 ---
 
-# 10. Map Interface
+## HashMap — the workhorse
 
-Map stores data in:
-key-value format.
-
-Example:
+Key→value lookup. The most useful collection in Java. Average O(1) for `get`, `put`, `remove`.
 
 ```java
-Map<Integer, String> users = new HashMap<>();
+Map<String, Integer> ages = new HashMap<>();
+ages.put("alice", 30);
+ages.put("bob", 25);
+
+ages.get("alice");           // 30
+ages.get("nobody");          // null  ← careful
+ages.getOrDefault("nobody", -1);   // -1
+ages.containsKey("alice");   // true
+ages.remove("bob");
+ages.size();                 // 1
 ```
 
-Used heavily in:
-- configurations
-- caching
-- API metadata
-- JSON processing
+The classic trap: `get` returns `null` for missing keys. Use `getOrDefault` or `containsKey` to avoid an NPE downstream.
 
----
-
-# 11. HashMap
-
-HashMap:
-- stores key-value pairs
-- allows fast lookup
-- allows one null key
-
-Important Backend Usage:
-- user lookup
-- configuration storage
-- request metadata
-- caching systems
-
----
-
-# 12. Basic HashMap Internal Concept
-
-HashMap internally uses:
-- hashing
-- buckets
-
-This allows:
-- fast insertion
-- fast retrieval
-
-Backend developers must understand:
-HashMap is optimized for fast lookup operations.
-
----
-
-# 13. Queue
-
-Queue follows:
-FIFO (First In First Out)
-
-Used in:
-- request processing
-- task scheduling
-- messaging systems
-
----
-
-# 14. Stack
-
-Stack follows:
-LIFO (Last In First Out)
-
-Used in:
-- recursion
-- undo operations
-- browser history
-- JVM call stack
-
----
-
-# 15. Traversing Collections
-
-Collections are traversed using:
-- for loop
-- enhanced for loop
-- iterator
-
-Example:
+Iterating:
 
 ```java
-for (String user : users) {
-
-    System.out.println(user);
-}
-```
-
----
-
-# 16. Iterator
-
-Iterator provides safe collection traversal.
-
-Important because:
-modifying collections during iteration may throw exceptions.
-
-Example:
-
-```java
-Iterator<String> iterator = users.iterator();
-```
-
----
-
-# 17. Collection Utility Methods
-
-Very important methods:
-- add()
-- remove()
-- contains()
-- size()
-- clear()
-- isEmpty()
-
-Used constantly in backend systems.
-
----
-
-# 18. Collection Sorting
-
-Collections can be sorted using:
-
-```java
-Collections.sort(list);
-```
-
-Used heavily in:
-- reports
-- dashboards
-- APIs
-- analytics
-
----
-
-# 19. Generics in Collections
-
-Generics provide:
-- type safety
-- compile-time checking
-- cleaner code
-
-Example:
-
-```java
-ArrayList<String> users = new ArrayList<>();
-```
-
-Benefits:
-- prevents wrong data types
-- reduces runtime errors
-
-VERY important backend concept.
-
----
-
-# 20. Null Handling in Collections
-
-Backend systems frequently encounter null values.
-
-Important points:
-- collections may contain null
-- map.get() may return null
-- always perform null checks
-
-Example:
-
-```java
-if (user != null) {
-
-    System.out.println(user);
-}
-```
-
-VERY important production practice.
-
----
-
-# 21. Choosing Correct Collection
-
-This is one of the MOST IMPORTANT backend engineering skills.
-
-Use:
-- ArrayList for fast reads
-- LinkedList for frequent modifications
-- HashSet for uniqueness
-- HashMap for fast key-value lookup
-- Queue for processing order
-
-Wrong collection choice may affect:
-- performance
-- memory usage
-- scalability
-
----
-
-# 22. Basic Performance Awareness
-
-Backend developers must know basic collection behavior:
-
-| Collection | Best Use Case |
-|------------|----------------|
-| ArrayList | Fast reads |
-| LinkedList | Frequent insertion/deletion |
-| HashSet | Unique values |
-| HashMap | Fast lookup |
-| Queue | FIFO processing |
-| Stack | LIFO operations |
-
----
-
-# 23. Real Backend Engineering Importance
-
-Collections are heavily used in:
-- REST APIs
-- Spring Boot services
-- database processing
-- microservices
-- caching
-- authentication systems
-- event-driven systems
-
-Examples:
-
-```java
-List<User>
-Map<String, Object>
-Set<Role>
-Queue<Task>
-```
-# 24. Wrapper Classes in Collections
-
-Collections store objects, not primitive data types.
-
-Incorrect:
-
-```ArrayList<int> numbers``` ❌
-
-Correct:
-
-```ArrayList<Integer> numbers``` ✅
-
-Common Wrapper Classes:
-- int → Integer
-- double → Double
-- char → Character
-- boolean → Boolean
-
----
-
-# 25. Collection Ordering Behavior
-
-Different collections maintain different ordering behavior.
-
-| Collection | Ordering |
-|------------|-----------|
-| ArrayList | Ordered |
-| LinkedList | Ordered |
-| HashSet | Unordered |
-| HashMap | Unordered |
-
-Understanding ordering behavior is important for debugging and backend predictability.
-
-Collections are foundational for enterprise backend engineering.
-
----
-
-# 26. Streams and Collections Connection
-
-Java 8 Streams work heavily with collections.
-
-Example:
-
-users.stream()
-
-Streams allow:
-- filtering
-- mapping
-- transformation
-- cleaner iteration
-
-Collections become even more powerful with Streams.
-
----
-
-# 27. ConcurrentModificationException
-
-This exception occurs when collection is modified during iteration improperly.
-
-Incorrect:
-
-for (String user : users) {
-
-    users.remove(user);
+for (Map.Entry<String, Integer> entry : ages.entrySet()) {
+    System.out.println(entry.getKey() + " -> " + entry.getValue());
 }
 
-Correct:
-Use Iterator for safe removal during traversal.
+ages.forEach((name, age) -> System.out.println(name + " is " + age));
+```
+
+`HashMap` makes no order guarantees. Need insertion order? `LinkedHashMap`. Need sorted by key? `TreeMap`.
 
 ---
 
-# 28. Collections of Custom Objects
+## Queue and Stack
 
-Backend systems usually store collections of objects.
+`Queue` is FIFO (first in, first out). `Deque` (double-ended queue) supports both ends. **Use `ArrayDeque`** for both queue and stack purposes — it's faster than the older `LinkedList` or `Stack` classes.
 
-Examples:
+```java
+Deque<String> q = new ArrayDeque<>();
+q.offer("a");        // add to back
+q.offer("b");
+q.offer("c");
+q.poll();            // "a" — remove from front
 
+// Stack usage (LIFO)
+Deque<String> stack = new ArrayDeque<>();
+stack.push("a");
+stack.push("b");
+stack.pop();         // "b"
 ```
-List<User>
 
-List<Order>
-
-Map<Integer, Product>
-```
-
-This is one of the most important backend engineering collection concepts.
+The `java.util.Stack` class still exists but is legacy. Use `ArrayDeque` for new code.
 
 ---
 
+## Generics
 
-# 29. Industry Relevance
+The `<String>`, `<Integer>` part is **generics** — the type parameter for the collection.
 
-Collections are one of the most frequently asked interview topics in Java backend development.
+```java
+List<String> names = new ArrayList<>();
+names.add("alice");
+names.add(42);           // compile error — wrong type
+```
 
-Strong collections knowledge helps developers:
-- write scalable applications
-- process large datasets
-- optimize backend logic
-- build maintainable systems
+Without generics (the old "raw type"), you'd be able to put anything in and would have to cast on the way out. Don't write raw types in new code:
 
-Collections mastery is ESSENTIAL for backend engineering.
+```java
+List names = new ArrayList();        // raw — avoid
+names.add("alice"); names.add(42);   // compiles
+String s = (String) names.get(1);    // ClassCastException at runtime
+```
+
+Collections require **reference types** for their generic parameter, not primitives. Use the wrapper types — `Integer`, `Long`, `Double`, `Boolean`. Java auto-converts between `int` and `Integer` (autoboxing/unboxing) so this is mostly invisible.
+
+```java
+List<Integer> numbers = new ArrayList<>();
+numbers.add(5);          // autoboxed from int to Integer
+int n = numbers.get(0);  // unboxed back to int
+```
+
+---
+
+## Picking the right collection
+
+| You want to...                              | Reach for...     |
+|---------------------------------------------|------------------|
+| Hold an ordered list, allow duplicates      | `ArrayList`      |
+| Ask "is X in this set" repeatedly           | `HashSet`        |
+| Look something up by a key                  | `HashMap`        |
+| Keep insertion order in a set/map           | `LinkedHashSet`/`LinkedHashMap` |
+| Keep entries sorted by key                  | `TreeMap` (or `TreeSet`) |
+| Process items FIFO (queue) or LIFO (stack)  | `ArrayDeque`     |
+| Hold something that never changes           | `List.of(...)`, `Set.of(...)`, `Map.of(...)` |
+
+Default to `ArrayList` and `HashMap` unless you have a specific reason to pick something else.
+
+---
+
+## Common pitfalls
+
+- **`map.get(key)` returns null for missing keys, and you NPE downstream.** Use `getOrDefault` or `containsKey`.
+- **Iterating with for-each and removing.** ConcurrentModificationException (see topic 04). Use `Iterator.remove`, `removeIf`, or build a new collection.
+- **Using a mutable object as a `HashMap` key.** If the key's `hashCode` changes after insertion (e.g., mutated field), you can't find it again. Keys should be effectively immutable.
+- **Forgetting that `HashSet`/`HashMap` need `equals` and `hashCode`.** Default `Object.equals` is identity-based. Two `User` objects with the same name aren't "equal" unless you override `equals` and `hashCode` together. Module 02 (object methods topic) covers this.
+- **Putting `int` in `List<Integer>`, then `==` comparing.** Wrapper objects don't compare with `==`. Use `.equals()` or unbox to `int` first.
+
+---
+
+## Code examples
+
+1. `ArrayListBasics.java` — declare, add, get, remove, contains, iterate.
+2. `HashMapBasics.java` — put, get, getOrDefault, iterate with entrySet and forEach.
+3. `HashSetUniqueness.java` — adding duplicates is a no-op, fast lookup.
+4. `QueueAndStack.java` — ArrayDeque used both ways.
+5. `ChooseTheCollection.java` — a small benchmark / decision demo: counting word occurrences using HashMap; deduplicating using HashSet.
+6. `GenericsAndAutoboxing.java` — generics for type safety, autoboxing int ↔ Integer.
+
+---
+
+## Try this yourself
+
+1. In `HashMapBasics.java`, count word frequencies in a sentence. Use `getOrDefault(word, 0) + 1`. The whole loop is 3 lines.
+2. In `HashSetUniqueness.java`, swap `HashSet` to `LinkedHashSet`. Observe that the iteration order now matches insertion. Try `TreeSet` — the order is alphabetical.
+3. Take a `List<Integer>`, remove every value above 100 *during iteration*. Try with for-each (CME), with Iterator, and with `list.removeIf(...)`. Confirm the last two work.
+
+---
+
+## Self-check
+
+1. You need "is this username taken?" — `ArrayList` or `HashSet`? Why?
+2. `map.get("foo")` returns null. Does that mean "foo isn't a key" or "foo's value is null"? How do you tell the difference?
+3. You iterate a `List<String>` with for-each and try to `list.remove(item)` inside the loop. What exception fires, and what should you do instead?
