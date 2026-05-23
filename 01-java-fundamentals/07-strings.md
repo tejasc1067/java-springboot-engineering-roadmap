@@ -1,247 +1,210 @@
-# Strings in Java
+# 07 — Strings
 
-Strings are one of the most commonly used data types in Java.
+Backend code is mostly moving strings around: parsing JSON, validating user input, building SQL queries, formatting logs. So getting Java's String model right pays off immediately.
 
-Backend applications constantly process strings for:
-- usernames
-- passwords
-- API requests
-- JSON data
-- database records
-- logs
-- validations
-
-Understanding strings properly is extremely important for backend engineering.
+The two essentials: **strings are immutable** (every operation returns a new string), and **`==` does not compare values** (use `.equals()`). These two rules generate more interview questions than any other Java topic.
 
 ---
 
-# 1. What is a String?
+## What a String actually is
 
-A String is a sequence of characters.
-
-Example:
+A `String` is an object that holds a sequence of characters. It's not a primitive — even though it has a literal syntax (`"hello"`) that makes it look like one.
 
 ```java
-String name = "Tejas";
+String name = "alice";       // creates a String object, stores a reference in `name`
+String empty = "";           // empty string — not null, just zero-length
+String space = "   ";        // a string of three spaces
 ```
 
-Here:
-- `String` is data type
-- `"Tejas"` is string value
-
----
-
-# 2. Why Strings are Important?
-
-Strings are heavily used in:
-- user input
-- API communication
-- database queries
-- authentication systems
-- file handling
-
-Almost every backend application depends on strings.
-
----
-
-# 3. Creating Strings
-
-Example:
+You can also create one with `new String(...)`, but you rarely should — the literal form is cleaner and faster.
 
 ```java
-String city = "Pune";
-```
-
-Another way:
-
-```java
-String country = new String("India");
+String a = "alice";
+String b = new String("alice");   // forces a brand-new object, almost never what you want
 ```
 
 ---
 
-# 4. String Immutability
+## Strings are immutable
 
-Strings in Java are immutable.
-
-Meaning:
-- string values cannot be changed after creation
-
-Example:
+Once a `String` is created, its contents never change. Every method that "modifies" a string actually **returns a new string**.
 
 ```java
-String name = "Java";
+String s = "hello";
+s.toUpperCase();             // returns "HELLO", but doesn't change s
+System.out.println(s);       // still "hello"
 
-name.concat(" Backend");
+s = s.toUpperCase();         // NOW s points to "HELLO"
+System.out.println(s);       // "HELLO"
 ```
 
-Original string remains unchanged.
+Forgetting this is the most common String bug. If a method returns a value, you must capture it.
 
-This improves:
-- security
-- memory optimization
-- thread safety
+Why immutable? Three reasons that matter:
+- **Thread safety.** Multiple threads can share a String without coordination.
+- **Safe hash keys.** Putting a String in a `HashMap` is safe — it can't change and break the hash.
+- **Security.** A class can keep a reference to a String passed in without worrying that the caller will mutate it later.
 
----
-
-# 5. Common String Methods
-
-Java provides many useful string methods.
+The cost: every concatenation creates a new object. We'll get to `StringBuilder` for the rare case where that matters.
 
 ---
 
-## length()
+## `==` vs `.equals()` — the classic bug
 
-Returns string length.
-
-Example:
+`==` on Strings (or any object) compares **references**: are these two variables pointing at the same object? `.equals()` compares **contents**: do these two strings contain the same characters?
 
 ```java
-String language = "Java";
+String a = "alice";
+String b = "alice";
+String c = new String("alice");
 
-System.out.println(language.length());
+System.out.println(a == b);          // true — see "string pool" below
+System.out.println(a == c);          // false — different objects
+System.out.println(a.equals(c));     // true — same contents
 ```
 
----
+**Always use `.equals()` to compare String contents.** Even when `==` happens to work (because of the string pool), it's a fragile coincidence — change one literal to a variable later and the comparison silently flips to `false`.
 
-## toUpperCase()
-
-Converts string to uppercase.
-
-Example:
+For null-safety, use `Objects.equals(a, b)` — it returns `false` if either is null instead of throwing.
 
 ```java
-System.out.println(language.toUpperCase());
+import java.util.Objects;
+Objects.equals(a, b);   // true if both null, false if one is null
 ```
 
 ---
 
-## toLowerCase()
+## The string pool
 
-Converts string to lowercase.
-
----
-
-## charAt()
-
-Accesses character using index.
-
-Example:
+When you write a string literal in source code, Java interns it: all identical literals point to the same underlying object. This is called the **string pool**.
 
 ```java
-System.out.println(language.charAt(0));
+String a = "alice";
+String b = "alice";
+System.out.println(a == b);    // true — same pooled object
 ```
 
----
-
-## contains()
-
-Checks if string contains value.
-
-Example:
+That's why `==` looked like it worked above. But:
 
 ```java
-System.out.println(language.contains("av"));
+String c = new String("alice");
+System.out.println(a == c);    // false — `new` forces a separate object
 ```
+
+This is a memory optimization, not a guarantee you can rely on. Always use `.equals()`.
 
 ---
 
-## equals()
-
-Compares actual string values.
-
-Example:
+## Common String methods
 
 ```java
-String a = "Java";
-String b = "Java";
+String s = "  Hello, Java  ";
 
-System.out.println(a.equals(b));
+s.length();                  // 15
+s.trim();                    // "Hello, Java"  (returns new string)
+s.toUpperCase();             // "  HELLO, JAVA  "
+s.toLowerCase();             // "  hello, java  "
+s.contains("Java");          // true
+s.startsWith("  H");         // true
+s.endsWith("  ");            // true
+s.indexOf("Java");           // 9 (first index of substring, or -1 if not found)
+s.replace("Java", "World");  // "  Hello, World  "
+s.charAt(2);                 // 'H'
+s.substring(7, 11);          // "Java"
+
+"a,b,c".split(",");          // {"a", "b", "c"}
+String.join("-", "a", "b");  // "a-b"
+String.format("%d points", 5); // "5 points"
 ```
+
+Every one of those returns a new String. The original `s` is unchanged.
 
 ---
 
-# 6. == vs equals()
+## StringBuilder: when concatenation matters
 
-VERY IMPORTANT interview concept.
-
-`==`
-- compares references
-
-`equals()`
-- compares actual values
-
-Example:
+This is the slow way:
 
 ```java
-String a = new String("Java");
-String b = new String("Java");
-
-System.out.println(a == b);
-
-System.out.println(a.equals(b));
+String result = "";
+for (int i = 0; i < 10000; i++) {
+    result = result + i;     // creates a new String each iteration
+}
 ```
 
----
+Each `+` creates a brand-new String object. Doing it 10,000 times wastes memory and time.
 
-# 7. String Concatenation
-
-Strings can be combined using `+`.
-
-Example:
+`StringBuilder` is mutable. It holds a growable internal buffer:
 
 ```java
-String firstName = "Tejas";
-String lastName = "Chumbalkar";
-
-System.out.println(firstName + " " + lastName);
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < 10000; i++) {
+    sb.append(i);            // mutates the existing buffer
+}
+String result = sb.toString();  // convert to String at the end
 ```
+
+For one-off concatenations like `"hello " + name + "!"`, the compiler optimizes for you — don't bother with StringBuilder. Only reach for it inside loops or when building up a string from many parts.
+
+There's also `StringBuffer` — same API, but synchronized (thread-safe). Slower. You'll rarely need it; use `StringBuilder` by default.
 
 ---
 
-# 8. StringBuilder Introduction
+## Vulnerable / broken examples
 
-Frequent string modification creates unnecessary objects.
-
-Java provides:
-- StringBuilder
-- StringBuffer
-
-for efficient string manipulation.
-
-Example:
+**Bug 1 — calling a String method and ignoring the return value.**
 
 ```java
-StringBuilder builder = new StringBuilder("Java");
-
-builder.append(" Backend");
+String name = "  alice  ";
+name.trim();                          // returns "alice", but discards it
+System.out.println("[" + name + "]"); // still "[  alice  ]"
 ```
 
+Fix: `name = name.trim();`
+
+**Bug 2 — `==` for content comparison.**
+
+```java
+Scanner sc = new Scanner(System.in);
+String input = sc.nextLine();
+if (input == "quit") { ... }          // never true
+```
+
+The user's input is a runtime string, not a pooled literal. `==` will always be false.
+
+Fix: `input.equals("quit")` — or safer, `"quit".equals(input)` (no NPE if input is null).
+
+**Bug 3 — StringBuilder you never converted.**
+
+```java
+StringBuilder sb = new StringBuilder();
+sb.append("a").append("b");
+return sb;        // ← caller wanted a String, got a StringBuilder
+```
+
+Fix: `return sb.toString();`
+
 ---
 
-# 9. Real Backend Engineering Importance
+## Code examples
 
-Strings are used in:
-- REST APIs
-- JSON processing
-- request validation
-- authentication
-- logging
-- database queries
-- file handling
-
-Strong string knowledge is essential for backend development.
+1. `StringBasics.java` — declaration, concatenation, length, common methods.
+2. `StringEquality.java` — `==` vs `.equals()`, the string pool, what `new String(...)` actually does.
+3. `StringImmutability.java` — show that `.toUpperCase()` doesn't change the original; the fix is to reassign.
+4. `StringBuilderDemo.java` — the slow loop with `+`, the fast loop with `StringBuilder`. Time both.
 
 ---
 
-# 10. Industry Relevance
+## Try this yourself
 
-Large backend systems process millions of strings daily.
+1. In `StringEquality.java`, create a String from user-controlled input (or read from a different source like an array element) and compare to a literal with `==`. Confirm it's false even though contents match.
+2. In `StringBuilderDemo.java`, raise the loop bound to 100,000 and watch the time difference grow.
+3. Write a method `String censor(String s, String word)` that replaces every occurrence of `word` in `s` with `***`. Use the standard library — no manual loops needed.
 
-Understanding:
-- immutability
-- string comparison
-- string performance
-- StringBuilder
+---
 
-helps developers build efficient and scalable applications.
+## Self-check
+
+1. Why does `s.trim()` not change `s`?
+2. `String a = "x"; String b = "x"; String c = new String("x");` — for which of `a == b`, `a == c`, `a.equals(c)` is the result `true`? Why?
+3. You concatenate 10,000 strings in a loop with `+`. The code works but is slow. Why? What's the fix?

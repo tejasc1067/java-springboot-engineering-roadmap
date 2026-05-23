@@ -1,210 +1,170 @@
-# Arrays in Java
+# 06 — Arrays
 
-Arrays are used to store multiple values of the same data type in a single variable.
+An array is a fixed-size sequence of values, all of the same type. It's the simplest container in Java and the building block under everything else — `ArrayList`, strings, even how method arguments arrive (`String[] args`).
 
-Arrays help developers:
-- manage collections of data
-- reduce variable duplication
-- process large datasets efficiently
-- organize related values together
-
-Backend applications frequently use arrays for:
-- processing user data
-- handling API responses
-- storing temporary records
-- data iteration
+In real backend code you'll usually reach for `ArrayList` instead (topic 13 covers it). But arrays show up constantly in low-level code, in APIs, and in the questions interviewers love. Worth getting right.
 
 ---
 
-# 1. What is an Array?
+## Declaring and creating an array
 
-An array is a collection of similar data elements stored together.
+Two ways.
 
-Example:
+**Literal — use when you know the values upfront:**
 
 ```java
-int[] numbers = {10, 20, 30, 40};
+int[] scores = {90, 85, 78, 60, 45};
+String[] names = {"alice", "bob", "carol"};
 ```
 
-Here:
-- `numbers` is array name
-- array stores multiple integer values
+**Allocation — use when you'll fill it in later:**
+
+```java
+int[] scores = new int[5];        // length 5, all zeros
+String[] names = new String[3];   // length 3, all null
+scores[0] = 90;
+scores[1] = 85;
+```
+
+Once an array is created its **length is fixed**. You cannot resize it. If you need to grow, you create a new bigger array and copy — or use `ArrayList`.
 
 ---
 
-# 2. Why Arrays are Important?
+## Accessing elements
 
-Without arrays:
-- developers would create many separate variables
-- code becomes difficult to maintain
-
-Example without array:
+Indices start at **0**. The last valid index is `length - 1`.
 
 ```java
-int mark1 = 90;
-int mark2 = 85;
-int mark3 = 80;
+int[] scores = {90, 85, 78};
+System.out.println(scores[0]);   // 90
+System.out.println(scores[2]);   // 78
+System.out.println(scores.length); // 3
 ```
 
-Arrays solve this problem efficiently.
+Note `length` is a *field*, not a method — no parentheses. (`String.length()` *is* a method. Yes, Java is inconsistent here. Live with it.)
 
----
-
-# 3. Array Declaration
-
-Syntax:
+Going past the end throws `ArrayIndexOutOfBoundsException`:
 
 ```java
-dataType[] arrayName;
-```
-
-Example:
-
-```java
-int[] marks;
+scores[3];   // throws — last valid index is 2
 ```
 
 ---
 
-# 4. Array Initialization
+## Iterating an array
 
-Arrays can be initialized while declaration.
-
-Example:
+The two common forms:
 
 ```java
-int[] marks = {90, 85, 80, 95};
-```
+int[] scores = {90, 85, 78};
 
----
+// Classic for — use when you need the index
+for (int i = 0; i < scores.length; i++) {
+    System.out.println(i + ": " + scores[i]);
+}
 
-# 5. Accessing Array Elements
-
-Array elements are accessed using index numbers.
-
-Example:
-
-```java
-System.out.println(marks[0]);
-```
-
-Output:
-
-```text
-90
-```
-
-Important:
-- array index starts from 0
-
----
-
-# 6. Modifying Array Elements
-
-Example:
-
-```java
-marks[1] = 88;
-```
-
-This updates second element.
-
----
-
-# 7. Array Length
-
-Arrays provide `length` property.
-
-Example:
-
-```java
-System.out.println(marks.length);
-```
-
----
-
-# 8. Traversing Arrays
-
-Loops are commonly used with arrays.
-
-Example:
-
-```java
-for (int i = 0; i < marks.length; i++) {
-
-    System.out.println(marks[i]);
+// Enhanced for — use when you don't
+for (int s : scores) {
+    System.out.println(s);
 }
 ```
 
 ---
 
-# 9. Enhanced for Loop
+## Defaults
 
-Java provides enhanced for loop for arrays.
+A newly allocated array is filled with the type's default value:
 
-Example:
+- `int[]`, `long[]`, `byte[]`, `short[]` → all zeros
+- `double[]`, `float[]` → all `0.0`
+- `boolean[]` → all `false`
+- `char[]` → all `'\0'` (the null char)
+- Reference types (`String[]`, `User[]`, ...) → all `null`
+
+This is why `new String[3]` gives you an array of three nulls, and calling a method on `arr[0]` immediately throws an NPE.
+
+---
+
+## Two-dimensional arrays
+
+Arrays of arrays. Think "table" or "matrix."
 
 ```java
-for (int mark : marks) {
+int[][] grid = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 9}
+};
 
-    System.out.println(mark);
-}
+System.out.println(grid[1][2]);   // 6 — row 1, column 2
+System.out.println(grid.length);     // 3 — number of rows
+System.out.println(grid[0].length);  // 3 — number of columns in row 0
 ```
 
-This improves readability.
+Note: Java's "2D" array is really a 1D array of references to row arrays. The rows don't have to be the same length (a *jagged* array is allowed).
 
 ---
 
-# 10. Array Memory Basics
+## Useful utilities
 
-Arrays are reference types.
+`java.util.Arrays` has helpers you'll reach for constantly:
 
-Array objects are stored in:
-- heap memory
+```java
+import java.util.Arrays;
 
-Array references are stored in:
-- stack memory
+int[] a = {3, 1, 4, 1, 5, 9, 2, 6};
+Arrays.sort(a);                          // in-place sort
+System.out.println(Arrays.toString(a));  // [1, 1, 2, 3, 4, 5, 6, 9]
 
-Understanding this helps in:
-- memory optimization
-- debugging
-- backend performance understanding
+int[] copy = Arrays.copyOf(a, a.length); // independent copy
+boolean equal = Arrays.equals(a, copy);  // true — value-equal
 
----
+int[] zeros = new int[5];
+Arrays.fill(zeros, 7);                   // {7,7,7,7,7}
+```
 
-# 11. Common Array Problems
-
-Developers commonly face:
-- ArrayIndexOutOfBoundsException
-- wrong loop conditions
-- incorrect indexing
-
-Careful index handling is important.
+`Arrays.toString` is the only reasonable way to print an array — `System.out.println(arr)` prints something like `[I@1540e19d` (the internal class name and hash).
 
 ---
 
-# 12. Real Backend Engineering Importance
+## Common pitfalls
 
-Arrays help in:
-- handling datasets
-- processing API records
-- managing temporary data
-- batch processing
-- iterative backend operations
-
-Arrays also become foundation for:
-- collections framework
-- ArrayList
-- streams
-- advanced data structures
+- **Off-by-one in the loop bound.** `i <= arr.length` walks past the end. Use `i < arr.length`.
+- **Forgetting `length` is a field, not a method.** `arr.length()` → compile error. `arr.length` → correct.
+- **Printing the array directly.** `System.out.println(arr)` gives garbage. Use `Arrays.toString(arr)`.
+- **Assuming `==` compares contents.** It compares references — `new int[]{1} == new int[]{1}` is `false`. Use `Arrays.equals` for value equality.
+- **`String[] = new String[5]` then immediately calling methods on it.** All five slots are null until you assign them. NPE waiting.
 
 ---
 
-# 13. Industry Relevance
+## When to use an array vs. an `ArrayList`
 
-Even though collections are used more frequently in enterprise applications, arrays remain extremely important because:
-- collections internally use arrays
-- arrays provide performance advantages
-- understanding arrays improves data structure knowledge
+- **Array** — you know the size upfront, performance matters, you're working at a low level (image pixels, byte buffers, primitive math).
+- **ArrayList** — you don't know the final size, you want to add/remove, you want utility methods. This is the everyday default in backend code.
 
-Strong array fundamentals help developers write efficient backend applications.
+When in doubt, use `ArrayList`. Going from `int[]` to `List<Integer>` later is annoying.
+
+---
+
+## Code examples
+
+1. `ArrayBasics.java` — declaration, indexing, iteration, length. `Arrays.toString` to print.
+2. `TwoDimensionalArray.java` — a 3x3 grid, nested loops to read it.
+3. `ArrayDefaults.java` — show what each type defaults to in `new T[5]`.
+4. `ArrayUtilities.java` — `Arrays.sort`, `copyOf`, `fill`, `equals`. The standard toolbox.
+
+---
+
+## Try this yourself
+
+1. In `ArrayBasics.java`, write a method `int sum(int[] arr)` that returns the total. Call it from `main`. Try empty arrays — make sure it returns 0, not crashes.
+2. Convert `TwoDimensionalArray.java` from a regular grid to a jagged one — first row 3 elements, second row 5, third row 2. Iterate it with `grid[i].length` per row.
+3. In `ArrayUtilities.java`, demonstrate that `Arrays.copyOf(a, a.length + 3)` produces an array with three extra zeros at the end.
+
+---
+
+## Self-check
+
+1. `arr.length` vs `arr.length()` — which one is correct for an array, and which one is for a `String`? Why is the language inconsistent?
+2. `new String[3]` produces an array of what value? What happens if you call `.length()` on the first element?
+3. Why does `System.out.println(arr)` print garbage, and what's the fix?
