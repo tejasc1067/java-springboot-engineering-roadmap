@@ -2,7 +2,7 @@
 
 Once threads touch the same collection, the rules change. `ArrayList`, `HashMap`, and friends are **not thread-safe** — concurrent modification can corrupt them, lose data, or throw `ConcurrentModificationException` at random. This topic covers the modern toolkit: `ConcurrentHashMap`, `CopyOnWriteArrayList`, blocking queues, and what each is for.
 
-Concurrency in depth lives in topics 12–17. This one focuses specifically on **collections under multi-threaded access**.
+Concurrency in depth lives in module [03c-concurrency](../03c-concurrency/). This one focuses specifically on **collections under multi-threaded access**.
 
 ---
 

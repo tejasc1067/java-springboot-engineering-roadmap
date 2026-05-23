@@ -35,7 +35,7 @@ Before you start, install the JDK and IntelliJ — see [`SETUP.md`](SETUP.md).
 
 ### If you already code in another language (frontend, data, QA, devops...)
 
-You can skim modules 01–02 quickly. Start seriously at **`03-java-advanced/`** to ground yourself in Java's concurrency and JVM model, then continue. Expect ~3–4 months at 10 hrs/week.
+You can skim modules 01–02 quickly. Start seriously at **`03a-java-language-depth/`** and work through 03a → 03b → 03c → 03d to ground yourself in Java's type system, functional features, concurrency, and JVM model, then continue. Expect ~3–4 months at 10 hrs/week.
 
 ### If you know Java but not backend specifically
 
@@ -75,8 +75,11 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 ```
 01-java-fundamentals                          ← ✓ done
 02-oops-and-design-principles                 ← ✓ done
-03-java-advanced                              ← ✓ done
-04-jdbc-and-database                          ← ✓ done (new template)
+03a-java-language-depth                       ← ✓ done   (exceptions, generics, collections)
+03b-modern-java-and-functional                ← ✓ done   (lambdas, streams, Optional)
+03c-concurrency                               ← ✓ done   (threads, sync, executors, futures)
+03d-jvm-and-runtime                           ← ✓ done   (memory, GC, reflection, networking, production)
+04-jdbc-and-database                          ← ✓ done (reference template)
 05-maven-and-gradle                           ← 🚧 in progress
 06-unit-testing
 07-spring-core
@@ -95,7 +98,9 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 20-projects
 ```
 
-**Module 04 is the current reference implementation** of the curriculum's style and depth: runnable code examples (H2 in-memory database), vulnerable-then-safe contrasts for security topics, broken-then-fixed contrasts for resource management, real exception handling. Modules 01–03 cover their content well but will eventually be rewritten to match the new depth.
+**Module 04 is the current reference implementation** of the curriculum's style and depth: runnable code examples (H2 in-memory database), vulnerable-then-safe contrasts for security topics, broken-then-fixed contrasts for resource management, real exception handling. Module 03 (split into 03a-03d to keep each sub-module walkable) is the newest application of that template.
+
+**About the 03a-03d split.** The original "Java Advanced" module grew to 32 topics — too much to walk as one. It's split into four sub-modules along concept boundaries: 03a (language depth), 03b (modern Java), 03c (concurrency), 03d (JVM & runtime). Read in order — 03c uses lambdas from 03b, 03d assumes concurrency vocabulary from 03c.
 
 ---
 
