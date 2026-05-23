@@ -1,204 +1,200 @@
-# Advanced Generics in Java
+# 04 — Generics Advanced (Wildcards, Bounds, PECS)
 
-Advanced generics are heavily used in:
-- Spring Framework
-- collections framework
-- repositories
-- reusable libraries
-- enterprise backend systems
+Topic 03 covered the basics — `Box<T>`, generic methods, type erasure. This one covers what trips most people up: **wildcards** (`?`), **bounded types** (`T extends Number`), and the **PECS** rule (Producer Extends, Consumer Super) that tells you when to use which.
 
-Modern Java architecture depends heavily on advanced generics.
-
-Very important enterprise Java topic.
+You need this the moment you write a method that has to accept "a list of Numbers or any subtype" — which, in real code, is very often.
 
 ---
 
-# 1. Bounded Types
+## The problem this solves
 
-Bounded types restrict:
-# allowed generic types
-
-Example:
+Suppose you write:
 
 ```java
-<T extends Number>
+static double sumAll(List<Number> nums) {
+    double total = 0;
+    for (Number n : nums) total += n.doubleValue();
+    return total;
+}
 ```
 
-Only numeric types are allowed.
-
-Very important compile-time safety feature.
-
----
-
-# 2. Why Bounded Types are Important?
-
-Bounded types improve:
-- type safety
-- reusable APIs
-- compile-time validation
-
-Very important architecture principle.
-
----
-
-# 3. Wildcards
-
-Wildcard:
-# ?
-
-represents unknown type.
-
-Used heavily in:
-- collections
-- APIs
-- reusable abstractions
-
-Very important Java feature.
-
----
-
-# 4. Upper Bounded Wildcards
-
-Example:
+Then you call it:
 
 ```java
-<? extends Number>
+List<Integer> ints = List.of(1, 2, 3);
+sumAll(ints);                          // ← compile error
 ```
 
-Means:
-- Number
-- subclasses of Number
-
-Usually used for:
-# reading data safely
-
-Very important collections concept.
+Wait — `Integer` extends `Number`, so why doesn't this work? Because **`List<Integer>` is NOT a subtype of `List<Number>`**. Generic types are *invariant* by default. The fix is wildcards.
 
 ---
 
-# 5. Lower Bounded Wildcards
+## Why generics are invariant
 
-Example:
+If `List<Integer>` were a subtype of `List<Number>`, this would compile:
 
 ```java
-<? super Integer>
+List<Integer> ints = new ArrayList<>();
+List<Number> nums = ints;              // (hypothetical — actually illegal)
+nums.add(3.14);                        // adding a Double through the Number view
+Integer i = ints.get(0);               // boom: it's actually a Double
 ```
 
-Means:
-- Integer
-- parent classes of Integer
-
-Usually used for:
-# safely inserting data
-
-Very important collections design principle.
+To prevent that disaster, Java makes generic types invariant: `List<Integer>` and `List<Number>` are unrelated types, even though `Integer extends Number`. Wildcards give you back a *safe* way to relax this restriction.
 
 ---
 
-# 6. PECS Principle
+## Upper-bound wildcard: `? extends T`
 
-Very important interview topic.
+"A list of `T` or any subtype." You can **read** from it, but you can't **write** to it (except `null`).
 
-PECS means:
-
-# Producer Extends
-# Consumer Super
-
-Rules:
-- producer → extends
-- consumer → super
-
-Very important collections API concept.
-
----
-
-# 7. Covariance Basics
-
-Covariance allows:
-# reading safely
-
-Commonly associated with:
 ```java
-<? extends Type>
+static double sumAll(List<? extends Number> nums) {
+    double total = 0;
+    for (Number n : nums) total += n.doubleValue();
+    return total;
+}
+
+sumAll(List.of(1, 2, 3));              // List<Integer> ✓
+sumAll(List.of(1.0, 2.0));             // List<Double>  ✓
+sumAll(List.of(1L, 2L, 3L));           // List<Long>    ✓
 ```
 
-Very important generic behavior concept.
+The compiler knows every element is *some* `Number`, so reading is safe (`Number n = nums.get(0)`). But it can't let you `nums.add(...)` — the actual list might be `List<Integer>`, in which case adding a `Double` would corrupt it.
+
+**Use case: producers.** When a method receives data from the parameter and only reads from it.
 
 ---
 
-# 8. Contravariance Basics
+## Lower-bound wildcard: `? super T`
 
-Contravariance allows:
-# safe insertion
+"A list of `T` or any supertype." You can **write** `T` (or any subtype) into it, but you can't safely **read** anything more specific than `Object`.
 
-Commonly associated with:
 ```java
-<? super Type>
+static void addIntegers(List<? super Integer> dest) {
+    dest.add(1);
+    dest.add(2);
+    dest.add(3);
+}
+
+List<Integer> ints     = new ArrayList<>();
+List<Number>  nums     = new ArrayList<>();
+List<Object>  objects  = new ArrayList<>();
+
+addIntegers(ints);     // ✓
+addIntegers(nums);     // ✓
+addIntegers(objects);  // ✓
 ```
 
-Very important collections behavior concept.
+The compiler knows the list holds at least `Integer` (or some ancestor of it), so adding `Integer` is safe. But reading? You'd only get an `Object` — too lossy to be useful.
+
+**Use case: consumers.** When a method puts data into the parameter.
 
 ---
 
-# 9. Type Erasure
+## PECS: Producer Extends, Consumer Super
 
-Java generics mainly exist at:
-# compile time
+That's the rule, and it's the one piece of mnemonics worth memorizing.
 
-At runtime:
-generic type information is mostly removed.
+- If the parameter **produces** data for your method to read → `? extends T`.
+- If the parameter **consumes** data your method writes → `? super T`.
+- If it does both → just use `T` (no wildcard).
 
-This behavior is called:
-# type erasure
+The canonical example is `Collections.copy`:
 
-Very important advanced Java topic.
+```java
+public static <T> void copy(List<? super T> dest, List<? extends T> src) {
+    //                       ^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^
+    //                       consumer (writes T)    producer (reads T)
+}
+```
 
----
-
-# 10. Generic Restrictions
-
-Generics have restrictions.
-
-Examples:
-- cannot directly use primitive types
-- cannot create generic arrays directly
-- static members cannot use generic type parameter directly
-
-Very important interview topic.
+Read it once. Internalize it. PECS appears everywhere in standard library signatures — `Stream`, `Comparator`, `Function`, etc.
 
 ---
 
-# 11. Real-World Backend Examples
+## Unbounded wildcard: `?`
 
-Advanced generics are heavily used in:
-- Spring Data JPA
-- repositories
-- API wrappers
-- collections framework
-- reusable backend libraries
+`List<?>` means "list of *something*, but I don't care what." You can read elements only as `Object`, and you can't add anything except `null`.
 
-Very important enterprise Java topic.
+```java
+static void printSize(List<?> list) {
+    System.out.println("size: " + list.size());
+}
+```
 
----
+When is this better than `List<Object>`? Because `List<Object>` is invariant — only `List<Object>` satisfies it. `List<?>` accepts `List<String>`, `List<Integer>`, anything.
 
-# 12. Common Beginner Confusions
-
-Beginners often:
-- misuse wildcards
-- confuse extends vs super
-- misunderstand PECS
-- misunderstand type erasure
-
-Advanced generics require careful understanding.
+Default to `List<?>` when you really mean "any list and I won't add to it." Otherwise pick a bound.
 
 ---
 
-# 13. Industry Relevance
+## Bounded type parameters: `<T extends Number>`
 
-Modern enterprise Java heavily depends on:
-- advanced generics
-- type-safe abstractions
-- reusable frameworks
-- collections architecture
+Sometimes you want a *type parameter* with a constraint, not just a wildcard. Use `<T extends Bound>` in the method/class declaration.
 
-Framework-level backend engineering strongly relies on advanced generics.
+```java
+static <T extends Number> double sumStrict(List<T> nums) {
+    double total = 0;
+    for (T n : nums) total += n.doubleValue();
+    return total;
+}
+```
+
+Difference from `? extends Number`:
+
+- `List<? extends Number>` — caller can pass any `List<Subtype>`, but **inside the method, all elements are just "some unknown subtype of Number."** You can't refer to the concrete type.
+- `List<T> where T extends Number` — `T` is a *named* type. You can use it in the signature (`T first = list.get(0)`), return it, store it.
+
+Use a named type parameter when the method's signature talks about the type (e.g. returning a `T`). Use `? extends` when you only read elements.
+
+You can have multiple bounds with `&`: `<T extends Number & Comparable<T>>` — must extend `Number` *and* implement `Comparable<T>`.
+
+---
+
+## Type erasure consequences here
+
+Topic 03 showed that the JVM erases type parameters. With wildcards, that means:
+
+- You can't write `new T[10]`, `new ArrayList<T>[10]`, etc.
+- `if (list instanceof List<String>)` won't compile — only `List<?>` works as an `instanceof` check.
+- The compiler inserts casts when you call `list.get(0)` in generic code. Most of the time you never see this; occasionally a runtime `ClassCastException` from inserted casts is your only clue.
+
+This is why generics are sometimes called "compile-time type checking only."
+
+---
+
+## Common pitfalls
+
+- **`List<Object>` as a "universal" type.** It only matches `List<Object>` exactly, not `List<String>`. Use `List<?>` if you mean "any list."
+- **Trying to `add` into `List<? extends T>`.** Compiler refuses. The wildcard means you don't know the exact type — adding could corrupt it. Use `? super T` for that.
+- **PECS reversed.** Easy to swap. Re-derive it: if your method *reads* the parameter, the parameter *produces* — `extends`. If it *writes*, the parameter *consumes* — `super`.
+- **Wildcard in a return type.** `List<? extends T> doStuff()` — the caller now has the same write restriction. Usually you mean to return a concrete `List<T>` instead.
+- **Capture conversion confusion.** Sometimes you'll get errors like "capture of ? extends Number cannot be converted." The fix is usually a helper method with a real type parameter (`<T extends Number> void help(List<T> list)`).
+
+---
+
+## Code examples
+
+1. `InvarianceProof.java` — `List<Integer>` is not a `List<Number>`; compile error explained.
+2. `UpperBoundProducer.java` — `? extends Number` for reading.
+3. `LowerBoundConsumer.java` — `? super Integer` for writing.
+4. `PecsCopy.java` — the canonical `copy(dest, src)` with both wildcards.
+5. `BoundedTypeParameter.java` — `<T extends Number>` named parameter, used in return type.
+6. `UnboundedWildcard.java` — `List<?>` for "any list, read-only."
+
+---
+
+## Try this yourself
+
+1. In `UpperBoundProducer.java`, try to add an `Integer` to the `List<? extends Number>` parameter. Read the compile error — it's PECS biting you correctly.
+2. In `LowerBoundConsumer.java`, try to read an element from `List<? super Integer>` and assign to `Integer`. Read the compile error. Now assign to `Object` — works.
+3. Convert `PecsCopy.java` to use no wildcards (`List<T> dest, List<T> src`). Find at least one realistic caller that no longer compiles. That call site is exactly why PECS exists.
+
+---
+
+## Self-check
+
+1. Why is `List<Integer>` not a subtype of `List<Number>`? What concrete bug would assigning one to the other allow?
+2. State the PECS rule. Apply it to a method `Collections.addAll(Collection<? super T> c, T... elements)` — which role does the parameter play?
+3. When would you prefer a bounded type parameter `<T extends Number>` over `? extends Number`?
