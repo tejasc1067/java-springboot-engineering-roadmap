@@ -1,654 +1,514 @@
-# Common Mistakes in Java Fundamentals
+# Common Mistakes — Java Fundamentals
 
-## 1. Forgetting semicolon
+Real bugs in code that compiles and looks reasonable. Each entry shows the bad pattern, what actually goes wrong, and the fix.
 
-Incorrect:
-
-System.out.println("Hello")
-
-Correct:
-
-System.out.println("Hello");
-
----
-
-## 2. Wrong main method signature
-
-Correct:
-
-public static void main(String[] args)
-
----
-
-## 3. Case sensitivity
-
-Java is case-sensitive.
-
-Incorrect:
-system.out.println()
-
-Correct:
-System.out.println()
-
-## 4. Confusing JDK, JRE, and JVM
-
-JDK:
-Development toolkit
-
-JRE:
-Runtime environment
-
-JVM:
-Executes bytecode
-
----
-
-## 5. Thinking Java code runs directly
-
-Java code first gets compiled into bytecode before JVM executes it.
-
----
-
-## 6. Confusing Primitive and Reference Types
-
-Primitive types store actual values.
-
-Reference types store object references.
-
----
-
-## 7. Forgetting Variable Initialization
-
-Local variables must be initialized before usage.
-
-Incorrect:
-
-int age;
-System.out.println(age);
-
-Correct:
-
-int age = 25;
-
----
-
-## 8. Using = instead of ==
-
-Incorrect:
-
-if (a = 5)
-
-Correct:
-
-if (a == 5)
-
----
-
-## 9. Forgetting break in switch
-
-Missing break causes fall-through behavior.
-
----
-
-## 10. Confusing && and ||
-
-&& → AND
-
-|| → OR
-
----
-
-## 11. Creating Infinite Loops
-
-Incorrect:
-
-while(true)
-
-without termination condition.
-
----
-
-## 12. Wrong Loop Condition
-
-Incorrect conditions may:
-- skip execution
-- create infinite loops
-
----
-
-## 13. Off-by-One Errors
-
-Very common beginner mistake.
-
-Example:
-
-for (int i = 0; i <= length; i++)
-
-may exceed array boundary.
-
----
-
-## 14. Forgetting Method Call
-
-Defining method alone does not execute it.
-
-Method must be called.
-
----
-
-## 15. Missing Return Statement
-
-Methods with return type must return value.
-
----
-
-## 16. Wrong Parameter Order
-
-Incorrect parameter order may produce unexpected results.
-
----
-
-## 17. Confusing Parameters and Arguments
-
-Parameters are method variables.
-
-Arguments are actual passed values.
-
----
-
-## 18. Accessing Invalid Array Index
-
-Incorrect:
-
-marks[5]
-
-when array size is smaller.
-
----
-
-## 19. Wrong Loop Condition
-
-Incorrect loop condition may skip elements or exceed array bounds.
-
----
-
-## 20. Forgetting Array Length
-
-Hardcoding loop limits instead of using `.length` reduces flexibility.
-
-Correct:
-
-for (int i = 0; i < array.length; i++)
-
----
-
-## 21. Using == for String Comparison
-
-Incorrect:
-
-if (a == b)
-
-Correct:
-
-if (a.equals(b))
-
----
-
-## 22. Ignoring String Immutability
-
-Methods like concat() create new String objects.
-
-Original String remains unchanged.
-
----
-
-## 23. Excessive String Concatenation
-
-Using `+` repeatedly inside loops may create performance issues.
-
-Use StringBuilder instead.
-
----
-
-## 24. Accessing Non-Static Members from Static Context
-
-Static methods cannot directly access non-static members.
-
----
-
-## 25. Excessive Static Usage
-
-Too much static usage may create tightly coupled applications.
-
----
-
-## 26. Confusing Class-Level and Object-Level Data
-
-Static variables are shared among all objects.
-
----
-
-## 27. Forgetting this During Variable Ambiguity
-
-Local variables may hide instance variables.
-
----
-
-## 28. Using this Inside Static Methods
-
-Static methods cannot directly use `this`.
-
 ---
 
-## 29. Incorrect Constructor Chaining
+## Execution and setup
 
-`this()` must be first statement inside constructor.
+### 1. Running `java HelloWorld.class`
 
----
-
-## 30. Making Sensitive Variables Public
-
-Sensitive data should usually remain private.
-
----
-
-## 31. Confusing protected and default Access
-
-protected allows child class access.
-
-default does not.
-
----
-
-## 32. Overusing public Variables
-
-Too many public members reduce encapsulation and security.
-
----
+```bash
+java HelloWorld.class       # error: Could not find or load main class HelloWorld.class
+```
 
-## 33. Incorrect Package Declaration Position
+The `java` command takes a **class name**, not a file name. It appends `.class` itself.
 
-Package declaration must be first statement in Java file.
+**Fix:**
+```bash
+java HelloWorld             # without the .class extension
+# or, Java 11+:
+java HelloWorld.java        # single-file source-code launch (compiles + runs)
+```
 
----
-
-## 34. Folder Structure Not Matching Package Name
-
-Package hierarchy must match folder structure.
-
----
-
-## 35. Overcrowding Single Package
-
-Too many unrelated classes inside one package reduces maintainability.
+### 2. Public class name doesn't match the file name
 
----
-
-## 36. Catching Generic Exception Everywhere
-
-Overusing generic Exception reduces debugging clarity.
+```java
+// File: hello.java
+public class HelloWorld { ... }      // compile error: class HelloWorld is public, should be in HelloWorld.java
+```
 
----
-
-## 37. Ignoring Exception Messages
+**Fix:** rename the file to match the public class, or remove `public` to make it package-private.
 
-Exception messages provide important debugging information.
-
 ---
-
-## 38. Empty Catch Blocks
 
-Never leave catch blocks empty.
+## Variables and types
 
-Bad practice:
-catch(Exception e) {}
+### 3. Reading a local variable before assigning
 
----
-
-## 39. Forgetting finally for Resource Cleanup
-
-Resources should be properly closed using finally block.
+```java
+int x;
+System.out.println(x);    // compile error: variable x might not have been initialized
+```
 
----
+The compiler refuses. Field declarations get type defaults automatically; locals don't.
 
-## 40. Using Wrong Collection Type
+**Fix:** initialize at declaration. `int x = 0;`.
 
-Choose collection based on use case.
+### 4. Integer overflow in millisecond math
 
----
+```java
+int seconds = 60 * 60 * 24 * 365;       // fits in int
+int millis = seconds * 1000;             // overflows int, wraps to a negative
+long correct = (long) seconds * 1000;    // promote BEFORE the multiply
+```
 
-## 41. Ignoring Duplicate Behavior in Set
+The compiler does not warn. Wrap-around is silent.
 
-Set automatically removes duplicates.
+**Fix:** use `long` for anything in millisecond / nanosecond range, large IDs, money in cents.
 
----
+### 5. Comparing doubles with `==`
 
-## 42. Forgetting Null Checks During Retrieval
+```java
+double a = 0.1 + 0.2;
+if (a == 0.3) { ... }      // false — a is 0.30000000000000004
+```
 
-Map retrieval may return null.
+**Fix:** `Math.abs(a - b) < 1e-9`, or `BigDecimal` for money.
 
 ---
-
-## 43. Concurrent Modification During Iteration
 
-Modifying collection during iteration may throw exceptions.
+## Operators and conditions
 
----
+### 6. `=` instead of `==` in a boolean condition
 
-## 44. Using Primitive Types in Collections
+```java
+boolean loggedIn = false;
+if (loggedIn = true) {     // assignment, evaluates to true → always enters
+    ...
+}
+```
 
-Collections require wrapper classes.
+For non-boolean assignments the compiler catches it. For booleans it doesn't.
 
-Incorrect:
-ArrayList<int>
+**Fix:** read every `if` condition twice. Linters and IDEs flag this.
 
-Correct:
-ArrayList<Integer>
+### 7. Forgetting `break` in classic switch
 
----
+```java
+switch (status) {
+    case "OK":    handleOk();        // no break — falls through
+    case "ERROR": handleError();      // both branches run
+}
+```
 
-## 45. Forgetting Null Checks in HashMap
+**Fix:** add `break;` after each branch — or, better, use the arrow-form `switch` expression, which makes fall-through impossible.
 
-map.get() may return null.
+### 8. `if` with no braces, indentation lies
 
----
+```java
+if (score >= 90)
+    System.out.println("excellent");
+    awardPrize();             // runs UNCONDITIONALLY
+```
 
-## 46. Modifying Collection During Iteration
+Indentation isn't syntax. The second line is outside the `if`.
 
-Improper modification may cause ConcurrentModificationException.
+**Fix:** always use braces, even for single-statement bodies.
 
 ---
 
-## 47. Confusing Ordered and Unordered Collections
+## Strings
 
-HashSet and HashMap do not guarantee ordering.
+### 9. `==` to compare String contents
 
----
-
-## 48. Choosing Wrong Collection Type
+```java
+Scanner sc = new Scanner(System.in);
+String input = sc.nextLine();
+if (input == "quit") { ... }    // never true
+```
 
-Wrong collection choice may reduce performance and scalability.
-
----
+Runtime strings aren't pooled. `==` compares references.
 
-## 49. Using == Instead of equals() in Collections
+**Fix:** `input.equals("quit")` — or safer, `"quit".equals(input)` to avoid NPE on null input.
 
-String/object comparison inside collections should usually use equals().
+### 10. Calling `s.trim()` and ignoring the return
 
----
+```java
+String name = "  alice  ";
+name.trim();
+System.out.println("[" + name + "]");   // still "[  alice  ]"
+```
 
-## 50. Ignoring Generics
+Strings are immutable. Methods return a new String; the original doesn't change.
 
-Using raw collections reduces type safety.
+**Fix:** `name = name.trim();`.
 
-Incorrect:
+### 11. `+=` in a loop for huge strings
 
-ArrayList list = new ArrayList();
+```java
+String s = "";
+for (int i = 0; i < 100_000; i++) s += i;
+```
 
-Correct:
+Each `+=` allocates a new String. The total work is O(n²).
 
-ArrayList<String> list = new ArrayList<>();
+**Fix:** use `StringBuilder` inside loops.
 
 ---
 
-## 51. Excessive Nested Loops on Collections
+## Arrays
 
-Poor iteration logic may reduce backend performance.
-
----
+### 12. Off-by-one in array iteration
 
-## 52. Removing Elements Improperly During for-each Loop
+```java
+int[] arr = {1, 2, 3};
+for (int i = 0; i <= arr.length; i++) {   // <= ; should be <
+    System.out.println(arr[i]);            // throws ArrayIndexOutOfBoundsException at i=3
+}
+```
 
-This may cause ConcurrentModificationException.
+**Fix:** `i < arr.length`. The last valid index is `length - 1`.
 
-Use Iterator instead.
+### 13. `System.out.println(arr)` prints garbage
 
----
+```java
+int[] arr = {1, 2, 3};
+System.out.println(arr);     // something like "[I@1540e19d"
+```
 
-## 53. Ignoring Collection Performance
+The default `toString` on an array isn't useful.
 
-Wrong collection selection may reduce backend scalability.
+**Fix:** `System.out.println(Arrays.toString(arr));`.
 
----
+### 14. `String[] arr = new String[3]; arr[0].length();`
 
-## 54. Not Using Iterator for Safe Removal
+All three slots are null. Calling a method on `arr[0]` throws NPE.
 
-Direct removal during iteration may cause ConcurrentModificationException.
+**Fix:** initialize each slot before reading. Or use a `List<String>` with an `ArrayList` whose constructor populates it.
 
 ---
 
-## 55. Ignoring Immutability Concepts
+## Methods
 
-Improper mutable object handling may create backend bugs.
-
----
+### 15. Expecting a primitive parameter to be modified
 
-## 56. Overusing Static Variables
+```java
+void increment(int x) { x++; }
 
-Excessive static usage may create memory and testing issues.
+int n = 5;
+increment(n);
+// n is still 5
+```
 
----
+Java is pass-by-value. The callee gets a copy.
 
-## 57. Hardcoding Values Instead of Constants
+**Fix:** return the new value: `n = increment(n);`. Or wrap in an object if you really need pass-by-reference semantics.
 
-Hardcoded values reduce maintainability.
+### 16. Reassigning a reference parameter and expecting the caller to see it
 
----
+```java
+void replace(StringBuilder sb) {
+    sb = new StringBuilder("new");    // local rebinding only
+}
+```
 
-## 58. Poor Package Organization
+The caller's reference is unchanged.
 
-Improper package structure creates maintainability problems in large backend applications.
+**Fix:** mutate the passed-in object's state, or return the new object.
 
 ---
-
-## 59. Ignoring Exception Propagation
 
-Improper exception handling hides real backend issues.
+## Static and this
 
----
+### 17. Forgetting `this.` in a constructor
 
-## 60. Using Raw Collections
+```java
+class User {
+    String name;
+    User(String name) {
+        name = name;          // assigns parameter to itself; field stays null
+    }
+}
+```
 
-Raw collections reduce type safety and increase runtime risks.
+No warning. Silent bug.
 
----
+**Fix:** `this.name = name;`.
 
-## 61. Overusing Streams for Complex Logic
+### 18. `this(...)` not as the first statement
 
-Complex streams reduce readability and debugging capability.
+```java
+User() {
+    System.out.println("creating user");
+    this("default");          // compile error
+}
+```
 
----
+**Fix:** `this(...)` and `super(...)` must come first. Move any logging or work after.
 
-## 62. Ignoring Null Safety in Streams
+### 19. Calling a non-static method from `main`
 
-Null values may still cause NullPointerException.
+```java
+public class Demo {
+    void greet() { ... }              // instance method
+    public static void main(String[] args) {
+        greet();                       // compile error
+    }
+}
+```
 
----
+`main` is static; `greet` isn't. No current object to call `greet` on.
 
-## 63. Using Optional Incorrectly
+**Fix:** either make `greet` static, or `new Demo().greet()`.
 
-Avoid calling get() without checking presence.
+### 20. Static field as global mutable state
 
----
+```java
+class UserService {
+    static List<User> all = new ArrayList<>();
+}
+```
 
-## 64. Writing Very Long Stream Chains
+In a long-running server, `all` grows forever. Memory leak.
 
-Excessive chaining reduces maintainability.
+**Fix:** make it an instance field. If you really do need cross-instance state, bound the size (e.g., LRU cache).
 
 ---
 
-## 65. Ignoring Stream Performance
+## Exceptions
 
-Streams improve readability but may not always improve performance.
-
----
+### 21. Empty catch block
 
-## 66. Confusing map() and filter()
+```java
+try {
+    risky();
+} catch (Exception e) {
+    // silence
+}
+```
 
-filter():
-selects data
+The bug just disappears. Future-you debugs for hours.
 
-map():
-transforms data
+**Fix:** at minimum log. Usually rethrow or recover meaningfully.
 
----
+### 22. Catching `Exception` everywhere
 
-## 67. Forgetting Streams Are Immutable Operations
+```java
+catch (Exception e) { ... }
+```
 
-Streams create new transformed pipelines.
+Swallows NPEs, your own custom exceptions, and everything else you didn't mean to handle.
 
-Original collection remains unchanged.
+**Fix:** catch the specific type. Reserve broad `catch (Exception e)` for the outermost layer that's supposed to handle anything.
 
----
+### 23. Losing the cause when wrapping
 
-## 68. Using Streams for Everything
+```java
+try {
+    doSql();
+} catch (SQLException e) {
+    throw new BusinessException("save failed");   // ← lost the SQL stack
+}
+```
 
-Traditional loops are sometimes simpler and more readable.
+**Fix:** `throw new BusinessException("save failed", e);` so the original cause is chained.
 
----
+### 24. Forgetting that checked exceptions must be handled
 
-## 69. Forgetting to Close File Resources
+```java
+String text = Files.readString(path);    // compile error if not in throws or try/catch
+```
 
-Improper resource closing may cause memory leaks.
+**Fix:** either catch (`try { ... } catch (IOException e) { ... }`) or declare (`throws IOException` on the method).
 
 ---
 
-## 70. Using Hardcoded File Paths
+## Collections
 
-Hardcoded paths reduce portability.
+### 25. Modifying a list during for-each iteration
 
----
+```java
+for (String s : list) {
+    if (s.startsWith("x")) list.remove(s);    // ConcurrentModificationException
+}
+```
 
-## 71. Ignoring Exception Handling During File Operations
+**Fix:** use an explicit Iterator and `it.remove()`, or `list.removeIf(...)`, or build a new list of survivors.
 
-File operations may fail unexpectedly.
+### 26. `map.get(key)` returns null, you NPE downstream
 
----
+```java
+int age = ages.get("dave");       // ages.get("dave") might be null
+                                  // unboxing to int → NullPointerException
+```
 
-## 72. Reading Large Files Inefficiently
+**Fix:** `getOrDefault`, `containsKey` check, or `Optional.ofNullable(ages.get("dave"))`.
 
-BufferedReader improves large file reading performance.
+### 27. Using a mutable object as a HashMap key
 
----
+```java
+User u = new User("alice");
+map.put(u, "data");
+u.setName("bob");                  // hashCode changes
+map.get(u);                        // null — can't find it any more
+```
 
-## 73. Forgetting try-with-resources
+**Fix:** keys should be effectively immutable. If using your own class, don't expose setters for fields used in `equals`/`hashCode`.
 
-Automatic resource handling is safer and cleaner.
+### 28. Comparing Integer wrappers with `==`
 
----
+```java
+Integer a = 200, b = 200;
+if (a == b) { ... }                // false (different objects)
+if (a.equals(b)) { ... }           // true
+```
 
-## 74. Ignoring File Permissions
+Works "by luck" for small numbers (-128 to 127 are cached). Don't rely on it.
 
-Applications may fail if permissions are insufficient.
+**Fix:** use `.equals` for wrapper types, or unbox to `int` first.
 
----
+### 29. Raw types (no generics)
 
-## 75. Overwriting Important Files Accidentally
+```java
+List names = new ArrayList();      // raw
+names.add("alice");
+names.add(42);                      // no compile error
+String s = (String) names.get(1);  // ClassCastException at runtime
+```
 
-Improper write operations may overwrite existing data.
+**Fix:** always parameterize: `List<String> names = new ArrayList<>();`.
 
 ---
 
-## 76. Ignoring Relative Path Usage
+## Java 8 and Streams
 
-Relative paths improve portability and deployment flexibility.
+### 30. `Optional.get()` without checking
 
----
+```java
+Optional<User> u = findByName("dave");
+User x = u.get();                  // NoSuchElementException if empty
+```
 
-## 77. Ignoring Thread Safety
+**Fix:** `orElse`, `orElseThrow`, `ifPresent`, or `map(...).orElse(...)`.
 
-Shared resources may produce inconsistent results.
+### 31. Side effects inside a stream
 
----
+```java
+List<String> results = new ArrayList<>();
+list.stream()
+    .filter(...)
+    .map(...)
+    .forEach(results::add);        // side-effect collection — fragile
+```
 
-## 78. Creating Too Many Threads
+Breaks on parallel streams. Confuses readers.
 
-Too many threads may reduce backend performance.
+**Fix:** terminate with `.toList()` or `.collect(...)`.
 
----
+### 32. `Optional` as a field or parameter
 
-## 79. Forgetting Synchronization
+```java
+class User {
+    Optional<String> middleName;   // don't
+}
+```
 
-Unsynchronized shared data may cause race conditions.
+Optional is designed for return types. Fields should be nullable (and documented) or just the value type itself.
 
 ---
 
-## 80. Misusing sleep() for Coordination
+## Files
 
-sleep() is not reliable synchronization mechanism.
+### 33. No try-with-resources
 
----
+```java
+BufferedReader r = Files.newBufferedReader(path);
+String line = r.readLine();
+// ... never close r
+```
 
-## 81. Ignoring Race Conditions
+Leaks an OS file descriptor.
 
-Concurrent modification may produce unpredictable results.
-
----
+**Fix:** wrap in `try (BufferedReader r = ...) { ... }`.
 
-## 82. Accessing Shared Mutable State Improperly
+### 34. `readAllLines` on a large file
 
-Improper shared state handling creates concurrency bugs.
+```java
+List<String> lines = Files.readAllLines(Path.of("huge.log"));   // OOM
+```
 
----
+Loads the whole file into memory.
 
-## 83. Blocking Main Thread Unnecessarily
+**Fix:** stream line by line with `BufferedReader.readLine()` or `Files.lines(path)` (closed via try-with-resources).
 
-Improper joins/sleeps may reduce responsiveness.
+### 35. Hardcoded absolute paths
 
----
+```java
+Path p = Path.of("C:\\Users\\alice\\data.txt");
+```
 
-## 84. Assuming Thread Execution Order
+Doesn't work for anyone else.
 
-Thread execution order is not guaranteed.
+**Fix:** relative paths and configurable paths via environment or config file.
 
 ---
 
-## 85. Excessive Object Creation
+## Threading
 
-Too many unnecessary objects increase memory pressure.
-
----
+### 36. Calling `run()` instead of `start()`
 
-## 86. Improper Static Variable Usage
+```java
+Thread t = new Thread(task);
+t.run();         // runs on the CURRENT thread — no parallelism
+```
 
-Static objects may remain in memory for long duration.
+Looks identical at first glance. Hides the bug.
 
----
+**Fix:** `t.start();`.
 
-## 87. Ignoring Memory Leaks
+### 37. Race on shared counter
 
-Unused referenced objects may consume heap memory.
+```java
+static int count;
+Runnable task = () -> {
+    for (int i = 0; i < 100_000; i++) count++;
+};
+// two threads → final count is less than 200,000
+```
 
----
+`count++` is read-modify-write, not atomic.
 
-## 88. Assuming System.gc() Guarantees GC
+**Fix:** `AtomicInteger` (simplest), or `synchronized`.
 
-System.gc() only requests garbage collection.
+### 38. Swallowing `InterruptedException`
 
----
+```java
+try {
+    Thread.sleep(1000);
+} catch (InterruptedException e) {
+    // ignored
+}
+```
 
-## 89. Storing Large Data in Memory Unnecessarily
+When a thread is interrupted, you've eaten the cancellation signal. Future-you debugs "why doesn't this thread shut down?".
 
-Large collections may increase heap usage.
+**Fix:** at minimum `Thread.currentThread().interrupt();` to restore the flag. Usually rethrow or exit the loop.
 
 ---
 
-## 90. Ignoring JVM Memory Behavior
+## Memory
 
-Poor memory understanding makes backend debugging difficult.
+### 39. Static collection growing forever
 
----
-
-## 91. Holding References Longer Than Needed
+```java
+class Service {
+    static Map<String, Result> cache = new HashMap<>();
+    // we put, we never evict
+}
+```
 
-Unused references prevent garbage collection.
+In a web server, this is a slow OOM.
 
----
+**Fix:** bound the cache (LRU, size-cap), use a library like Caffeine, or move to instance scope.
 
-## 92. Confusing Stack and Heap Responsibilities
+### 40. Calling `System.gc()` "to free memory"
 
-Stack stores method execution data.
+```java
+processBigBatch();
+System.gc();      // hint, not a command. Often does nothing useful.
+```
 
-Heap stores objects.
+Just removes a stop-the-world pause from your control. Doesn't fix leaks.
 
----
+**Fix:** let the JVM run GC when it sees fit. If memory is a problem, find the actual retention path with a heap dump.
