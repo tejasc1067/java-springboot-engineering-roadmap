@@ -15,7 +15,7 @@ public class EqualsHashCodeContractBroken {
             return id == other.id;
         }
 
-        // hashCode NOT overridden — inherits Object's identity hash
+        // hashCode NOT overridden -- inherits Object's identity hash
     }
 
     public static void main(String[] args) {
@@ -28,10 +28,10 @@ public class EqualsHashCodeContractBroken {
 
         System.out.println("a.equals(b) = " + a.equals(b));
         System.out.println("a.hashCode() == b.hashCode()? " + (a.hashCode() == b.hashCode()));
-        System.out.println("Set size:    " + users.size() + "   ← should be 1, is 2");
+        System.out.println("Set size:    " + users.size() + "   <-- should be 1, is 2");
         System.out.println();
         System.out.println("equals() said they're the same, but hashCode() sent them to different buckets.");
-        System.out.println("HashSet never found the second one in the first one's bucket — it just stored it.");
+        System.out.println("HashSet never found the second one in the first one's bucket -- it just stored it.");
         System.out.println("See EqualsHashCodeContractFixed.java.");
     }
 }

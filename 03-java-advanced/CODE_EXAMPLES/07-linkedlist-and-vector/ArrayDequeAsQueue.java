@@ -18,7 +18,7 @@ public class ArrayDequeAsQueue {
         }
 
         System.out.println();
-        System.out.println("FIFO via offer/poll/peek. Same Deque interface — switch to a different");
+        System.out.println("FIFO via offer/poll/peek. Same Deque interface -- switch to a different");
         System.out.println("implementation (LinkedList, PriorityQueue) by changing one line.");
     }
 }

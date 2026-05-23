@@ -21,7 +21,7 @@ public class SubListIsAView {
             all.add("F");
             middle.size();
         } catch (java.util.ConcurrentModificationException e) {
-            System.out.println("modifying parent invalidated the sublist view → CME on next access");
+            System.out.println("modifying parent invalidated the sublist view -> CME on next access");
         }
 
         System.out.println();

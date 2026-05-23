@@ -7,7 +7,7 @@ public class LinkedHashMapAsLruCache {
         private final int maxSize;
 
         LruCache(int maxSize) {
-            super(16, 0.75f, true);     // accessOrder = true → most-recently-accessed moves to tail
+            super(16, 0.75f, true);     // accessOrder = true -> most-recently-accessed moves to tail
             this.maxSize = maxSize;
         }
 
@@ -29,6 +29,6 @@ public class LinkedHashMapAsLruCache {
         System.out.println("after get(A) (touches A):     " + cache);
 
         cache.put("D", 4);
-        System.out.println("after put(D) (evicts eldest): " + cache + "   ← B was eldest, dropped");
+        System.out.println("after put(D) (evicts eldest): " + cache + "   <-- B was eldest, dropped");
     }
 }

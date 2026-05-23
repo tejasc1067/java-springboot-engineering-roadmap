@@ -22,7 +22,7 @@ public class VectorIsLegacy {
         System.out.println("expected at most 100 (unique values), often higher because");
         System.out.println("contains() and add() are individually atomic but NOT atomic together.");
         System.out.println();
-        System.out.println("Vector's synchronized methods only protect each call — not your compound logic.");
+        System.out.println("Vector's synchronized methods only protect each call -- not your compound logic.");
         System.out.println("For real concurrency, use ConcurrentHashMap or explicit locks (topic 11).");
     }
 }

@@ -25,7 +25,7 @@ public class HashMapRaceCorruption {
         System.out.println("expected size: " + expected);
         System.out.println("actual size:   " + map.size());
         if (map.size() != expected) {
-            System.out.println("entries lost or corrupted — race during put");
+            System.out.println("entries lost or corrupted -- race during put");
         }
         System.out.println();
         System.out.println("plain HashMap is unsafe for concurrent writes.");

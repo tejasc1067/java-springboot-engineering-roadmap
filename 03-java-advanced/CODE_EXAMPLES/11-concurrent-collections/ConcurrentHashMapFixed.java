@@ -25,6 +25,6 @@ public class ConcurrentHashMapFixed {
         System.out.println("expected size: " + expected);
         System.out.println("actual size:   " + map.size());
         System.out.println();
-        System.out.println("ConcurrentHashMap uses lock striping — concurrent writes don't corrupt it.");
+        System.out.println("ConcurrentHashMap uses lock striping -- concurrent writes don't corrupt it.");
     }
 }

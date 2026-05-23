@@ -14,7 +14,7 @@ public class AsListIsFixedSize {
         try {
             fromAsList.add("d");
         } catch (UnsupportedOperationException e) {
-            System.out.println("add throws — Arrays.asList list is fixed-size");
+            System.out.println("add throws -- Arrays.asList list is fixed-size");
         }
 
         List<String> mutable = new ArrayList<>(Arrays.asList("a", "b", "c"));
@@ -25,7 +25,7 @@ public class AsListIsFixedSize {
         try {
             immutable.set(0, "X");
         } catch (UnsupportedOperationException e) {
-            System.out.println("List.of returns a fully immutable list — set throws too");
+            System.out.println("List.of returns a fully immutable list -- set throws too");
         }
     }
 }

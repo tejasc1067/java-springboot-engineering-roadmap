@@ -15,7 +15,7 @@ public class RemoveOverloadTrap {
         System.out.println("after remove(Integer.valueOf(20)):     " + nums2 + "   <-- removed the value 20");
 
         System.out.println();
-        System.out.println("trap: on List<Integer>, remove(int) is index-based — easy to think you're");
+        System.out.println("trap: on List<Integer>, remove(int) is index-based -- easy to think you're");
         System.out.println("      asking for value removal. Always wrap with Integer.valueOf(...) when");
         System.out.println("      you want value removal.");
     }

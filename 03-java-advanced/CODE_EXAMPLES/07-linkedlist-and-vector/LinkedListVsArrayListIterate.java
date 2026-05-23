@@ -27,7 +27,7 @@ public class LinkedListVsArrayListIterate {
         System.out.println("LinkedList iterate sum: " + sum + " in " + elapsedMsLinked + " ms");
 
         System.out.println();
-        System.out.println("Same loop body, same N — LinkedList loses on cache locality.");
+        System.out.println("Same loop body, same N -- LinkedList loses on cache locality.");
         System.out.println("Each next() chases a pointer to a heap-scattered node.");
     }
 }

@@ -17,7 +17,7 @@ public class HashMapPutWalkthrough {
         for (String k : keys) {
             int bucket = bucketOf(k, capacity);
             map.put(k, k.length());
-            System.out.printf("put(\"%s\") — hash=0x%08x → bucket %d (of %d)%n",
+            System.out.printf("put(\"%s\") -- hash=0x%08x -> bucket %d (of %d)%n",
                               k, k.hashCode(), bucket, capacity);
         }
 

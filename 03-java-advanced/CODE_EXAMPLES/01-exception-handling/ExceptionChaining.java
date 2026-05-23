@@ -40,7 +40,7 @@ public class ExceptionChaining {
         }
 
         System.out.println();
-        System.out.println("=== WITHOUT chain (loses cause — SQLException invisible) ===");
+        System.out.println("=== WITHOUT chain (loses cause -- SQLException invisible) ===");
         try {
             withoutChain();
         } catch (RepositoryException e) {

@@ -7,7 +7,7 @@ public class LowerBoundConsumer {
         dest.add(1);
         dest.add(2);
         dest.add(3);
-        // Integer x = dest.get(0);   ← compile error: only safe as Object
+        // Integer x = dest.get(0);   <-- compile error: only safe as Object
         //                              consumer = write-only (for T or subtype)
     }
 

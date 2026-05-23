@@ -25,8 +25,8 @@ public class LinkedListGetIsLinear {
         }
 
         System.out.println();
-        System.out.println("LinkedList.get(i) walks from the nearer end — far indices cost more.");
-        System.out.println("ArrayList.get(i) is direct array access — constant.");
+        System.out.println("LinkedList.get(i) walks from the nearer end -- far indices cost more.");
+        System.out.println("ArrayList.get(i) is direct array access -- constant.");
     }
 
     static void time(String label, List<Integer> list, int idx) {
@@ -37,6 +37,6 @@ public class LinkedListGetIsLinear {
             sum += list.get(idx);
         }
         long elapsedUs = (System.nanoTime() - start) / 1_000;
-        System.out.println(label + " — " + iterations + " calls in " + elapsedUs + " us (sum=" + sum + ")");
+        System.out.println(label + " -- " + iterations + " calls in " + elapsedUs + " us (sum=" + sum + ")");
     }
 }

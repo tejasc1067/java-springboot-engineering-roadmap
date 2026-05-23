@@ -4,7 +4,7 @@ public class UnboundedWildcard {
 
     static int sizeOfAny(List<?> list) {
         return list.size();
-        // list.add("anything");   ← compile error: cannot add to ?
+        // list.add("anything");   <-- compile error: cannot add to ?
         //                           (except null)
     }
 
@@ -24,6 +24,6 @@ public class UnboundedWildcard {
         printAsObjects(List.of(1.1, 2.2, 3.3));
 
         System.out.println();
-        System.out.println("List<?> accepts any parameterization — List<Object> would not.");
+        System.out.println("List<?> accepts any parameterization -- List<Object> would not.");
     }
 }

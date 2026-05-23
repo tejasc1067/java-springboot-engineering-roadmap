@@ -11,7 +11,7 @@ public class RecordAutoEquals {
         users.add(new User(1, "alice@example.com"));
         users.add(new User(2, "bob@example.com"));
 
-        System.out.println("set size: " + users.size() + "   (1 and 2 — duplicate of id=1 collapsed)");
+        System.out.println("set size: " + users.size() + "   (1 and 2 -- duplicate of id=1 collapsed)");
         for (User u : users) {
             System.out.println("  - " + u);
         }

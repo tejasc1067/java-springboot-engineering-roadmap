@@ -42,6 +42,6 @@ public class ChooseTheRightCollection {
             any |= c.contains(target);
         }
         long elapsedUs = (System.nanoTime() - start) / 1_000;
-        System.out.println(label + " — " + iterations + " lookups in " + elapsedUs + " us (found=" + any + ")");
+        System.out.println(label + " -- " + iterations + " lookups in " + elapsedUs + " us (found=" + any + ")");
     }
 }

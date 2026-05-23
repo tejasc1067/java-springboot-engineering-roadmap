@@ -7,7 +7,7 @@ public class CheckedVsUncheckedChoice {
         public ConfigLoadException(String msg, Throwable cause) { super(msg, cause); }
     }
 
-    // UNCHECKED: caller passed invalid input — no recovery, fix the bug
+    // UNCHECKED: caller passed invalid input -- no recovery, fix the bug
     static class InvalidPriceException extends RuntimeException {
         public InvalidPriceException(String msg) { super(msg); }
     }

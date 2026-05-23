@@ -13,7 +13,7 @@ public class ConcurrentModException {
                 }
             }
         } catch (java.util.ConcurrentModificationException e) {
-            System.out.println("CME thrown — mutating the collection during enhanced-for is unsafe.");
+            System.out.println("CME thrown -- mutating the collection during enhanced-for is unsafe.");
             System.out.println("See IteratorRemoveProper.java for the fix.");
         }
 

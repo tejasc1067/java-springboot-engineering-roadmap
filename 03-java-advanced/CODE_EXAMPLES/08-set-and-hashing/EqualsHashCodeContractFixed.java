@@ -32,6 +32,6 @@ public class EqualsHashCodeContractFixed {
 
         System.out.println("a.equals(b) = " + a.equals(b));
         System.out.println("a.hashCode() == b.hashCode()? " + (a.hashCode() == b.hashCode()));
-        System.out.println("Set size:    " + users.size() + "   ← 1, correct");
+        System.out.println("Set size:    " + users.size() + "   <-- 1, correct");
     }
 }
