@@ -1,170 +1,151 @@
-# LinkedList and Vector in Java
+# 07 — `LinkedList`, `ArrayDeque`, and `Vector`
 
-Different collections behave differently internally.
+`LinkedList` and `Vector` come up in interviews more often than in code. This topic explains what each is, why `ArrayDeque` has quietly replaced both as the right choice for almost every "I want a queue / stack / linked list" use case, and why `LinkedList` is far less useful than its reputation suggests.
 
-Choosing the wrong collection may cause:
-- performance bottlenecks
-- memory overhead
-- scalability issues
-- unnecessary synchronization cost
-
-Very important backend engineering topic.
+If you've been reaching for `LinkedList` because someone said "use it for lots of inserts" — read this first.
 
 ---
 
-# 1. What is LinkedList?
+## The problem this solves
 
-LinkedList is:
-# doubly linked list implementation of List
+The interfaces `Queue` (FIFO), `Deque` (double-ended), and `Stack`-style LIFO need *some* implementation. There are two reasonable strategies:
 
-Internally each node stores:
-- data
-- previous reference
-- next reference
+1. **Linked nodes** (`LinkedList`) — each element is its own object with `prev`/`next` pointers.
+2. **Circular array** (`ArrayDeque`) — one array, two index pointers (head and tail) that wrap around.
 
-Very important internal structure.
+Both give O(1) operations at both ends. But the array-backed version wins on cache locality, memory overhead, and constant factors — by a wide margin. `LinkedList` won when memory was cheap and CPUs didn't have caches. That's not the world anymore.
 
 ---
 
-# 2. Why LinkedList Exists?
+## How `LinkedList` works
 
-LinkedList improves:
-# insertion and deletion performance
+Each element is a node:
 
-especially:
-- middle insertion
-- frequent removals
+```text
+[prev | value | next] ↔ [prev | value | next] ↔ [prev | value | next]
+   ↑                                                ↑
+  head                                             tail
+```
 
-Very important collection design concept.
+- `addFirst`, `addLast`, `removeFirst`, `removeLast` — O(1).
+- `get(i)` — walks from the nearer end. **O(n)**, even though `LinkedList` implements `List`.
+- `add(i, e)` — walks to index `i` (O(n)), then inserts (O(1) once positioned). Total: O(n).
 
----
+The "fast insert in the middle" claim *only* applies if you already have an `Iterator` at the position. `linkedList.add(5000, x)` is O(n) — same as `arrayList.add(5000, x)`, just for a different reason.
 
-# 3. LinkedList Access Performance
+### The hidden cost: memory
 
-Access is:
-# slower than ArrayList
-
-because traversal occurs node-by-node.
-
-Very important performance tradeoff.
+Each `LinkedList` node is a separate object: ~24 bytes of object header, two reference fields (~16 bytes), plus the actual element. On a 64-bit JVM, that's roughly **48 bytes per element of overhead**, plus the element itself. An `ArrayList<Integer>` of 1M ints uses ~24 MB. A `LinkedList<Integer>` of 1M ints uses ~72 MB. And every iteration is a pointer chase — terrible for CPU cache.
 
 ---
 
-# 4. LinkedList Memory Overhead
+## `ArrayDeque` — the better default
 
-LinkedList consumes:
-# more memory
+`ArrayDeque` is a circular array. Two index pointers mark the head and tail; they wrap around the array. It implements `Deque`, so it's both a queue and a stack.
 
-because every node stores:
-- previous reference
-- next reference
+```java
+Deque<String> stack = new ArrayDeque<>();
+stack.push("A");                          // top
+stack.push("B");
+stack.push("C");
+System.out.println(stack.pop());          // C
+System.out.println(stack.pop());          // B
 
-Very important scalability consideration.
+Deque<String> queue = new ArrayDeque<>();
+queue.offer("A");                         // back
+queue.offer("B");
+queue.offer("C");
+System.out.println(queue.poll());         // A (front)
+```
 
----
+- `addFirst`, `addLast`, `removeFirst`, `removeLast`, `peek` — all amortized O(1).
+- No null elements allowed (you'd lose the "queue is empty" sentinel).
+- Cache-friendly: it's one contiguous array.
 
-# 5. What is Vector?
+When should you use `LinkedList` instead? Honestly: rarely. Two cases come to mind:
 
-Vector is:
-# synchronized dynamic array
+1. You need a list that implements `Deque` *and* you'll frequently take iterators and modify around them. `LinkedList` iterators are stable across some structural modifications.
+2. You're already inside an API that mandates `LinkedList`. (Doesn't happen in modern code.)
 
-Very similar to:
-# ArrayList
-
-but operations are synchronized.
-
-Very important historical concurrency topic.
-
----
-
-# 6. Why Vector is Less Common Today?
-
-Synchronization creates:
-# performance overhead
-
-Modern systems usually prefer:
-- ArrayList
-- concurrent collections
-
-Very important backend evolution concept.
+Otherwise: `ArrayList` for a list, `ArrayDeque` for a queue or stack.
 
 ---
 
-# 7. ArrayList vs LinkedList
+## `Stack` (the legacy class) — don't use it
 
-ArrayList:
-- fast access
-- better for frequent reads
+Java has a `Stack` class. It extends `Vector` (synchronized), exposes the `Vector` API (so you can mutate via `set(index, value)` — defeats the point), and is slow because of synchronization.
 
-LinkedList:
-- better insertion/deletion
-- slower random access
+Modern stack code:
 
-Very important interview topic.
+```java
+Deque<Integer> stack = new ArrayDeque<>();
+stack.push(1);
+stack.push(2);
+int top = stack.pop();
+```
 
----
-
-# 8. Vector vs ArrayList
-
-Vector:
-- synchronized
-- slower
-
-ArrayList:
-- faster
-- not synchronized
-
-Very important concurrency understanding.
+That's the canonical pattern, recommended in `Stack`'s own Javadoc.
 
 ---
 
-# 9. Performance Complexity
+## `Vector` and `Hashtable` — also legacy
 
-Approximate complexities:
+`Vector` is `ArrayList`'s synchronized older sibling — every public method holds a lock. Same for `Hashtable` vs. `HashMap`.
 
-ArrayList Access      -> O(1)
-LinkedList Access     -> O(n)
+Two problems:
 
-ArrayList Insert Mid  -> O(n)
-LinkedList Insert Mid -> O(1)
+- **Coarse-grained locking.** Every operation locks the whole structure, even reads. Heavy concurrent workloads get worse, not better.
+- **The "synchronized" guarantees are weaker than people think.** `vector.contains(x)` is atomic, but `if (vector.contains(x)) vector.add(y)` is not — another thread can race between the two calls.
 
-Very important engineering tradeoff.
-
----
-
-# 10. Real-World Backend Relevance
-
-LinkedList used in:
-- queues
-- task processing
-- buffering systems
-
-Vector mainly exists in:
-- legacy systems
-- historical APIs
-
-Very important backend engineering understanding.
+If you need thread-safe collections, use what topic 11 covers: `ConcurrentHashMap`, `CopyOnWriteArrayList`, etc. For locked access to a regular list, `Collections.synchronizedList()` is at least honest about what it gives you.
 
 ---
 
-# 11. Common Beginner Confusions
+## Quick decision table
 
-Beginners often:
-- assume LinkedList is always faster
-- ignore memory overhead
-- misuse Vector
-- misunderstand collection tradeoffs
-
-Understanding internals is very important.
+| What you want | Use |
+|---------------|-----|
+| Indexed list, append/scan | `ArrayList` |
+| Stack | `ArrayDeque` (via `push`/`pop`) |
+| Queue (FIFO) | `ArrayDeque` (via `offer`/`poll`) |
+| Double-ended queue | `ArrayDeque` |
+| Thread-safe map | `ConcurrentHashMap` (topic 11) |
+| Thread-safe list, read-heavy | `CopyOnWriteArrayList` (topic 11) |
+| Anywhere `LinkedList` was suggested | usually `ArrayDeque` or `ArrayList` |
+| Anywhere `Vector`/`Hashtable`/`Stack` was suggested | use the modern equivalent |
 
 ---
 
-# 12. Industry Relevance
+## Common pitfalls
 
-Modern backend systems heavily depend on:
-- proper collection selection
-- scalability-aware design
-- memory optimization
-- efficient data structures
+- **Using `LinkedList` for "fast middle insert"** without realizing the walk-to-position is O(n) too.
+- **`stack` (lowercase, `java.util.Stack`)** in new code. Even Oracle says use `ArrayDeque`.
+- **`Vector` for "thread safety."** Its per-method locking doesn't make compound operations safe. And it's slower for single-threaded use than `ArrayList`.
+- **`LinkedList.get(i)` in a loop.** O(n) per call → O(n²) loop. Use an iterator: one walk through.
+- **Storing nulls in `ArrayDeque`.** `null` is the empty-marker; the API will reject it. `LinkedList` allows nulls, which can be useful or a source of confusion.
 
-Backend engineering strongly relies on collection performance understanding.
+---
+
+## Code examples
+
+1. `ArrayDequeAsStack.java` — modern stack pattern.
+2. `ArrayDequeAsQueue.java` — modern queue pattern (FIFO).
+3. `LinkedListGetIsLinear.java` — proving `LinkedList.get(i)` is O(n) by timing.
+4. `LinkedListVsArrayListIterate.java` — same iteration, very different times.
+5. `VectorIsLegacy.java` — `Vector`'s synchronization doesn't help compound operations.
+
+---
+
+## Try this yourself
+
+1. In `LinkedListGetIsLinear.java`, change the indices accessed and watch the time grow with index. Now run the same on `ArrayList` — flat.
+2. In `ArrayDequeAsQueue.java`, switch the implementation to `LinkedList`. Same code, both work — that's the point of programming to `Deque`.
+3. In `VectorIsLegacy.java`, run with one thread vs. eight. Note that `Vector` *does not* speed up — its lock serializes everything. (Topic 11 shows actual concurrent collections.)
+
+---
+
+## Self-check
+
+1. `LinkedList` is famous for "fast insertion." Under what specific condition is that true, and when is it actually O(n)?
+2. Why is `ArrayDeque` preferred over `LinkedList` for stack/queue use cases?
+3. `Vector.contains(x)` is atomic. Why is `if (vector.contains(x)) vector.add(y)` still unsafe under concurrency?
