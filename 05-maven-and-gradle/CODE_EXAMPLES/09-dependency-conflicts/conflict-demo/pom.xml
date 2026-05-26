@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>conflict-demo</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <!--
+            Two real libraries that historically pull different versions of slf4j-api
+            via their transitive dependencies. Run:
+                mvn dependency:tree -Dverbose -Dincludes=org.slf4j:slf4j-api
+            to see which version Maven picks and which gets "omitted for conflict".
+        -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <!-- Bring in a binding so logs go somewhere visible -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+            ======================================================================
+            STRATEGY A — direct top-level declaration. Wins via "nearest" rule.
+            Uncomment the block below to apply it.
+            ======================================================================
+        -->
+        <!--
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.13</version>
+        </dependency>
+        -->
+
+    </dependencies>
+
+    <!--
+        ==========================================================================
+        STRATEGY B — pin the version via <dependencyManagement>. Wins regardless of
+        tree distance. Uncomment the block below to apply it.
+        ==========================================================================
+    -->
+    <!--
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>2.0.13</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    -->
+
+    <!--
+        ==========================================================================
+        STRATEGY C — exclude the older transitive. Apply by un-commenting the
+        <exclusions> block inside the kafka-clients dependency above (move it from
+        here into that <dependency> element) so kafka-clients no longer drags in
+        its old slf4j-api version. Demonstrated as a comment to keep the file
+        runnable as-is.
+        ==========================================================================
+    -->
+
+</project>
