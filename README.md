@@ -80,8 +80,8 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 03c-concurrency                               ← ✓ done   (threads, sync, executors, futures)
 03d-jvm-and-runtime                           ← ✓ done   (memory, GC, reflection, networking, production)
 04-jdbc-and-database                          ← ✓ done (reference template)
-05-maven-and-gradle                           ← 🚧 in progress
-06-unit-testing
+05-maven-and-gradle                           ← ✓ done
+06-unit-testing                               ← 🚧 in progress
 07-spring-core
 08-spring-boot
 09-rest-api-development
