@@ -81,8 +81,8 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 03d-jvm-and-runtime                           ← ✓ done   (memory, GC, reflection, networking, production)
 04-jdbc-and-database                          ← ✓ done (reference template)
 05-maven-and-gradle                           ← ✓ done
-06-unit-testing                               ← 🚧 in progress
-07-spring-core
+06-unit-testing                               ← ✓ done   (JUnit 5, AssertJ, Mockito, JaCoCo)
+07-spring-core                                ← 🚧 in progress
 08-spring-boot
 09-rest-api-development
 10-spring-data-jpa
