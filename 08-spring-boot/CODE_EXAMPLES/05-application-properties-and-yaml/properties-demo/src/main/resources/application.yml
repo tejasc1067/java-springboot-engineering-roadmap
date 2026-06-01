@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: properties-demo
+
+app:
+  message: "Default from yml"
