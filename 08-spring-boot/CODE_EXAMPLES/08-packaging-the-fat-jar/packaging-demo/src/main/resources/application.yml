@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: packaging-demo
+
+app:
+  message: "Packaged successfully."
