@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: profiles-demo
+
+app:
+  greeting: "Hello from the default config."
