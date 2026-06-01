@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: actuator-demo
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
