@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: configuration-properties-demo
+
+app:
+  retry:
+    max-attempts: 3
+    backoff: 500ms
+    notification:
+      email: ops@example.com
+      enabled: true
