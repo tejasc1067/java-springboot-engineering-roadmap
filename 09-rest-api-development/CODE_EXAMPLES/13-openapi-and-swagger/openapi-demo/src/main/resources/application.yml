@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: openapi-demo
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
