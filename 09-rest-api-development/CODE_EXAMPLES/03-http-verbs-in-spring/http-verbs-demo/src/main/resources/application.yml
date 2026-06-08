@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: http-verbs-demo
+
+server:
+  port: 8080
