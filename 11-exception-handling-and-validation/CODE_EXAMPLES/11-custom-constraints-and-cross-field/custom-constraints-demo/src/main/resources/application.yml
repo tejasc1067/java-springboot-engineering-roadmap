@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: custom-constraints-demo
+server:
+  port: 8080
