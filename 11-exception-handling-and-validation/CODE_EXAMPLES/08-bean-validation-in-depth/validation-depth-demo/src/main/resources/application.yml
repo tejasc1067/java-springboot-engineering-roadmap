@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: validation-depth-demo
+
+server:
+  port: 8080
