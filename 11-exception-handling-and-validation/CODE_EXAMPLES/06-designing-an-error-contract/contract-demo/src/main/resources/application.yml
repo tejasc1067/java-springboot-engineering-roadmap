@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: contract-demo
+
+server:
+  port: 8080
