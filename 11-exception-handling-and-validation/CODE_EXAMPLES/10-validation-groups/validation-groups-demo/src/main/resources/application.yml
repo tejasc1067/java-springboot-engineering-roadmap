@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: validation-groups-demo
+server:
+  port: 8080
