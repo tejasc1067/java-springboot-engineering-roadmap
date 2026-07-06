@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: jwt-demo
+
+server:
+  port: 8080
+
+demo:
+  jwt:
+    # HS256 signing secret. LOCAL-ONLY fallback after the colon; override with the DEMO_JWT_SECRET env var.
+    # Must be >= 32 bytes. In production this comes from the environment / a secret manager and is never
+    # committed — anyone who has it can forge a valid token for any user, including admin.
+    secret: ${DEMO_JWT_SECRET:this-is-a-demo-only-hmac-secret-change-me-32b}
