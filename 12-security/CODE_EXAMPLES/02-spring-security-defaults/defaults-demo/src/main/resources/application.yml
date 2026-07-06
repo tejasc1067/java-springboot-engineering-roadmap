@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: defaults-demo
+
+# Deliberately NO spring.security.user.* here. With no user configured, Spring Boot generates a random
+# password at every startup and logs it once:
+#   "Using generated security password: <uuid>   This generated password is for development use only..."
+# The default username is "user". That log line is what you copy into curl / the browser to get in.
+server:
+  port: 8080
