@@ -87,7 +87,7 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 09-rest-api-development                       ← ✓ done   (controllers, JSON, status codes, MockMvc, OpenAPI, versioning)
 10-spring-data-jpa                            ← ✓ done   (entities, repositories, queries, fetch, transactions, Flyway)
 11-exception-handling-and-validation          ← ✓ done   (advice, ProblemDetail/RFC 7807, bean validation, custom constraints)
-12-security                                   ← 🚧 in progress
+12-security                                   ← ✓ done 
 13-microservices
 14-docker-and-devops
 15-system-design
