@@ -2,7 +2,7 @@
 
 Java 8 (released 2014) is when Java caught up with modern languages: lambdas, streams, `Optional`, method references, default methods on interfaces. Every backend codebase you'll touch uses these. If you only learn one set of "modern Java" features, learn these.
 
-This topic isn't trying to be exhaustive — module 03 covers streams in depth. The goal here is for you to recognize and use the basic forms confidently.
+This topic isn't trying to be exhaustive — module 03b covers streams in depth. The goal here is for you to recognize and use the basic forms confidently.
 
 ---
 
@@ -146,7 +146,7 @@ Map<Character, List<String>> byInitial = names.stream()
         .collect(Collectors.groupingBy(n -> n.charAt(0)));
 ```
 
-Module 03 covers more. The four idioms above will get you 80% of the way.
+Module 03b covers more. The four idioms above will get you 80% of the way.
 
 ---
 

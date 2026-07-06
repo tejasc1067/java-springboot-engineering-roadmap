@@ -79,5 +79,5 @@ In 2026, the Java backend ecosystem is roughly 70% Maven, 30% Gradle (Spring pro
 ## A note on what's not here
 
 - No Spring Boot Maven plugin yet — that lives in module 08.
-- No CI/CD configuration. That belongs in module 14.
+- No CI/CD configuration. That belongs in module 14 (Docker & DevOps), later in the roadmap.
 - No deep Gradle (custom tasks, Kotlin build logic, composite builds). One topic is enough to read other people's builds; deeper Gradle is its own roadmap.

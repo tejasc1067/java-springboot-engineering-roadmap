@@ -82,7 +82,7 @@ If you can't answer all three self-check questions, re-read the topic before mov
 
 ## Module checkpoint
 
-Before moving on to module 03 (Advanced Java), you should be able to answer these aloud:
+Before moving on to module 03a (Java language depth), you should be able to answer these aloud:
 
 1. A junior dev makes every field `public` "for convenience." What's the actual cost, and what should they do instead?
 2. You see `class Stack extends ArrayList`. What's wrong with this, and what's the fix?

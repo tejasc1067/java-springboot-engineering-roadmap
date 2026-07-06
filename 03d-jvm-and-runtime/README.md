@@ -60,6 +60,15 @@ Topics **01-04** (memory, GC, JVM internals, performance) and **05-06** (reflect
 - Recognize the classic Java native-serialization RCE risk and avoid it.
 - Talk about latency percentiles and backpressure with the engineers running the service.
 
+## Checkpoint
+
+Before moving on to module 04, you should be able to answer these aloud:
+
+1. Which region holds objects, which holds local variables and call frames, and what distinguishes a `StackOverflowError` from an `OutOfMemoryError`?
+2. In one sentence each: what does the garbage collector do, and why can a GC pause hurt a latency-sensitive service?
+3. Why does setting a fixed `-Xmx` matter inside a container, and what goes wrong if you leave it to the default?
+4. Name one production symptom (heap high after GC, climbing pause times, thread contention) and the tool you'd reach for to diagnose it.
+
 ## Where to next
 
 → **Module 04** ([JDBC and database](../04-jdbc-and-database/)). Persistence is where backend-specific thinking begins: connection pools, transactions, parameterized SQL, the relationship between your service and the database it can't live without.

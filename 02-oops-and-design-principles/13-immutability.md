@@ -158,7 +158,7 @@ If you can use immutable types end-to-end, there's nothing to defensively copy. 
 
 **Thread safety, for free.**
 
-An immutable object can be shared across any number of threads without any locks. Nobody can change it; nobody can observe an inconsistent state. This is huge for concurrent code (covered properly in module 03).
+An immutable object can be shared across any number of threads without any locks. Nobody can change it; nobody can observe an inconsistent state. This is huge for concurrent code (covered properly in module 03c).
 
 **HashMap and HashSet keys.**
 

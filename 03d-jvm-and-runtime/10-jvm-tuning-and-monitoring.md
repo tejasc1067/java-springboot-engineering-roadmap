@@ -2,7 +2,7 @@
 
 A backend service in production needs JVM-level visibility. When the API gets slow at 3am, "looks fine in dev" is not enough. You need: heap usage, GC pause history, thread dumps, allocation rate, lock contention. This topic covers the **observation** layer (what to look at, with which tool) and the **tuning** layer (which flags actually matter, when to change them).
 
-Topics 18-19 covered *what* GC does. Topic 32 covers production architecture concerns (cold start, backpressure, pool sizing). This one is the bridge: the actual flags and tools you reach for.
+Topics 01–02 covered the memory model and *what* GC does. Topic 11 covers production architecture concerns (cold start, backpressure, pool sizing). This one is the bridge: the actual flags and tools you reach for.
 
 ---
 

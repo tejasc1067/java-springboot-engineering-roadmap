@@ -120,7 +120,7 @@ Plot pause time over time. Spikes correlate with traffic load, allocation pressu
 
 ## Tuning, briefly
 
-Topic 31 has the production details. For now, the four levers:
+Topic 10 has the production details. For now, the four levers:
 
 1. **Heap size** — `-Xms` (initial) and `-Xmx` (max). Set them equal in containers to avoid resize pauses.
 2. **Pause target** — `-XX:MaxGCPauseMillis=200` (G1's soft goal).

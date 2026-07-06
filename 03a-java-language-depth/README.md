@@ -40,6 +40,15 @@ If you're a career-switcher landing here from another language, this is your sta
 - Pick the right collection for a given access pattern (lookup-heavy, iteration-heavy, sorted, concurrent).
 - Recognize and fix the classic `equals`/`hashCode` and `HashMap`-under-concurrency bugs.
 
+## Checkpoint
+
+Before moving on to 03b, you should be able to answer these aloud:
+
+1. When would you make a custom exception checked vs. unchecked, and why does wrapping a low-level exception (e.g. `SQLException`) in a domain one help the caller?
+2. State the PECS rule in your own words: what does `List<? extends Number>` let you do, and what does it forbid?
+3. For a lookup-heavy workload of millions of reads, which collection do you reach for, and what makes the lookup O(1)?
+4. Walk through why a broken `hashCode()` makes a `HashMap` "lose" a key you know you inserted.
+
 ## Where to next
 
 → **[03b — Modern Java & Functional](../03b-modern-java-and-functional/)**. Lambdas, streams, and `Optional`. The functional toolkit you'll need before 03c (concurrency) because `CompletableFuture` examples use lambdas heavily.

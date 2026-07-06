@@ -105,8 +105,8 @@ Without backpressure, slowness compounds: the queue fills, requests time out, ca
 When a service is slow, the bottleneck is one of:
 
 1. **CPU saturation.** `top` shows the process at 100% across all cores. Profile (JFR) → see what's hot.
-2. **Memory / GC pressure.** Heap usage stays high after GC; pause times climb. Topic 19.
-3. **Lock contention.** Thread dump shows many threads in `BLOCKED` on the same monitor. Topic 13/14/17.
+2. **Memory / GC pressure.** Heap usage stays high after GC; pause times climb. Topic 02.
+3. **Lock contention.** Thread dump shows many threads in `BLOCKED` on the same monitor. See 03c topics 02, 03, 06.
 4. **I/O wait.** Threads parked in `Socket.read` or `getConnection`. Pool or downstream is the problem.
 5. **GC + I/O combination.** Slow downstream → threads pile up → heap fills → GC pressure → everything slows.
 

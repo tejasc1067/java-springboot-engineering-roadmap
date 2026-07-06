@@ -2,7 +2,7 @@
 
 Java doesn't make you call `free()` like C. Objects you've stopped using are reclaimed automatically by the **garbage collector** (GC). Memory management still has rules, though — knowing where things live, when they're collected, and how memory leaks happen in a "garbage-collected" language matters in production.
 
-This topic isn't a JVM internals course (that comes in module 03). It's enough mental model to debug a real memory issue and to read GC logs without panicking.
+This topic isn't a JVM internals course (that comes in module 03d). It's enough mental model to debug a real memory issue and to read GC logs without panicking.
 
 ---
 

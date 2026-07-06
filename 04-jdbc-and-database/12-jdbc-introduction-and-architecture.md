@@ -1,6 +1,6 @@
 # 12 — JDBC: Introduction and Architecture
 
-You've been writing JDBC code since topic 05 to run SQL against H2. This topic finally explains what JDBC *is*, what each piece does, and why the API looks the way it does.
+Since topic 05 you've been running SQL against H2 through JDBC boilerplate — the `Connection`/`Statement` plumbing the examples used without stopping to explain it. This topic is where JDBC itself begins: what it *is*, what each piece does, and why the API looks the way it does.
 
 JDBC ("Java Database Connectivity") is the standard Java API for talking to relational databases. Every Java backend framework — Spring, Hibernate, MyBatis, R2DBC — is ultimately built on JDBC (or its async cousin). Understanding the layer below saves you when frameworks misbehave.
 

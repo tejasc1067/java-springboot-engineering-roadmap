@@ -1,6 +1,6 @@
 # 03 — Thread Safety and Concurrency Problems
 
-Topic 13 covered race conditions and `synchronized`. There are three more bugs you must recognize before writing serious concurrent code:
+Topic 02 covered race conditions and `synchronized`. There are three more bugs you must recognize before writing serious concurrent code:
 
 - **Visibility** — one thread writes a value, another thread never sees it.
 - **Atomicity** — an operation that looks like one step is actually three, and threads interleave.

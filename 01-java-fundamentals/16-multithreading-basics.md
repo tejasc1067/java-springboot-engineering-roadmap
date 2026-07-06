@@ -2,7 +2,7 @@
 
 A thread is a separate path of execution inside your program. Multiple threads let your program do several things at once: handle many requests in a web server, compute in the background while UI stays responsive, fan out work in parallel.
 
-This topic stays at the basics — creating threads, sleeping, joining, and the race conditions you get when multiple threads touch the same data. Module 03 covers the modern concurrency tools (Executors, CompletableFuture, virtual threads). For now: the language-level primitives.
+This topic stays at the basics — creating threads, sleeping, joining, and the race conditions you get when multiple threads touch the same data. Module 03c covers the modern concurrency tools (Executors, CompletableFuture, virtual threads). For now: the language-level primitives.
 
 A warning: concurrent code is hard. The bugs are non-deterministic, hard to reproduce, and embarrassingly common. Treat this topic carefully.
 
@@ -149,7 +149,7 @@ For collections, `ConcurrentHashMap` and `CopyOnWriteArrayList` are thread-safe 
 - **Reach for threads** when you have genuinely independent work that can run in parallel — handling separate requests in a server, running background jobs, fanning out parallel calls to external services.
 - **Don't reach for threads** "to make code faster" without measuring. Synchronization, context switches, and cache effects often eat the gains. A single-threaded program that finishes in 100 ms beats a four-threaded one that finishes in 200 ms because of overhead.
 
-In modern Java code you'll almost never create `Thread` objects directly. You'll use an `ExecutorService`, `CompletableFuture`, or (Java 21+) virtual threads. Module 03 covers these. The reason we still teach `Thread` first: every higher-level API is built on these primitives, and the failure modes are the same.
+In modern Java code you'll almost never create `Thread` objects directly. You'll use an `ExecutorService`, `CompletableFuture`, or (Java 21+) virtual threads. Module 03c covers these. The reason we still teach `Thread` first: every higher-level API is built on these primitives, and the failure modes are the same.
 
 ---
 

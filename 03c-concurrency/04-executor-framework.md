@@ -76,7 +76,7 @@ Future<String> f = pool.submit(callable);  // returns Future for result/cancella
 
 `submit` accepts both `Runnable` and `Callable`. It always returns a `Future`. With `execute`, an exception inside the task is handled by the pool's `UncaughtExceptionHandler`; with `submit`, exceptions are captured inside the `Future` and surface when you call `get()`.
 
-Topic 16 goes deep on `Future` and `CompletableFuture`.
+Topic 05 goes deep on `Future` and `CompletableFuture`.
 
 ---
 

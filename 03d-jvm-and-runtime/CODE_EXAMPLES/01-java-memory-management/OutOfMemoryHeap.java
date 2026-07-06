@@ -16,7 +16,7 @@ public class OutOfMemoryHeap {
             System.out.println("error message: " + e.getMessage());
             System.out.println();
             System.out.println("The specific message ('Java heap space', 'GC overhead limit exceeded', etc.)");
-            System.out.println("tells you which failure mode hit. See topic 18 markdown for the table.");
+            System.out.println("tells you which failure mode hit. See topic 01 markdown for the table.");
             // Drop the sink so we don't OOM again while printing
             sink = null;
         }

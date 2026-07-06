@@ -16,7 +16,7 @@ This is also one of the most-asked topics in Java interviews.
 | `getClass()` | Returns the runtime class | (rarely overridden) |
 | `clone()` | Shallow copy if `Cloneable` | Avoid; use copy constructors instead |
 | `finalize()` | Deprecated | Don't use |
-| `wait()`, `notify()`, `notifyAll()` | Thread coordination | Covered in module 03 |
+| `wait()`, `notify()`, `notifyAll()` | Thread coordination | Covered in module 03c |
 
 The default `equals()` and `hashCode()` are almost never what you want. The default `toString()` is useless for debugging.
 

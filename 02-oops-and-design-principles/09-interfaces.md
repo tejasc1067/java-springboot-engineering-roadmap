@@ -159,7 +159,7 @@ interface Greeter {
 }
 ```
 
-(Functional interfaces and lambdas are covered properly in module 03; this is a preview.)
+(Functional interfaces and lambdas are covered properly in module 03b; this is a preview.)
 
 ---
 

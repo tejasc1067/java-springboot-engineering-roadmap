@@ -2,7 +2,7 @@
 
 When two threads touch the same mutable state, you can lose data, see impossible values, or just silently get the wrong answer. Java's primary tool to prevent this is the `synchronized` keyword, which gives a thread exclusive access to a critical section. This topic covers what a race condition really is, how `synchronized` fixes it, the difference between locking a method and a block, and the costs.
 
-Topic 14 covers the related visibility problem and `volatile`. Topic 17 covers the modern `Lock` API (`ReentrantLock`, `ReadWriteLock`) when `synchronized` isn't enough.
+Topic 03 covers the related visibility problem and `volatile`. Topic 06 covers the modern `Lock` API (`ReentrantLock`, `ReadWriteLock`) when `synchronized` isn't enough.
 
 ---
 

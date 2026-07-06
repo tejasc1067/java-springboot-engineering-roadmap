@@ -31,6 +31,15 @@ You've completed 03a. You're comfortable with generics and the collections frame
 - Use `Optional` where it earns its keep, and avoid it where it adds ceremony.
 - Read modern Java/Spring code without stopping to puzzle out lambda syntax.
 
+## Checkpoint
+
+Before moving on to 03c, you should be able to answer these aloud:
+
+1. Take a `for` loop that filters then transforms a list and rewrite it as a stream pipeline — then say when the plain loop is the better choice.
+2. What's the difference between `thenApply` and `thenApplyAsync`, and why will it matter once you hit `CompletableFuture` in 03c?
+3. When does `Optional` earn its keep, and where is it just ceremony (as a field? a method parameter?)?
+4. What does "streams are lazy" mean — what actually triggers the pipeline to run?
+
 ## Where to next
 
 → **[03c — Concurrency](../03c-concurrency/)**. Multithreading, synchronization, executors, futures, the modern locks API. `CompletableFuture` here will lean on what you learned in topic 03 (streams) and topic 02 (functional interfaces).

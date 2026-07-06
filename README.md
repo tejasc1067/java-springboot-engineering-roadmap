@@ -88,15 +88,18 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 10-spring-data-jpa                            ← ✓ done   (entities, repositories, queries, fetch, transactions, Flyway)
 11-exception-handling-and-validation          ← ✓ done   (advice, ProblemDetail/RFC 7807, bean validation, custom constraints)
 12-security                                   ← 🚧 in progress
+# ─── core goal reached: modules 01–12 get you to "build a secured Spring Boot REST service" ───
 13-microservices
 14-docker-and-devops
 15-system-design
-16-design-patterns
+16-design-patterns                            (applied patterns: the Spring/GoF idioms from 07–12, made explicit)
 17-kafka-and-event-driven
 18-redis-caching
 19-observability-and-monitoring
-20-projects
+20-projects                                   (capstone: build something end-to-end)
 ```
+
+**Where the core ends.** Modules 01–12 are the spine: finish them and you can build, secure, and test a real Spring Boot REST service — the stated goal of this roadmap. Modules 13–19 add breadth for working on larger systems (distributed services, infrastructure, event streaming, caching, observability); they're worth doing but sit *beyond* the core, and module 20 is a capstone where you build something end-to-end. Design patterns land at 16 deliberately — by then you've used the patterns Spring applies everywhere (dependency injection, template methods, proxies, strategies), so the module names and generalizes what you've already met rather than teaching it in the abstract.
 
 **Module 04 is the current reference implementation** of the curriculum's style and depth: runnable code examples (H2 in-memory database), vulnerable-then-safe contrasts for security topics, broken-then-fixed contrasts for resource management, real exception handling. Module 03 (split into 03a-03d to keep each sub-module walkable) is the newest application of that template.
 

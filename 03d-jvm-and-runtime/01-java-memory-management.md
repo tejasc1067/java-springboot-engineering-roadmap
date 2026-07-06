@@ -2,7 +2,7 @@
 
 The JVM hides memory allocation behind `new`, but it doesn't hide *where* objects live or *when* they die. Understanding the runtime memory layout — heap, stack, metaspace — and the reference graph that drives garbage collection is what separates "Java compiles and runs" from "Java runs in production under load without leaking, crashing, or stuttering."
 
-This topic covers the regions. Topic 19 covers garbage collection — when and how the JVM reclaims unreachable objects. Topic 20 covers the rest of the JVM (class loading, JIT, bytecode).
+This topic covers the regions. Topic 02 covers garbage collection — when and how the JVM reclaims unreachable objects. Topic 03 covers the rest of the JVM (class loading, JIT, bytecode).
 
 ---
 
@@ -131,7 +131,7 @@ For finding what's actually on the heap in production:
 - **`jcmd <pid> GC.heap_dump <file>`** — full heap dump for offline analysis.
 - **Eclipse MAT / VisualVM** — analyze a `.hprof` heap dump. Find leak suspects, retained sets.
 
-Topic 31 covers JVM tuning and monitoring in detail.
+Topic 10 covers JVM tuning and monitoring in detail.
 
 ---
 

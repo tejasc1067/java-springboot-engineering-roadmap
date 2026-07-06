@@ -37,6 +37,15 @@ If you're a Java developer who's only ever worked with single-threaded code (the
 - Compose async work with `CompletableFuture` chains without blocking.
 - Diagnose a deadlock in production using `jstack` or `ThreadMXBean`.
 
+## Checkpoint
+
+Before moving on to 03d, you should be able to answer these aloud:
+
+1. Why does `count++` from multiple threads lose updates even though it's a single line — and does `volatile` fix it?
+2. What does `synchronized` guarantee, and name one thing it does NOT guarantee.
+3. Why should a web endpoint use a bounded, purpose-sized thread pool rather than an arbitrary `newFixedThreadPool(N)` — what fails under load?
+4. What does `CompletableFuture` give you that a raw `Future` doesn't?
+
 ## Where to next
 
 → **[03d — JVM, Runtime & Production](../03d-jvm-and-runtime/)**. Memory management, garbage collection, JVM internals, reflection (the foundation of Spring), annotations, serialization, networking, NIO, and production tuning.

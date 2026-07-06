@@ -2,7 +2,7 @@
 
 A backend service is a program reachable over a network. To understand what your service does — long before you reach Spring or Tomcat — you need to know how Java talks to a network: sockets, TCP vs UDP, blocking I/O, and what "thread per connection" actually means.
 
-This topic covers the `java.net` package: opening a TCP connection, accepting connections on a `ServerSocket`, sending and receiving bytes, and the limits of the classic blocking model. Topic 30 covers Java NIO (non-blocking I/O), which is what real servers like Netty use.
+This topic covers the `java.net` package: opening a TCP connection, accepting connections on a `ServerSocket`, sending and receiving bytes, and the limits of the classic blocking model. Topic 09 covers Java NIO (non-blocking I/O), which is what real servers like Netty use.
 
 ---
 

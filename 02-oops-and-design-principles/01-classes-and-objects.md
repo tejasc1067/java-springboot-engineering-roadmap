@@ -127,7 +127,7 @@ Car a = new Car();
 
 `a` (the reference) lives on the stack. The `Car` object itself lives on the heap. When the method ends, `a` goes away. If no other reference points to the `Car`, the garbage collector eventually reclaims it.
 
-You'll see this picture again in module 03 (JVM internals). For now: variables on the stack point to objects on the heap.
+You'll see this picture again in module 03d (JVM internals). For now: variables on the stack point to objects on the heap.
 
 ---
 

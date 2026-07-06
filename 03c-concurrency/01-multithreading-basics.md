@@ -2,7 +2,7 @@
 
 A thread is a separate path of execution inside the same JVM process. Backend systems run many threads simultaneously: one per inbound HTTP request, one per background job, one per database connection that's mid-call. This topic covers the foundations — what a thread is, the two ways to create one, what `start()` actually does that `run()` doesn't, the lifecycle states, and what "daemon" means.
 
-Topics 13–17 dig into the hard parts: synchronization, visibility, executors, futures. This one is just the vocabulary.
+Topics 02–05 dig into the hard parts: synchronization, visibility, executors, futures. This one is just the vocabulary.
 
 ---
 
