@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: resource-server-demo
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # OFFLINE DEMO MODE. Pin one RSA PUBLIC key from the classpath. The app can VERIFY signatures with
+          # it but can never SIGN — it holds no private key. That is the whole "no shared secret" idea made
+          # concrete: the matching private key lives with the token issuer (here, the test tree; in real life,
+          # the identity provider), never here.
+          public-key-location: classpath:app.pub
+
+          # PRODUCTION SHAPE (comment out public-key-location and use this instead). Point at a real identity
+          # provider; Spring fetches its JWK Set over HTTPS, picks the key whose "kid" matches the token's
+          # header, and re-fetches automatically when the IdP rotates keys. issuer-uri also makes Spring
+          # validate that the token's "iss" claim matches — which public-key-location does not.
+          #   issuer-uri: http://localhost:8081/realms/demo      # e.g. a local Keycloak realm
+
+server:
+  port: 8080
