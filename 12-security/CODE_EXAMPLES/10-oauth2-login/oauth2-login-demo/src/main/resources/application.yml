@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: oauth2-login-demo
+  security:
+    oauth2:
+      client:
+        registration:
+          # Registration id "google" is a well-known provider: Spring supplies Google's authorization, token,
+          # userinfo and JWK-set URLs automatically, so no provider block is needed. The redirect URI defaults
+          # to {baseUrl}/login/oauth2/code/google.
+          google:
+            # Real values come from a Google OAuth client (see the demo README) via env vars. The placeholders
+            # let the app BOOT and build the redirect offline; only the actual round-trip to Google needs real
+            # credentials. A client secret is a real secret — never commit it; load it from the environment.
+            client-id: ${GOOGLE_CLIENT_ID:demo-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:demo-client-secret}
+            scope: openid, profile, email
+
+server:
+  port: 8080
