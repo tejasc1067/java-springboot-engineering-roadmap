@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: filterchain-demo
+
+# Still no user configured, so Spring Boot logs a generated password at startup (default username "user").
+# Because we enabled httpBasic, "curl -u user:<generated-password>" authenticates against /api/**.
+server:
+  port: 8080
