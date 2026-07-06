@@ -88,7 +88,6 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 10-spring-data-jpa                            ← ✓ done   (entities, repositories, queries, fetch, transactions, Flyway)
 11-exception-handling-and-validation          ← ✓ done   (advice, ProblemDetail/RFC 7807, bean validation, custom constraints)
 12-security                                   ← 🚧 in progress
-# ─── core goal reached: modules 01–12 get you to "build a secured Spring Boot REST service" ───
 13-microservices
 14-docker-and-devops
 15-system-design
