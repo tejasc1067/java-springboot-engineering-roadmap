@@ -1,0 +1,16 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: inventory-service
+  # inventory-service's OWN database. Note the name: inventorydb. The order service
+  # has a separate orderdb it cannot see. Two services, two databases (topic 04).
+  datasource:
+    url: jdbc:h2:mem:inventorydb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false

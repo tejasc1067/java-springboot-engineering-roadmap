@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: order-service
+  # order-service's OWN database, separate from inventory's inventorydb.
+  datasource:
+    url: jdbc:h2:mem:orderdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+# Where inventory-service lives. Externalized so it can be pointed anywhere
+# (topic 13 replaces this fixed URL with a discovery-resolved service name).
+inventory:
+  base-url: http://localhost:8081
