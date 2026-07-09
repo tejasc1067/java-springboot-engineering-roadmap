@@ -1,0 +1,6 @@
+server:
+  port: 8080   # clients talk only to the gateway on 8080
+
+# Where the gateway forwards /inventory/** — the scaffold's inventory-service by default.
+inventory:
+  uri: http://localhost:8081
