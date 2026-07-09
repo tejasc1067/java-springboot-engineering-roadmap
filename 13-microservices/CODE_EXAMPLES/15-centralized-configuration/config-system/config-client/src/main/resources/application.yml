@@ -1,0 +1,17 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    # The server serves config keyed by this name (it looks up inventory-service.yml).
+    name: inventory-service
+  config:
+    # Import config from the config server at startup. "optional:" lets the app still
+    # boot (with defaults) if the server is down — flip to "configserver:..." to require it.
+    import: "optional:configserver:http://localhost:8888"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh   # exposes POST /actuator/refresh to reload config at runtime

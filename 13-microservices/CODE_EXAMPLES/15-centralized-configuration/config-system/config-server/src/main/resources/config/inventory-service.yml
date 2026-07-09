@@ -1,0 +1,5 @@
+# Configuration for the service named "inventory-service", served centrally.
+# The client has NONE of this in its own application.yml — it fetches it from here.
+inventory:
+  greeting: "config served centrally by Spring Cloud Config"
+  low-stock-threshold: 3
