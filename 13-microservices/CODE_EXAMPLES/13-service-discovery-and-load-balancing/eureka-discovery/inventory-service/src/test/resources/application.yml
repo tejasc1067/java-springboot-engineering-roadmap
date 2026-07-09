@@ -1,0 +1,6 @@
+# In tests, don't try to reach a running Eureka server — just prove the context boots.
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false

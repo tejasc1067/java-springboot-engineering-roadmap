@@ -1,0 +1,15 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    # This name is how other services find it: they look up "inventory-service".
+    name: inventory-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    # Let two instances on different ports register distinctly (run with -Dserver.port=8082).
+    instance-id: ${spring.application.name}:${server.port}
