@@ -88,7 +88,7 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 10-spring-data-jpa                            ← ✓ done   (entities, repositories, queries, fetch, transactions, Flyway)
 11-exception-handling-and-validation          ← ✓ done   (advice, ProblemDetail/RFC 7807, bean validation, custom constraints)
 12-security                                   ← ✓ done   (auth vs authz, SecurityFilterChain, BCrypt, sessions vs JWT, OAuth2 resource server + login, CORS/CSRF, 401/403 ProblemDetail, spring-security-test)
-13-microservices
+13-microservices                              ← ✓ done   (when to split & the distributed-monolith trap, database-per-service, sync calls/contracts & async events, API composition, resilience: timeouts/retries/circuit breaker/bulkhead+rate limit, discovery/gateway/config, JWT & trace-id propagation, saga, idempotency/outbox, isolation & contract testing)
 14-docker-and-devops
 15-system-design
 16-design-patterns                            (applied patterns: the Spring/GoF idioms from 07–12, made explicit)
