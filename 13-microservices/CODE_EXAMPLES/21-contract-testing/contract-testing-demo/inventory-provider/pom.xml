@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>contract-testing-demo</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>inventory-provider</artifactId>
+
+    <!--
+      The PROVIDER side. Contracts live under src/test/resources/contracts. The SCC maven
+      plugin (below) does three things at build time:
+        - convert        : turn each contract into a WireMock stub mapping
+        - generateTests   : generate a JUnit test per contract that fires the contract's request
+                            at THIS provider and asserts the contract's response. If the provider
+                            drifts (renames a field, changes a status), that generated test FAILS.
+        - generateStubs   : package the stub mappings into an inventory-provider-*-stubs.jar,
+                            which the consumer module runs against.
+
+      Note: NO <extensions>true</extensions>. That flag auto-binds the goals but pulls a
+      conflicting httpclient into Maven's plugin realm (a cast error on this toolchain); binding
+      the goals explicitly in <executions> avoids it.
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Brings the contract verifier and rest-assured spring-mock-mvc (used by the base class). -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-contract-verifier</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+                <version>4.3.4</version>
+                <configuration>
+                    <testFramework>JUNIT5</testFramework>
+                    <baseClassForTests>com.example.inventory.ContractVerifierBase</baseClassForTests>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>convert</goal>
+                            <goal>generateTests</goal>
+                            <goal>generateStubs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

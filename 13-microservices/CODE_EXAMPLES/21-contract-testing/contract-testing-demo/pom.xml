@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.14</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.example</groupId>
+    <artifactId>contract-testing-demo</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <!--
+      Consumer-driven contract testing with Spring Cloud Contract, in two modules that share
+      ONE contract:
+        - inventory-provider: the contracts live here; the SCC plugin GENERATES a provider test
+          from each one, so if the provider stops honouring a contract its own build goes red.
+          The same contracts are packaged into a "stubs" jar.
+        - order-consumer: uses Stub Runner to boot those generated stubs and runs the real
+          order-service client against them — so the consumer tests against a stub that cannot
+          drift from what the provider is verified to produce.
+
+      Build order matters: install the provider (publishes the stubs jar to ~/.m2) BEFORE the
+      consumer resolves it. The reactor below builds inventory-provider first, so a single
+      `mvn install` from here does both in order.
+    -->
+    <properties>
+        <java.version>21</java.version>
+        <spring-cloud.version>2025.0.3</spring-cloud.version>
+    </properties>
+
+    <modules>
+        <module>inventory-provider</module>
+        <module>order-consumer</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
