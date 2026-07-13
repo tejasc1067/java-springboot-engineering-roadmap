@@ -76,8 +76,8 @@ class OutboxTest {
     void aFailureBeforeCommitLeavesNeitherAnOrderNorAPhantomEvent() throws SQLException {
         try (Connection c = open()) {
             c.setAutoCommit(false);
-            insertOrderTx(c, 1, "SKU-BOOK");
-            insertOutboxTx(c, "OrderPlaced", "OrderPlaced:1");
+            insertOrder(c, 1, "SKU-BOOK");
+            insertOutbox(c, "OrderPlaced", "OrderPlaced:1");
             // something fails before commit -> roll the WHOLE local transaction back
             c.rollback();
         }
@@ -101,8 +101,8 @@ class OutboxTest {
     private void placeOrderWithOutbox(int orderId, String sku) throws SQLException {
         try (Connection c = open()) {
             c.setAutoCommit(false);
-            insertOrderTx(c, orderId, sku);
-            insertOutboxTx(c, "OrderPlaced", "OrderPlaced:" + orderId);
+            insertOrder(c, orderId, sku);
+            insertOutbox(c, "OrderPlaced", "OrderPlaced:" + orderId);
             c.commit(); // both or neither
         }
     }
@@ -143,11 +143,7 @@ class OutboxTest {
         }
     }
 
-    private void insertOrderTx(Connection c, int id, String sku) throws SQLException {
-        insertOrder(c, id, sku);
-    }
-
-    private void insertOutboxTx(Connection c, String type, String payload) throws SQLException {
+    private void insertOutbox(Connection c, String type, String payload) throws SQLException {
         try (PreparedStatement ps = c.prepareStatement(
                 "INSERT INTO outbox(event_type, payload) VALUES (?, ?)")) {
             ps.setString(1, type);

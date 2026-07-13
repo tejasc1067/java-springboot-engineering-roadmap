@@ -31,8 +31,4 @@ public class Product {
     public int getAvailableStock() {
         return availableStock;
     }
-
-    public void setAvailableStock(int availableStock) {
-        this.availableStock = availableStock;
-    }
 }

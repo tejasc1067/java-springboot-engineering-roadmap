@@ -54,7 +54,7 @@ That runtime break is the whole lesson. In production it wouldn't surface in a t
 
 ## The fix: one database per service, reached through an API
 
-The `order-inventory-system` scaffold (sibling directory) is the corrected version. Look at the two `application.yml` files:
+The `order-inventory-system` scaffold (elsewhere in this module's `CODE_EXAMPLES/`) is the corrected version. Look at the two `application.yml` files:
 
 ```yaml
 # inventory-service            # order-service

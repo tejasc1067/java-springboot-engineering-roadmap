@@ -24,8 +24,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * The lesson: sharing a database means neither service can change its schema
  * without risking the other. They are not independently deployable, which means
  * they are not really separate services (topic 03). The fix is one database per
- * service, reached only through an API — that is the order-inventory-system
- * scaffold in the sibling directory.
+ * service, reached only through an API — exactly what the order-inventory-system
+ * scaffold (elsewhere in this module's CODE_EXAMPLES) demonstrates.
  */
 class SharedDatabaseAntipatternTest {
 

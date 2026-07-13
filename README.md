@@ -89,18 +89,11 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 11-exception-handling-and-validation          ← ✓ done   (advice, ProblemDetail/RFC 7807, bean validation, custom constraints)
 12-security                                   ← ✓ done   (auth vs authz, SecurityFilterChain, BCrypt, sessions vs JWT, OAuth2 resource server + login, CORS/CSRF, 401/403 ProblemDetail, spring-security-test)
 13-microservices                              ← ✓ done   (when to split & the distributed-monolith trap, database-per-service, sync calls/contracts & async events, API composition, resilience: timeouts/retries/circuit breaker/bulkhead+rate limit, discovery/gateway/config, JWT & trace-id propagation, saga, idempotency/outbox, isolation & contract testing)
-14-docker-and-devops
-15-system-design
-16-design-patterns                            (applied patterns: the Spring/GoF idioms from 07–12, made explicit)
-17-kafka-and-event-driven
-18-redis-caching
-19-observability-and-monitoring
-20-projects                                   (capstone: build something end-to-end)
 ```
 
-**Where the core ends.** Modules 01–12 are the spine: finish them and you can build, secure, and test a real Spring Boot REST service — the stated goal of this roadmap. Modules 13–19 add breadth for working on larger systems (distributed services, infrastructure, event streaming, caching, observability); they're worth doing but sit *beyond* the core, and module 20 is a capstone where you build something end-to-end. Design patterns land at 16 deliberately — by then you've used the patterns Spring applies everywhere (dependency injection, template methods, proxies, strategies), so the module names and generalizes what you've already met rather than teaching it in the abstract.
+**The shape of the roadmap.** Modules 01–12 are the spine: finish them and you can build, secure, and test a real Spring Boot REST service — the stated goal of this roadmap. Module 13 (microservices) is the final module: it extends that single service into a distributed system — when to split, how services talk, and the failure modes (timeouts, retries, circuit breakers, sagas, idempotency) that only show up once you do. That's the whole curriculum. It's deliberately bounded — see "What's deliberately not in this repo" for where it stops and why.
 
-**Module 04 is the current reference implementation** of the curriculum's style and depth: runnable code examples (H2 in-memory database), vulnerable-then-safe contrasts for security topics, broken-then-fixed contrasts for resource management, real exception handling. Module 03 (split into 03a-03d to keep each sub-module walkable) is the newest application of that template.
+**Module 04 is the reference implementation** of the curriculum's single-file style and depth: runnable code examples (H2 in-memory database), vulnerable-then-safe contrasts for security topics, broken-then-fixed contrasts for resource management, real exception handling. From module 05 on, examples become small Spring Boot projects, one per topic; module 13 (microservices), with its runnable multi-service demos, is the newest application of that template.
 
 **About the 03a-03d split.** The original "Java Advanced" module grew to 32 topics — too much to walk as one. It's split into four sub-modules along concept boundaries: 03a (language depth), 03b (modern Java), 03c (concurrency), 03d (JVM & runtime). Read in order — 03c uses lambdas from 03b, 03d assumes concurrency vocabulary from 03c.
 
@@ -114,7 +107,7 @@ So you don't have to wonder. These are out of scope on purpose, so the roadmap s
 - **Real deployed projects.** This repo teaches concepts. Building and shipping side projects is your job, in parallel. Pick something small (URL shortener, todo API, expense tracker) by the time you finish module 09 (REST APIs).
 - **Frontend, mobile, CSS, JavaScript, React.** This is a backend roadmap. Frontend is a different career path with its own curriculum.
 - **Machine learning, data engineering.** Different fields.
-- **CI/CD pipelines, Kubernetes, advanced DevOps.** Touched on in module 14 but not deep. Real DevOps is its own roadmap.
+- **Containers (Docker), CI/CD, Kubernetes, DevOps.** Deploying and operating services is a discipline of its own — learn it after this roadmap, not inside it.
 
 You don't need any of these to *follow this roadmap*. You'll need most of them to *be a complete backend engineer*. Knowing the boundary is freeing — you can focus on what's in this repo without feeling like you're missing something secret.
 

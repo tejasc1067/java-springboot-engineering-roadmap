@@ -40,7 +40,7 @@ class OrderViewComposerTest {
     }
 
     @Test
-    void failsWhenaRequiredSourceIsDown() {
+    void failsWhenARequiredSourceIsDown() {
         Function<Long, OrderInfo> orderDown = id -> {
             throw new RuntimeException("order-service unavailable");
         };
