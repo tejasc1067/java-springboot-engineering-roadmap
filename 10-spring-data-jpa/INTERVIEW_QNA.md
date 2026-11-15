@@ -1,4 +1,4 @@
-# Interview questions — Spring Data JPA
+# Interview questions — Spring Data (JPA, MongoDB, JDBC)
 
 Each entry is a real question from a real interview, answered with depth. If you can read the question out loud and reconstruct the answer in your own words, you're ready.
 
@@ -435,3 +435,23 @@ The repository extends `JpaSpecificationExecutor<Book>`. Composes cleanly, suppo
 **Native dynamic SQL** — last resort. Build the SQL string with `StringBuilder` and bind parameters. The price: lose type safety, fight injection bugs.
 
 What **not** to do: write five `@Query` methods for five filter combinations. The combinatorial explosion gets out of hand fast.
+
+---
+
+## 28. When would you choose a document database like MongoDB over a relational one? How do you decide what to embed?
+
+Start relational, and move only when you can name the problem a document store solves. Good fits: self-contained aggregates that are read and written whole (an order with its items and shipping address, a product with attributes that vary by category), where the document shape matches what the screen needs. Poor fits: data that is shared and updated in many places (customers, prices), many-to-many relationships, ad-hoc reporting, and invariants spanning records (balances, stock, bookings). MongoDB has multi-document transactions, but they're slower and need a replica set; if every operation needs them, the data is relational.
+
+Embed vs reference is decided per relationship. **Embed** when the child belongs to the parent, is bounded in size, and is read with it, or when a snapshot is the correct meaning (the address an order shipped to). **Reference** by id when the data is shared and changes (a customer's current name), or grows without limit (comments on a post). The cost of embedding shared data is concrete: every copy goes stale on update, and nothing tells you. Unbounded arrays also run into MongoDB's 16 MB document limit and slow every read of the parent. "Schemaless" doesn't remove the schema; it moves it into your code, where two versions of the app can write two shapes.
+
+## 29. What surprises do people coming from JPA hit with Spring Data MongoDB?
+
+Three, all silent. **Indexes:** `@Indexed(unique = true)` doesn't create an index unless `spring.data.mongodb.auto-index-creation=true`; it's been off by default since Spring Data MongoDB 3.0, because building indexes at startup can lock big collections. Without it, duplicates are accepted. In production, create indexes in a migration (Mongock or a deploy script). **Field renames:** the Java class is the only schema, so renaming a field leaves existing documents loading `null` with no error. Migrate with `$rename` or map the old name with `@Field`. **`save()` replaces the whole document:** two requests that each load an order, add an item, and save will lose one item, because the second save overwrites the first. JPA would have inserted two separate item rows. Fix with a targeted atomic update through `MongoTemplate` (`Update.push`, `inc`, `set`; single-document updates are atomic) or with `@Version` optimistic locking. Mapping-wise, anything that isn't a separate `@Document` is embedded, so there's no `@OneToMany`, no cascade, and no lazy loading.
+
+## 30. What is Spring Data JDBC, and how is it different from Spring Data JPA?
+
+The same repository programming model over plain SQL, with no JPA provider: no persistence context, no proxies, no lazy loading, no dirty checking. It is built around DDD **aggregates**: a root and its children are always loaded and saved together through one repository, and other aggregates are referenced by id (`AggregateReference<Customer, Long>`), never by object. Consequences: a loaded aggregate is always complete, so `LazyInitializationException` and N+1 can't happen inside an aggregate. Nothing is written without an explicit `save`, so changing a loaded object in a `@Transactional` method does nothing. Saving a root deletes and re-inserts all its child rows, because without dirty checking it can't know what changed; so aggregates must stay small, and child tables must never be written around the root. `@Query` is plain SQL (no JPQL), and you write the schema yourself (Flyway). Choose it when the model splits into small aggregates and you want predictable SQL; choose JPA for rich, navigable object graphs and its wider feature set.
+
+## 31. How does Spring Data decide whether `save()` is an insert or an update, and where does that go wrong?
+
+It asks whether the entity is "new". By default that means: the `@Id` is `null` (or 0 for a primitive). If a `@Version` field exists and is a wrapper type, a `null` version means new instead. Entities can also implement `Persistable` and answer `isNew()` themselves. This works perfectly for database-generated ids and breaks for natural keys you set yourself (a SKU, an ISBN). In Spring Data JPA, `save` on such an entity calls `merge`, which costs an extra `SELECT` before the `INSERT`. In Spring Data JDBC it's worse: it runs `UPDATE ... WHERE sku = ?`, matches zero rows, and returns normally, so nothing is saved and nothing errors. Fixes: `JdbcAggregateTemplate.insert(entity)`, a `@Version` field, or implementing `Persistable`.

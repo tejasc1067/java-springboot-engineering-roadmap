@@ -1,14 +1,17 @@
-# 10 — Spring Data JPA
+# 10 — Spring Data: JPA, MongoDB, and JDBC
 
 Module 04 taught you how to talk to a database with raw JDBC — `Connection`, `PreparedStatement`, `ResultSet`, and a lot of try-with-resources. That works, but writing it for every query gets old fast, and every line is a place to leak a connection or paste SQL injection into your codebase.
 
 This module replaces that ceremony with **JPA** (Jakarta Persistence API), **Hibernate** (the dominant JPA implementation), and **Spring Data JPA** (the Spring layer that gives you `JpaRepository<Book, Long>` and writes most of your query code for you). By the end you will be able to model a domain with `@Entity`, query it with derived methods or `@Query`, navigate relationships without falling into the N+1 trap, and test the persistence layer in isolation with `@DataJpaTest`.
+
+JPA is the main road, topics 01–14. The last three topics look at the alternatives, so you can choose rather than default: when a document database fits better (15), Spring Data MongoDB (16), and Spring Data JDBC, which keeps SQL but drops Hibernate's lazy loading and dirty checking (17). All three use the same Spring Data repository style you learn for JPA.
 
 ## Who this is for
 
 - Anyone who finished modules 04 (JDBC) and 09 (REST APIs) and is ready to wire a real database behind the controllers.
 - Developers who have seen `@Entity` and `JpaRepository` in someone else's code but cannot say what JPA *is*, what Hibernate is, or what Spring Data JPA adds on top.
 - Anyone who has been bitten by `LazyInitializationException` or an N+1 query in production and wants the model that explains why.
+- Anyone who has heard "just use MongoDB" and wants to know when that's right and what it costs.
 
 ## What you'll be able to do at the end
 
@@ -37,7 +40,7 @@ If you can do all seventeen, the module worked.
 - Module 04 done. You should be comfortable with what a `Connection`, a `PreparedStatement`, and a transaction are at the JDBC level. JPA hides all of this; knowing it is underneath is what stops JPA from feeling like magic.
 - Modules 08 and 09 done. You should be at home with `@SpringBootApplication`, `application.yml`, dependency injection of services into controllers, and writing `MockMvc` tests.
 - A JDK installed (Java 17 or newer; examples target Java 21 — Spring Boot 3.x's baseline is Java 17).
-- No external database needed. Every demo uses H2 in-memory, the same database module 04 introduced.
+- No external database needed. The JPA and JDBC demos use H2 in-memory, the same database module 04 introduced. The MongoDB demo (topic 16) starts a real MongoDB with flapdoodle embedded Mongo: no install and no Docker, but the first run downloads about 100 MB.
 
 ## How this module is organized
 
@@ -93,10 +96,14 @@ Module 10 stays on the same Spring Boot version as module 08/09 so projects move
 | Library | Coordinates | What it does | First used in |
 |---------|-------------|--------------|---------------|
 | Spring Boot Starter Parent | `org.springframework.boot:spring-boot-starter-parent:3.5.14` | parent POM; locks versions | every topic |
-| Spring Boot Starter Data JPA | `org.springframework.boot:spring-boot-starter-data-jpa` | Hibernate + Spring Data JPA + HikariCP + JDBC | every topic |
-| H2 Database | `com.h2database:h2:2.2.224` | in-memory database for demos | every topic |
+| Spring Boot Starter Data JPA | `org.springframework.boot:spring-boot-starter-data-jpa` | Hibernate + Spring Data JPA + HikariCP + JDBC | topics 02–14 |
+| H2 Database | `com.h2database:h2:2.2.224` | in-memory database for demos | every topic except 16 |
 | Spring Boot Starter Test | `org.springframework.boot:spring-boot-starter-test` | JUnit 5, AssertJ, Mockito, Spring test | every topic |
 | Flyway Core | `org.flywaydb:flyway-core` (Boot-managed version) | SQL migrations | topic 12 |
+| Jackson Databind | `com.fasterxml.jackson.core:jackson-databind` | JSON documents for the toy document store | topic 15 |
+| Spring Boot Starter Data MongoDB | `org.springframework.boot:spring-boot-starter-data-mongodb` | `MongoRepository`, `MongoTemplate`, document mapping | topic 16 |
+| Flapdoodle Embedded Mongo | `de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring3x:4.33.0` (test) | starts a real MongoDB server for tests | topic 16 |
+| Spring Boot Starter Data JDBC | `org.springframework.boot:spring-boot-starter-data-jdbc` | Spring Data repositories over plain SQL, no Hibernate | topic 17 |
 
 What's **not** here: `spring-boot-starter-web`. Module 10 demos run as `main` methods or as tests against `@DataJpaTest` — they do not stand up an HTTP server. Wiring controllers on top is the cross-module exercise at the end of topic 13. There is also no `spring-boot-starter-security` (module 12), no second datasource, and no R2DBC (reactive persistence is outside the scope of this roadmap).
 
@@ -122,8 +129,10 @@ You're done with this module when you can:
 4. Be given an entity with no `@Transactional` anywhere and asked "where should it go?" — answer "on the service method, not the repository, and not the controller," with the reason.
 5. Pin a `flyway-core` dependency to a Boot project, add `V1__init.sql`, flip `spring.jpa.hibernate.ddl-auto` to `validate`, and explain why this is the production setup.
 6. Write a `@DataJpaTest` that inserts two `Author`s and three `Book`s via `TestEntityManager`, then asserts a repository method returns the right subset.
+7. A teammate proposes MongoDB for orders, customers, and a payments ledger. For each, say document or relational, and for any documents, what you'd embed and what you'd reference.
+8. Explain what happens to an order's items when you change only its status and call `save()` — under JPA, under Spring Data MongoDB, and under Spring Data JDBC.
 
-If those six feel comfortable, move to module 11, where the entities you have here meet `@RestController` again — with proper exception mapping (`EntityNotFoundException` → 404) and request-level validation that responds with a useful error body.
+If those eight feel comfortable, move to module 11, where the entities you have here meet `@RestController` again — with proper exception mapping (`EntityNotFoundException` → 404) and request-level validation that responds with a useful error body.
 
 ## A note on what's *not* here
 
@@ -131,5 +140,6 @@ If those six feel comfortable, move to module 11, where the entities you have he
 - **No security.** Row-level filtering, ownership checks, `@PreAuthorize` on repository methods — all module 12.
 - **No multi-datasource, no read replicas, no sharding.** One H2 database per demo. Real production setups (write-primary + read-replica, sharded tables) are covered as architecture in module 18 (system design basics).
 - **No reactive persistence.** No R2DBC, no `ReactiveCrudRepository`. The roadmap is servlet-stack throughout.
-- **No JOOQ, no MyBatis, no plain `JdbcTemplate`.** They are valid choices in real systems; the module sticks to JPA because that is the dominant Spring Boot persistence layer.
+- **No jOOQ, no MyBatis.** They are valid choices in real systems. The module teaches JPA as the dominant Spring Boot persistence layer, plus Spring Data JDBC (topic 17) as the lighter alternative. Plain `JdbcTemplate` appears only as what Spring Data JDBC runs underneath and as a test helper.
+- **No other NoSQL clients.** Topic 15 surveys key-value, wide-column, and graph stores; only MongoDB gets a demo here. Redis gets its own module (15, caching and Redis).
 - **No deep Flyway operations.** Topic 12 shows enough to get migrations running and explains the `ddl-auto` debate. Real migration ops (rollback strategy, baselining a brownfield database, repair) are outside the module.

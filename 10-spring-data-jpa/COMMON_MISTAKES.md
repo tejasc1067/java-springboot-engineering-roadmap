@@ -1,4 +1,4 @@
-# Common mistakes — Spring Data JPA
+# Common mistakes — Spring Data (JPA, MongoDB, JDBC)
 
 Real bugs, with code that demonstrates them and the fix. Skim these before you start a new entity; revisit when persistence behaves unexpectedly.
 
@@ -396,3 +396,100 @@ Spring Boot's default keeps the Hibernate session open for the duration of the H
 **What goes wrong:** holds a database connection from the pool for as long as the entire request takes. Under load, the connection pool exhausts even though most connections are idle.
 
 **Fix:** set `spring.jpa.open-in-view: false`. Then fix every `LazyInitializationException` it surfaces with one of the three correct patterns (eager fetch, DTO, push into service).
+
+---
+
+## 29. Embedding shared, changing data in a document
+
+```json
+{ "_id": "o1", "customerId": "c1", "customerName": "Ann Lee", "items": [ ... ] }
+```
+
+**What goes wrong:** the customer changes their name. The customer document is updated; every order still says "Ann Lee". Nothing errors. Topic 15's `embeddedCopy_goesStaleWhenTheOriginalChanges` shows it.
+
+**Fix:** reference shared data by id (`customerId` only) and look it up. Embed only data that belongs to the parent, or where a snapshot is the intended meaning, and name it that way (`shippingAddressAtOrderTime`, `priceAtPurchase`).
+
+---
+
+## 30. Trusting `@Indexed(unique = true)` in Spring Data MongoDB
+
+```java
+@Document("customers")
+public class Customer {
+    @Indexed(unique = true) private String email;
+}
+```
+
+**What goes wrong:** automatic index creation is off by default, so the index never exists and duplicate emails are saved. Topic 16's `UniqueIndexTest` saves two.
+
+**Fix:** set `spring.data.mongodb.auto-index-creation=true` for dev and tests (`UniqueIndexEnabledTest` then gets `DuplicateKeyException`), and create indexes in a migration for production.
+
+---
+
+## 31. Renaming a field in a `@Document` class
+
+```java
+private String clientId;   // last release
+private String customerId; // this release
+```
+
+**What goes wrong:** every document already stored still has `clientId`. They load with `customerId == null`, and `findByCustomerId` can't see them. No error at startup or read (topic 16's `SchemaInCodeTest`).
+
+**Fix:** migrate the data (`$rename` in a migration script, or Mongock), or keep reading the old name with `@Field("clientId")` until it's migrated.
+
+---
+
+## 32. Read-modify-write with `save()` on a MongoDB document
+
+```java
+Order order = orders.findById(id).orElseThrow();
+order.getItems().add(item);
+orders.save(order);         // replaces the whole stored document
+```
+
+**What goes wrong:** two concurrent requests both load the order, each add an item, and the second `save` overwrites the first. One item disappears (`LostUpdateTest`).
+
+**Fix:** a targeted atomic update: `mongoTemplate.updateFirst(query(where("_id").is(id)), new Update().push("items", item), Order.class)`. Or add `@Version` so the stale save fails instead of overwriting.
+
+---
+
+## 33. Expecting dirty checking in Spring Data JDBC
+
+```java
+@Transactional
+public void ship(Long id) {
+    Order order = orders.findById(id).orElseThrow();
+    order.setStatus("SHIPPED");     // JPA would write this at commit
+}
+```
+
+**What goes wrong:** Spring Data JDBC returns plain objects that nothing watches. The status stays `NEW` (topic 17's `NoDirtyCheckingTest`).
+
+**Fix:** call `orders.save(order)` after every change.
+
+---
+
+## 34. `save()` with a natural key in Spring Data JDBC
+
+```java
+productRepository.save(new Product("SKU-1", "Notebook"));
+```
+
+**What goes wrong:** the id is non-null, so Spring Data treats the entity as existing and runs `UPDATE "PRODUCT" ... WHERE "SKU" = 'SKU-1'`. It matches zero rows and returns normally. The product was never inserted (`NaturalKeyTest`).
+
+**Fix:** `jdbcAggregateTemplate.insert(product)`, or add a `@Version Long version` field (null version = new), or implement `Persistable` with your own `isNew()`.
+
+---
+
+## 35. Writing to a child table behind the aggregate root's back
+
+```java
+jdbc.update("insert into order_item (order_id, line_no, sku, quantity) values (?, 1, 'GIFT-WRAP', 1)", orderId);
+// later, elsewhere:
+order.setStatus("PAID");
+orders.save(order);
+```
+
+**What goes wrong:** Spring Data JDBC saves an aggregate by deleting all its child rows and inserting the ones in memory. The `GIFT-WRAP` row added directly is deleted, silently (`savingTheRoot_rewritesAllItems_fromWhatIsInMemory`).
+
+**Fix:** change children only by loading the root, modifying it, and saving it. Keep aggregates small, so that rewriting children is cheap, and use `@Version` against concurrent edits.
