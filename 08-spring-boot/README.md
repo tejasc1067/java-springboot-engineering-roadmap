@@ -26,8 +26,9 @@ This module teaches the mechanics of Boot itself: the annotation, property files
 - [ ] Configure log levels per-package via `logging.level.*` and route logs to a file in a profile-specific way.
 - [ ] Write a `@SpringBootTest` that boots the whole context, and a slice test (`@WebMvcTest`) that boots only the web layer.
 - [ ] Enable Actuator, expose `/health` and `/info` over HTTP, and explain why `/env` and `/heapdump` should stay locked down in production.
+- [ ] Run work in the background with `@Async` and on a timer with `@Scheduled`, tune Boot's executors, and avoid the silent failures: self-calls, lost exceptions, one scheduler thread, and jobs running on every instance.
 
-If you can do all twelve, the module worked.
+If you can do all thirteen, the module worked.
 
 ## Prerequisites
 
@@ -53,6 +54,8 @@ Topic 11 introduces `spring-test`: `@SpringBootTest`, slice tests, and `@Mockito
 
 Topic 12 turns on Actuator so the operations team has health and metrics endpoints to scrape.
 
+Topic 13 runs work off the request thread: `@Async` on Boot's auto-configured executor, and `@Scheduled` jobs on its scheduler.
+
 ```text
 01-what-spring-boot-adds                    <- pain points of plain Spring; the Boot pitch
 02-first-spring-boot-app                    <- @SpringBootApplication, SpringApplication.run
@@ -66,6 +69,7 @@ Topic 12 turns on Actuator so the operations team has health and metrics endpoin
 10-logging                                  <- Logback defaults; logging.level.*; profile-specific; switching to Log4j2
 11-testing-with-spring-test                 <- @SpringBootTest; slice tests; @MockitoBean
 12-actuator                                 <- /health, /info, /metrics, /prometheus; custom Micrometer counter; exposure config
+13-async-and-scheduling                     <- @Async, spring.task.execution, @Scheduled rate/delay/cron, scheduler pool, one-instance jobs
 ```
 
 ```text
@@ -113,14 +117,14 @@ You're done with this module when you can:
 2. Be handed an `application.yml` and a `--debug` autoconfig report and tell which beans came from autoconfiguration, which came from your code, and which conditional refused to fire.
 3. Bind a nested config block (e.g. `app.retry.max-attempts: 3` and `app.retry.backoff: 500ms`) into a `@ConfigurationProperties` record with validation, then break the validation deliberately to see the failure message at startup.
 4. Write a `@SpringBootTest` that loads the full context, then rewrite the same test as `@WebMvcTest` and explain why it starts ten times faster.
+5. Explain why an `@Async` method called from the same class runs synchronously, why a daily `@Scheduled` job sends duplicates on three instances, and fix both.
 
-If those four feel comfortable, move to module 09, where REST APIs get the depth they deserve — served by the embedded Tomcat you just learned to start.
+If those five feel comfortable, move to module 09, where REST APIs get the depth they deserve — served by the embedded Tomcat you just learned to start.
 
 ## A note on what's *not* here
 
 - **No REST depth.** `@RestController` appears in exactly one topic (09) and serves exactly one `GET /hello` plain-string response. `@RequestBody`, JSON binding, `@PathVariable`, request-body validation, `MockMvc` with real JSON assertions, error handling — all module 09.
 - **No persistence.** No `spring-boot-starter-data-jpa`, no `@Entity`, no `JpaRepository`. Module 10.
 - **No security.** No `spring-boot-starter-security`, no auth filters, no method-level security. Module 12.
-- **No `@Async` or scheduling.** `@EnableAsync`, `@Async`, `@Scheduled` are Spring features that work in Boot but each needs careful explanation; they get their own topic, `13-async-and-scheduling` (planned), once Boot's auto-configured task executor is in place.
 - **No Spring Cloud or microservices wiring.** Module 13.
 - **No deployment, container image, or CI.** `mvn package` produces the jar. Module 14 (containers & Docker) packages that jar into an image and runs it; CI pipelines and cloud deployment are outside this roadmap.

@@ -83,7 +83,7 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 05-maven-and-gradle                           ← ✓ done
 06-unit-testing                               ← ✓ done   (JUnit 5, AssertJ, Mockito, JaCoCo)
 07-spring-core                                ← ✓ done   (IoC, DI, beans, scopes, AOP, events)
-08-spring-boot                                ← ✓ done   (auto-config, properties, profiles, fat jar, embedded Tomcat, Actuator)
+08-spring-boot                                ← ✓ done   (auto-config, properties, profiles, fat jar, embedded Tomcat, logging, testing, Actuator, @Async & @Scheduled)
 09-rest-api-development                       ← ✓ done   (controllers, JSON, status codes, MockMvc, OpenAPI, versioning)
 10-spring-data-jpa                            ← ✓ done   (entities, repositories, queries, fetch, transactions, Flyway; NoSQL & MongoDB; Spring Data JDBC)
 11-exception-handling-and-validation          ← ✓ done   (advice, ProblemDetail/RFC 7807, bean validation, custom constraints)

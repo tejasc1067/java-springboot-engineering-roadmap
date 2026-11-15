@@ -556,3 +556,54 @@ Compilation succeeds (your tests can see Spring). Runtime fails: `ClassNotFoundE
     <scope>test</scope>
 </dependency>
 ```
+
+---
+
+## Async and scheduling
+
+### 24. Calling an `@Async` method from the same class
+
+```java
+@Service
+class UserService {
+    public void register(User u) { save(u); sendWelcomeEmail(u); }   // this.sendWelcomeEmail(...)
+    @Async public void sendWelcomeEmail(User u) { ... }              // runs on the caller's thread
+}
+```
+
+**What goes wrong:** `@Async` works through a proxy, and `this` is the real object, so registration still waits for the email. No error. (`AsyncTest.selfInvocation_skipsTheProxy_andRunsOnTheCallersThread`.) Forgetting `@EnableAsync` has the same symptom.
+
+**Fix:** move the async method into another bean and inject it. Assert the thread name in a test.
+
+### 25. Exceptions thrown from a `void @Async` method
+
+```java
+@Async
+public void generateReport() { throw new IllegalStateException("failed"); }
+```
+
+**What goes wrong:** the caller has already returned. The exception goes to the default `AsyncUncaughtExceptionHandler`, which only logs it, and nobody notices the reports stopped.
+
+**Fix:** return `CompletableFuture<Void>` so callers can `join()` and see the failure, or implement `AsyncConfigurer.getAsyncUncaughtExceptionHandler()` to log with context and increment an error metric.
+
+### 26. One slow `@Scheduled` job blocking all the others
+
+```java
+@Scheduled(cron = "0 0 2 * * *") public void nightlyReport() { slowApi.fetchEverything(); }   // hangs
+@Scheduled(fixedRate = 900_000)  public void refreshCache()  { ... }                           // never runs again
+```
+
+**What goes wrong:** Spring Boot's scheduler has **one** thread by default. While the report hangs, no other scheduled method in the app can run (`SchedulerStarvationTest`).
+
+**Fix:** `spring.task.scheduling.pool.size: 4`, plus a timeout on whatever the job waits for.
+
+### 27. A `@Scheduled` job on an app that runs several instances
+
+```java
+@Scheduled(cron = "0 0 7 * * *")
+public void sendDailyDigest() { ... }
+```
+
+**What goes wrong:** every instance runs it. Three instances means three digests per customer (`DigestJobTest.scheduledJob_runsOnEveryInstance`).
+
+**Fix:** a lock in the shared database so one instance claims each run. ShedLock's `@SchedulerLock(name = "dailyDigest")` does this. Also make the job idempotent, so a second run after a crash sends nothing new.
