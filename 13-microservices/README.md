@@ -35,6 +35,7 @@ You will build a small two-service system — an `order-service` that must check
 - [ ] Handle a multi-service operation with a **saga** (there is no distributed transaction), and explain orchestration vs. choreography and eventual consistency.
 - [ ] Make an operation safely repeatable with an **idempotency key**, and publish events reliably with the **outbox pattern**.
 - [ ] **Test** a service in isolation by stubbing its downstream (WireMock/Testcontainers), and pin the contract between two services with **consumer-driven contract tests**.
+- [ ] Separate a write model from a read model (**CQRS**), rebuild state from an append-only log (**event sourcing**), handle projection lag, and say when neither is worth its cost.
 
 If you can do all of those, the module worked.
 
@@ -65,6 +66,8 @@ Topics 18–19 are **distributed data** — the hardest part — living without 
 
 Topics 20–21 are **testing** a system whose pieces are separately deployable: isolating a service from its downstream (20) and pinning the contract between them (21).
 
+Topic 22 returns to distributed data with two advanced patterns: **CQRS** (separate write and read models) and **event sourcing** (the event log as the source of truth). It comes last because it builds on events (07), read models across services (08), and the outbox (19), and because it's the topic most worth knowing *not* to reach for by default.
+
 ```text
 01-why-microservices-and-when-not        <- what distribution costs; when the trade is worth it; the distributed-monolith trap; markdown-only
 02-fallacies-of-distributed-computing     <- the network is not reliable/instant/free; the bedrock under every resilience topic; markdown-only
@@ -87,6 +90,7 @@ Topics 20–21 are **testing** a system whose pieces are separately deployable: 
 19-idempotency-and-the-outbox-pattern     <- idempotency keys; reliable event publishing; dedup
 20-testing-microservices                  <- stub the downstream with WireMock/Testcontainers; test a service in isolation
 21-contract-testing                       <- consumer-driven contracts so a breaking change fails a test, not production
+22-cqrs-and-event-sourcing                <- separate read/write models; state rebuilt from an event log; projection lag; the costs
 ```
 
 ```text
