@@ -28,8 +28,9 @@ This module replaces that ceremony with **JPA** (Jakarta Persistence API), **Hib
 - [ ] List the top JPA pitfalls (lazy loading after the transaction ends, dirty-checking surprises, batch insert without `hibernate.jdbc.batch_size`) and the fix for each.
 - [ ] Name the four NoSQL families, decide embed vs reference for a document relationship, and argue when a relational database is still the right choice.
 - [ ] Store an aggregate as one MongoDB document with `MongoRepository`, query into embedded fields, and avoid the missing-unique-index and lost-update traps.
+- [ ] Model an aggregate with Spring Data JDBC and explain what changes without lazy loading and dirty checking: explicit `save`, children rewritten on every save, ids instead of object references.
 
-If you can do all sixteen, the module worked.
+If you can do all seventeen, the module worked.
 
 ## Prerequisites
 
@@ -58,7 +59,7 @@ Topic 13 is testing with `@DataJpaTest` — a focused slice that boots only JPA,
 
 Topic 14 is a catalog of the bugs JPA users hit most often, with the cause and the fix for each.
 
-Topic 15 steps outside the relational model: the NoSQL families, embedding vs referencing in a document database, and when *not* to leave PostgreSQL. Topic 16 is Spring Data MongoDB: the same repository style, backed by documents instead of tables.
+Topic 15 steps outside the relational model: the NoSQL families, embedding vs referencing in a document database, and when *not* to leave PostgreSQL. Topic 16 is Spring Data MongoDB: the same repository style, backed by documents instead of tables. Topic 17 is Spring Data JDBC: relational again, but without Hibernate's lazy loading and dirty checking.
 
 ```text
 01-what-jpa-hibernate-spring-data-are       <- three-layer mental model; markdown-only
@@ -77,6 +78,7 @@ Topic 15 steps outside the relational model: the NoSQL families, embedding vs re
 14-common-jpa-pitfalls                      <- LazyInitializationException, batch inserts, flush
 15-nosql-and-when-to-use-it                 <- document/key-value/wide-column/graph, embed vs reference, when to stay relational
 16-spring-data-mongodb                      <- @Document, MongoRepository, embedded queries, indexes, atomic updates
+17-spring-data-jdbc                         <- aggregates, no lazy loading, no dirty checking, explicit save
 ```
 
 ```text

@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:jdbc-demo;DB_CLOSE_DELAY=-1
+logging:
+  level:
+    # Prints every SQL statement Spring Data JDBC sends. Read it: there is no hidden SQL.
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
