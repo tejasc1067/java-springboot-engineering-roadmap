@@ -512,3 +512,42 @@ Spring's transaction logic lives in a proxy in front of the bean. `this` is the 
 
 **Fix:** move `saveAudit` into another `@Service` and inject it, so the call goes through that bean's proxy.
 
+---
+
+## Behavioral patterns
+
+### 37. A type switch with a silent `else`
+
+```java
+if (customerType.equals("STUDENT"))           return price * 90 / 100;
+else if (customerType.equals("BLACK_FRIDAY")) return price * 70 / 100;
+else                                          return price;   // "EMPLOYEE" lands here
+```
+
+A new type added elsewhere falls into the `else` and gets the wrong price with no error. `17-behavioral-patterns/DiscountIfElseBroken.java` charges employees 10000 instead of 8000.
+
+**Fix:** a strategy per type in one lookup that throws on unknown names:
+```java
+DiscountStrategy s = DISCOUNTS.get(type);
+if (s == null) throw new IllegalArgumentException("no discount rule for " + type);
+return checkout.total(price, s);
+```
+
+### 38. Copying a resource skeleton into every class
+
+```java
+FakeFile file = new FakeFile();
+file.write(header);
+for (String row : rows) file.write(row);
+file.close();   // skipped when a row throws
+```
+
+Each copy of open/work/close is a chance to forget the `finally`. `17-behavioral-patterns/CopiedSkeletonBroken.java` leaks a file on every failed CSV export.
+
+**Fix:** write the skeleton once, as a `final` template method (or a method taking a lambda, like `JdbcTemplate`), and let callers supply only the steps:
+```java
+final void export(List<String> rows) {
+    FakeFile file = new FakeFile();
+    try { /* header(), formatRow(...) */ } finally { file.close(); }
+}
+```

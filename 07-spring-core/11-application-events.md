@@ -1,6 +1,6 @@
 # Application Events
 
-Some things should happen *because* an order was placed but shouldn't be the order-placing code's responsibility: audit logging, sending a confirmation email, posting a metric, updating a recommendation engine. If `OrderService` calls `auditLogger.log(...)` and `emailService.send(...)` and `metrics.increment(...)` directly, it has accumulated four responsibilities and four constructor parameters. Spring's **application events** let one bean *announce* that something happened and any number of other beans listen — without those listeners being mentioned in the publishing code at all.
+Some things should happen *because* an order was placed but shouldn't be the order-placing code's responsibility: audit logging, sending a confirmation email, posting a metric, updating a recommendation engine. If `OrderService` calls `auditLogger.log(...)` and `emailService.send(...)` and `metrics.increment(...)` directly, it has accumulated four responsibilities and four constructor parameters. Spring's **application events** (the observer pattern from module 02, topic 17) let one bean *announce* that something happened and any number of other beans listen — without those listeners being mentioned in the publishing code at all.
 
 By the end of this topic you can define a custom event, publish it from one bean, and listen for it in another.
 
