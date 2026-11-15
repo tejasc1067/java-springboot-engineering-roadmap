@@ -353,3 +353,38 @@ spring.cloud.openfeign.client.config.inventory:
   connect-timeout: 500
   read-timeout: 2000
 ```
+
+---
+
+## 18. Trusting the read model right after a command
+
+```java
+commands.deposit("acc-1", 10_000);
+return summaries.find("acc-1");          // CQRS read model, updated asynchronously
+```
+
+**What goes wrong:** the projection hasn't processed the deposit yet, so the response, and the page the user reloads, still shows the old balance. Users repeat the action ("my deposit didn't work") and you get duplicates. Topic 22's `projectionLag_userDoesNotSeeTheirOwnWrite` shows the stale read.
+
+**Fix:** have the command return its event's position and wait (with a timeout) until the projection has processed it, or return the result from the command itself, or read from the write side for that screen:
+
+```java
+long position = commands.deposit("acc-1", 10_000);
+// poll summaries.hasProcessed(position) briefly, then read; otherwise show "updating..."
+```
+
+---
+
+## 19. Appending events without an expected version
+
+```java
+Account account = load(accountId);                    // balance 100.00
+store.appendWithoutVersionCheck(accountId, account.withdraw(8_000));
+```
+
+**What goes wrong:** two requests load the same stream, both check "balance ≥ 80.00" against the same stale state, and both append. The account ends at −60.00 (`ConcurrencyTest`). The business rule ran correctly, twice, against data that was already out of date.
+
+**Fix:** append with the version you loaded, and reject the append if the stream has moved on (a unique constraint on `(stream_id, version)` in a database event store). The rejected caller reloads and decides again:
+
+```java
+store.append(accountId, account.version(), account.withdraw(8_000));   // throws ConcurrencyException if stale
+```

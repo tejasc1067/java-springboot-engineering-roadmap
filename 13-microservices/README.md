@@ -34,7 +34,7 @@ You will build a small two-service system — an `order-service` that must check
 - [ ] **Propagate a trace/correlation id** so one request across two services shows up as one trace in the logs.
 - [ ] Handle a multi-service operation with a **saga** (there is no distributed transaction), and explain orchestration vs. choreography and eventual consistency.
 - [ ] Make an operation safely repeatable with an **idempotency key**, and publish events reliably with the **outbox pattern**.
-- [ ] **Test** a service in isolation by stubbing its downstream (WireMock/Testcontainers), and pin the contract between two services with **consumer-driven contract tests**.
+- [ ] **Test** a service in isolation by stubbing its downstream (WireMock), and pin the contract between two services with **consumer-driven contract tests**.
 - [ ] Separate a write model from a read model (**CQRS**), rebuild state from an append-only log (**event sourcing**), handle projection lag, and say when neither is worth its cost.
 
 If you can do all of those, the module worked.
@@ -46,7 +46,7 @@ If you can do all of those, the module worked.
 - **Module 12 done.** Topic 16 propagates the JWT you learned to issue and validate in module 12 across a service call. You should already know what a bearer token is and how a resource server validates it.
 - **Module 10 helpful.** Each service owns its own data with Spring Data JPA + H2; the saga and outbox topics assume you know what a transaction is.
 - A JDK installed (Java 17+; examples target Java 21).
-- For the messaging topic (07) and the outbox topic (19), a local broker runs via Testcontainers/Docker — that topic's README gives the one-command setup so you never need a hosted broker.
+- No Docker and no broker. Messaging (07) uses an in-memory stand-in broker and the outbox (19) uses H2, so every demo runs with `mvn -q test`. Real brokers are module 16.
 
 ## How this module is organized
 
@@ -88,14 +88,14 @@ Topic 22 returns to distributed data with two advanced patterns: **CQRS** (separ
 17-distributed-tracing-and-correlation    <- one trace id across both services; one request = one trace in the logs
 18-distributed-transactions-and-saga      <- no 2PC; orchestration vs choreography; eventual consistency
 19-idempotency-and-the-outbox-pattern     <- idempotency keys; reliable event publishing; dedup
-20-testing-microservices                  <- stub the downstream with WireMock/Testcontainers; test a service in isolation
+20-testing-microservices                  <- stub the downstream with WireMock; test a service in isolation
 21-contract-testing                       <- consumer-driven contracts so a breaking change fails a test, not production
 22-cqrs-and-event-sourcing                <- separate read/write models; state rebuilt from an event log; projection lag; the costs
 ```
 
 ```text
-COMMON_MISTAKES.md       <- real distributed bugs with code: no timeout, retry storm, shared database, chatty calls, lost trace id, non-idempotent retry
-INTERVIEW_QNA.md         <- interview-grade questions: when NOT to use microservices, CAP, saga vs 2PC, circuit breaker states, at-least-once vs exactly-once
+COMMON_MISTAKES.md       <- real distributed bugs with code: no timeout, retry storm, shared database, chatty calls, lost trace id, non-idempotent retry, stale read model, unversioned event append
+INTERVIEW_QNA.md         <- interview-grade questions: when NOT to use microservices, CAP, saga vs 2PC, circuit breaker states, at-least-once vs exactly-once, CQRS vs event sourcing
 ```
 
 ## The toolkit (what we add to the pom)
@@ -105,19 +105,21 @@ Module 13 stays on the same Spring Boot version as modules 08–12 so projects m
 | Library | Coordinates | What it does | First used in |
 |---------|-------------|--------------|---------------|
 | Spring Boot Starter Parent | `org.springframework.boot:spring-boot-starter-parent:3.5.14` | parent POM; locks versions | every topic |
-| Spring Cloud BOM | `org.springframework.cloud:spring-cloud-dependencies` (release train `2025.0.x`, aligned to Boot 3.5) | locks all Spring Cloud versions | topics using `spring-cloud-*` |
-| Spring Boot Starter Web | `org.springframework.boot:spring-boot-starter-web` | `@RestController`, MVC, embedded Tomcat | every service |
-| Spring Boot Starter Data JPA + H2 | `...data-jpa`, `com.h2database:h2` | each service owns its own database | topic 04 |
+| Spring Cloud BOM | `org.springframework.cloud:spring-cloud-dependencies:2025.0.3` (aligned to Boot 3.5) | locks all Spring Cloud versions | topics using `spring-cloud-*` |
+| Spring Boot Starter Web | `org.springframework.boot:spring-boot-starter-web` | `@RestController`, MVC, embedded Tomcat, `RestClient` | most service demos |
+| Spring Boot Starter Data JPA + H2 | `...data-jpa`, `com.h2database:h2` | each service owns its own database | `order-inventory-system`; H2 alone in topics 04 and 19 |
 | Spring Web `RestClient` / HTTP Interface | built into `spring-web` | the synchronous service-to-service call | topic 05 |
-| Spring Cloud Circuit Breaker (Resilience4j) | `org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j` | timeouts, retries, circuit breaker, bulkhead, rate limiter | topics 09–12 |
-| Spring Cloud Netflix Eureka | `...spring-cloud-starter-netflix-eureka-server` / `-client` | service registry + client-side load balancing | topic 13 |
-| Spring Cloud Gateway | `org.springframework.cloud:spring-cloud-starter-gateway` | API gateway: routing + edge filters | topic 14 |
+| Spring Cloud OpenFeign | `org.springframework.cloud:spring-cloud-starter-openfeign` | the declarative-client alternative to an HTTP interface | topic 05 |
+| Resilience4j | `io.github.resilience4j:resilience4j-retry` / `-circuitbreaker` / `-bulkhead` / `-ratelimiter` | retries, circuit breaker, bulkhead, rate limiter (used directly, so the mechanism is visible) | topics 10–12 |
+| Spring Cloud Netflix Eureka | `...spring-cloud-starter-netflix-eureka-server` / `-client` | service registry | topic 13 |
+| Spring Cloud LoadBalancer | `org.springframework.cloud:spring-cloud-starter-loadbalancer` | client-side load balancing across instances | topic 13 |
+| Spring Cloud Gateway (Server MVC) | `org.springframework.cloud:spring-cloud-starter-gateway-server-webmvc` | API gateway on the servlet stack: routing + edge filters | topic 14 |
 | Spring Cloud Config | `...spring-cloud-config-server` / `spring-cloud-starter-config` | centralized, refreshable configuration | topic 15 |
 | Spring Boot Starter OAuth2 Resource Server | `...spring-boot-starter-oauth2-resource-server` | validate the propagated JWT at the downstream | topic 16 |
-| Micrometer Tracing + Brave/OTel bridge | `io.micrometer:micrometer-tracing-bridge-*` | trace/correlation id propagation across the hop | topic 17 |
-| Spring for Apache Kafka (or RabbitMQ) via Testcontainers | `org.springframework.kafka:spring-kafka`, `org.testcontainers:*` | the async event bus; a real broker for tests | topics 07, 19 |
-| WireMock | `org.wiremock:wiremock-standalone` (or Spring Cloud Contract WireMock) | stub the downstream to test a service in isolation | topic 20 |
-| Spring Cloud Contract | `org.springframework.cloud:spring-cloud-starter-contract-verifier` | consumer-driven contract tests | topic 21 |
+| WireMock | `org.wiremock:wiremock-standalone` | stub the downstream to test a service in isolation | topic 20 |
+| Spring Cloud Contract | `...spring-cloud-starter-contract-verifier` / `-stub-runner` | consumer-driven contract tests | topic 21 |
+
+Several topics need no library at all: messaging (07), API composition (08), the saga (18), and CQRS/event sourcing (22) are plain Java with in-memory stand-ins, so the pattern is the whole lesson. Topic 17 builds correlation-id propagation by hand and explains Micrometer Tracing, which automates it. Real brokers (Kafka, RabbitMQ) are module 16, and Testcontainers is module 14.
 
 Exact versions are pinned by the Boot parent and the Spring Cloud BOM; the first demo's `pom.xml` is the source of truth and is verified to build.
 
@@ -131,7 +133,7 @@ mvn -q test                 # runs the assertion: caller hangs without a timeout
 mvn -q spring-boot:run      # boots the service(s) so you can curl the behavior yourself
 ```
 
-Because a distributed demo needs the downstream running, each topic's README says exactly what to start and in what order (often just one command — the demo boots a stub downstream, or uses Testcontainers to bring a broker up for the test). Every demo prints or logs the thing being demonstrated: the request that hung, the retry that fired, the breaker that opened, the trace id that survived the hop.
+Because a distributed demo needs the downstream running, each topic's README says exactly what to start and in what order (often just one command — the demo boots a stub downstream inside the test). Every demo prints or logs the thing being demonstrated: the request that hung, the retry that fired, the breaker that opened, the trace id that survived the hop.
 
 ## Checkpoint
 
@@ -145,13 +147,14 @@ You're done with this module when you can:
 6. Explain why a retried "reserve stock" call can double-reserve, and how an idempotency key or the outbox pattern prevents it.
 7. Show one request flowing through the gateway to both services and appearing as a single trace id in the logs, and explain how the id and the JWT got there.
 8. Test `order-service` with `inventory-service` completely stubbed, and explain what a consumer-driven contract test catches that the stub does not.
+9. A user deposits money and the "my accounts" page doesn't show it. Explain the CQRS read model that caused it, the fix, and why two simultaneous withdrawals need an expected-version check in an event store.
 
-If those eight feel comfortable, the core-plus-breadth of distributed backend work is in place; modules 14–18 cover what surrounds them: running them in containers (14), caching (15), real message brokers (16), observability (17), and system design at scale (18).
+If those nine feel comfortable, the core-plus-breadth of distributed backend work is in place; modules 14–18 cover what surrounds them: running them in containers (14), caching (15), real message brokers (16), observability (17), and system design at scale (18).
 
 ## A note on what's *not* here
 
 - **No Kubernetes, service mesh, or deployment.** Running and orchestrating these services (containers, k8s, Istio/Linkerd, blue-green/canary) is partly module 14 (containers and Kubernetes basics); service mesh and deployment strategies such as blue-green and canary are outside this roadmap. This module is the *application-level* patterns; how you deploy them is a separate skill.
-- **No Kafka internals.** Topic 07 uses messaging as the async alternative to a sync call and topic 19 uses it for the outbox, but partitions, consumer groups, offsets, delivery semantics, and stream processing are module 16 (Kafka & RabbitMQ). We use just enough of a broker to make the pattern real.
+- **No Kafka internals.** Topic 07 uses an in-memory stand-in broker to teach the async-event pattern, and topic 19's outbox relay publishes from a database table, but partitions, consumer groups, offsets, delivery semantics, and stream processing are module 16 (Kafka & RabbitMQ). Here the pattern is the lesson; module 16 puts it on real brokers.
 - **No distributed caching.** Redis, cache-aside, and cache invalidation across services are module 15. A slow downstream here is fixed with resilience patterns, not a cache.
 - **No metrics dashboards or full observability stack.** Topic 17 covers trace/correlation id *propagation* — the microservices-specific part — but Prometheus/Grafana/alerting and log aggregation infrastructure are module 17.
 - **No reactive / WebFlux.** The roadmap is servlet-stack throughout; reactive service calls (`WebClient` on Reactor, R2DBC) are analogous but out of scope.
