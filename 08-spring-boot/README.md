@@ -121,6 +121,6 @@ If those four feel comfortable, move to module 09, where REST APIs get the depth
 - **No REST depth.** `@RestController` appears in exactly one topic (09) and serves exactly one `GET /hello` plain-string response. `@RequestBody`, JSON binding, `@PathVariable`, request-body validation, `MockMvc` with real JSON assertions, error handling — all module 09.
 - **No persistence.** No `spring-boot-starter-data-jpa`, no `@Entity`, no `JpaRepository`. Module 10.
 - **No security.** No `spring-boot-starter-security`, no auth filters, no method-level security. Module 12.
-- **No `@Async` or scheduling.** `@EnableAsync`, `@Async`, `@Scheduled` are Spring features that work in Boot but each needs careful explanation; they show up later, alongside event-driven systems (module 17).
+- **No `@Async` or scheduling.** `@EnableAsync`, `@Async`, `@Scheduled` are Spring features that work in Boot but each needs careful explanation; they get their own topic, `13-async-and-scheduling` (planned), once Boot's auto-configured task executor is in place.
 - **No Spring Cloud or microservices wiring.** Module 13.
-- **No deployment, container image, or CI.** `mvn package` produces the jar; what you do with that jar lives in module 14 (Docker / DevOps) and beyond.
+- **No deployment, container image, or CI.** `mvn package` produces the jar. Module 14 (containers & Docker) packages that jar into an image and runs it; CI pipelines and cloud deployment are outside this roadmap.

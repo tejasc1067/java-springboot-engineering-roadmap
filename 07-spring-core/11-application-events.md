@@ -115,7 +115,7 @@ public class EmailNotifier {
 }
 ```
 
-`@Async` requires `@EnableAsync` somewhere in your configuration, plus the standard advice about thread pools. Module 08 covers it properly when Spring Boot configures the executor for you. Until then, treat events as synchronous.
+`@Async` requires `@EnableAsync` somewhere in your configuration, plus the standard advice about thread pools. Module 08, topic 13 (async and scheduling) covers it properly, once Spring Boot configures the executor for you. Until then, treat events as synchronous.
 
 ## Conditional listeners
 

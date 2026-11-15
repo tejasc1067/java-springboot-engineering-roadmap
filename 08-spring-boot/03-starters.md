@@ -175,7 +175,7 @@ Whatever third-party library you need, search Maven Central for `spring-boot-sta
 
 ## A custom starter, briefly
 
-Companies often publish their own starters internally to bundle "the libraries every service at this company should have" — observability agents, common security config, an internal logger format. Building one is a topic for module 19 (or later); for now, the recognition is enough: a starter is just a `pom.xml` with `<dependencies>` and zero Java code, optionally paired with an autoconfigure module that ships `@Configuration` classes.
+Companies often publish their own starters internally to bundle "the libraries every service at this company should have" — observability agents, common security config, an internal logger format. Building your own is beyond this roadmap; topic 04 (auto-configuration) shows the mechanism a starter's auto-configuration uses. For now, the recognition is enough: a starter is just a `pom.xml` with `<dependencies>` and zero Java code, optionally paired with an autoconfigure module that ships `@Configuration` classes.
 
 ---
 

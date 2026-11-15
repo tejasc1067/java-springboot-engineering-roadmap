@@ -114,5 +114,5 @@ If those four feel comfortable, move to module 08, where Spring Boot makes most 
 - **No Spring MVC / web layer.** `@Controller` is mentioned as one of the stereotype annotations but no HTTP request handling. Module 09.
 - **No Spring Data / JPA.** `@Repository` is mentioned but does not yet talk to a database here. Module 10.
 - **No `@SpringJUnitConfig` or `spring-test`.** Tests in this module bootstrap an `AnnotationConfigApplicationContext` directly. The Spring test framework arrives with Spring Boot in module 08.
-- **No async or scheduling.** `@Async`, `@Scheduled`, `@EnableAsync` are real Spring Core features but each needs a few paragraphs of careful explanation; they're better introduced alongside Spring Boot's auto-configured task executor.
+- **No async or scheduling.** `@Async`, `@Scheduled`, `@EnableAsync` are real Spring Core features but each needs a few paragraphs of careful explanation; they're introduced in module 08, topic 13, alongside Spring Boot's auto-configured task executor.
 - **No AspectJ load-time weaving.** Topic 10 uses Spring's *proxy-based* AOP only — the kind you'll actually meet in Spring projects. Full AspectJ is a separate (and rarely needed) topic.

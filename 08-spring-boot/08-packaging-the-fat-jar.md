@@ -129,7 +129,7 @@ You unpack a layered jar with:
 java -Djarmode=tools -jar myapp.jar extract --layers
 ```
 
-The resulting directory has `dependencies/`, `spring-boot-loader/`, `snapshot-dependencies/`, and `application/`. Each is a Docker `COPY` target. Module 14 (Docker / DevOps) covers the Dockerfile pattern; for now, knowing the layers exist is enough.
+The resulting directory has `dependencies/`, `spring-boot-loader/`, `snapshot-dependencies/`, and `application/`. Each is a Docker `COPY` target. Module 14 (containers & Docker) writes the Dockerfile that uses them; for now, knowing the layers exist is enough.
 
 ---
 
