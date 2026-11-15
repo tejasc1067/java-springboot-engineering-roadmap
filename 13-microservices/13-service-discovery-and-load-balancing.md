@@ -51,7 +51,7 @@ Round-robin is the default strategy; others exist (random, least-connections, we
 ## Discovery and load balancing vs. the alternatives
 
 - **DNS** can do a form of this (a name resolving to multiple A records), but DNS caching and slow TTLs make it a poor fit for fast-changing instance lists — a dead instance stays in DNS long after it's gone. Discovery registries evict dead instances quickly via heartbeats.
-- **Kubernetes** provides discovery and load balancing natively (a `Service` is a stable name that load-balances across healthy pods), so on k8s you often *don't* run Eureka — the platform does it. Eureka (and Spring Cloud LoadBalancer) is the application-level equivalent for when you're not on such a platform, and it's the one worth understanding because it makes the mechanism explicit. (Kubernetes itself is module 14 / out of scope here.)
+- **Kubernetes** provides discovery and load balancing natively (a `Service` is a stable name that load-balances across healthy pods), so on k8s you often *don't* run Eureka — the platform does it. Eureka (and Spring Cloud LoadBalancer) is the application-level equivalent for when you're not on such a platform, and it's the one worth understanding because it makes the mechanism explicit. (Kubernetes basics — Services, Deployments, probes — are module 14.)
 
 ## When to use it / when not to
 

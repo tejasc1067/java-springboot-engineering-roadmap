@@ -142,13 +142,13 @@ You're done with this module when you can:
 7. Show one request flowing through the gateway to both services and appearing as a single trace id in the logs, and explain how the id and the JWT got there.
 8. Test `order-service` with `inventory-service` completely stubbed, and explain what a consumer-driven contract test catches that the stub does not.
 
-If those eight feel comfortable, the core-plus-breadth of distributed backend work is in place; module 14 (Docker & DevOps) is how you actually run these services somewhere.
+If those eight feel comfortable, the core-plus-breadth of distributed backend work is in place; modules 14–18 cover what surrounds them: running them in containers (14), caching (15), real message brokers (16), observability (17), and system design at scale (18).
 
 ## A note on what's *not* here
 
-- **No Kubernetes, service mesh, or deployment.** Running and orchestrating these services (containers, k8s, Istio/Linkerd, blue-green/canary) is module 14 and beyond. This module is the *application-level* patterns; how you deploy them is a separate skill.
-- **No Kafka internals.** Topic 07 uses messaging as the async alternative to a sync call and topic 19 uses it for the outbox, but partitions, consumer groups, offsets, delivery semantics, and stream processing are module 17 (Kafka & event-driven). We use just enough of a broker to make the pattern real.
-- **No distributed caching.** Redis, cache-aside, and cache invalidation across services are module 18. A slow downstream here is fixed with resilience patterns, not a cache.
-- **No metrics dashboards or full observability stack.** Topic 17 covers trace/correlation id *propagation* — the microservices-specific part — but Prometheus/Grafana/alerting and log aggregation infrastructure are module 19.
+- **No Kubernetes, service mesh, or deployment.** Running and orchestrating these services (containers, k8s, Istio/Linkerd, blue-green/canary) is partly module 14 (containers and Kubernetes basics); service mesh and deployment strategies such as blue-green and canary are outside this roadmap. This module is the *application-level* patterns; how you deploy them is a separate skill.
+- **No Kafka internals.** Topic 07 uses messaging as the async alternative to a sync call and topic 19 uses it for the outbox, but partitions, consumer groups, offsets, delivery semantics, and stream processing are module 16 (Kafka & RabbitMQ). We use just enough of a broker to make the pattern real.
+- **No distributed caching.** Redis, cache-aside, and cache invalidation across services are module 15. A slow downstream here is fixed with resilience patterns, not a cache.
+- **No metrics dashboards or full observability stack.** Topic 17 covers trace/correlation id *propagation* — the microservices-specific part — but Prometheus/Grafana/alerting and log aggregation infrastructure are module 17.
 - **No reactive / WebFlux.** The roadmap is servlet-stack throughout; reactive service calls (`WebClient` on Reactor, R2DBC) are analogous but out of scope.
 - **No building your own service registry, gateway, or config server from scratch.** You *use* Eureka, Spring Cloud Gateway, and Spring Cloud Config; writing your own is not a fundamentals task.

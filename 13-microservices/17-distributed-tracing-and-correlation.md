@@ -53,7 +53,7 @@ A correlation id gets you grepped logs. **Distributed tracing** is the richer ve
 - **Trace id + span id.** A whole request is a **trace** (one id); each unit of work within it (a service handling it, a downstream call) is a **span** (its own id, linked to a parent). So you don't just know *which* request — you know its *structure*: order-service's span, the inventory call span nested inside it, etc. Micrometer puts `[traceId, spanId]` in the MDC for you — no filter to write.
 - **Automatic propagation** via the **W3C `traceparent`** header (or B3), instrumented into `RestClient`/`RestTemplate`/messaging automatically — no interceptor to write.
 - **Timing.** Each span records how long it took, so you can see *where* the latency is across the chain (was it the payment call? the DB?).
-- **Export to a backend.** Spans are sent (sampled) to a tracing system — **Zipkin**, **Jaeger**, or an OpenTelemetry collector — which shows a visual waterfall of the request across all services. That backend is infrastructure (and, like metrics dashboards, belongs to module 19); the *propagation* is the part that's a microservices concern and lives here.
+- **Export to a backend.** Spans are sent (sampled) to a tracing system — **Zipkin**, **Jaeger**, or an OpenTelemetry collector — which shows a visual waterfall of the request across all services. That backend is infrastructure (and, like metrics dashboards, belongs to module 17, observability); the *propagation* is the part that's a microservices concern and lives here.
 - **Sampling.** Tracing every request is expensive at scale, so tracers sample (e.g. 10%). You configure the rate; correlation ids for logging are usually kept on every request even when trace *export* is sampled.
 
 The demo is deliberately the by-hand version so you can see the mechanism; reach for Micrometer Tracing in real services rather than hand-rolling a filter — it's a dependency plus a little config, and it does spans and export too.
@@ -72,7 +72,7 @@ The demo is deliberately the by-hand version so you can see the mechanism; reach
 - **Forgetting async propagation.** The id rides HTTP headers automatically but not message payloads unless you put it there. An event-driven flow (topic 07) needs the id in the message headers or the trace breaks at the broker.
 - **Logging without the id in the pattern.** The id is in the MDC but the log pattern doesn't reference `%X{...}`, so it never appears — you did the work and get none of the benefit.
 - **Sampling confusion.** Sampling reduces exported *traces* (for cost), but you usually still want the correlation id on every log line. Don't let trace sampling drop your log correlation.
-- **Treating tracing as a replacement for good logs/metrics.** Tracing shows the path and timing; you still need meaningful log messages and metrics (module 19). They complement each other.
+- **Treating tracing as a replacement for good logs/metrics.** Tracing shows the path and timing; you still need meaningful log messages and metrics (module 17). They complement each other.
 
 ---
 
@@ -98,4 +98,4 @@ Note how the propagation interceptor is the *same shape* as topic 16's token pro
 
 1. Why is finding one request's log lines hard in a distributed system, and how does a propagated correlation id solve it?
 2. What are the three things the mechanism does (assign, log, propagate), and why is clearing the MDC in a `finally` block essential?
-3. What does distributed tracing (Micrometer Tracing) add on top of a bare correlation id, and which part of it is a microservices concern versus infrastructure that belongs to observability (module 19)?
+3. What does distributed tracing (Micrometer Tracing) add on top of a bare correlation id, and which part of it is a microservices concern versus infrastructure that belongs to observability (module 17)?

@@ -87,7 +87,7 @@ That's the ceiling of isolation testing, and it's exactly the gap **contract tes
 - **Stub the downstream for essentially every test of a service that calls another.** It's the default way to test a microservice: fast, isolated, and it exercises the real client. WireMock (or Spring Cloud Contract's WireMock, or MockWebServer) is the standard tool.
 - **Use a mock (not a stub) for the pure-logic branches** where no HTTP is involved — it's lighter and clearer. Reserve WireMock for the calls that actually cross the wire.
 - **Keep a few real integration/end-to-end tests**, but don't make them your default — they're slow and flaky, so they earn their place only for critical paths and for the wiring a stub can't reach (real serialization against a real service, real DB).
-- **Don't stub your own database.** A stub is for a *remote service* you don't own in this test. Your service's own database is an integration concern — use Testcontainers (topic mentions it, module 14+ goes deeper), not a hand-rolled HTTP stub.
+- **Don't stub your own database.** A stub is for a *remote service* you don't own in this test. Your service's own database is an integration concern — use Testcontainers (topic mentions it, module 14 goes deeper), not a hand-rolled HTTP stub.
 
 ## Common pitfalls
 

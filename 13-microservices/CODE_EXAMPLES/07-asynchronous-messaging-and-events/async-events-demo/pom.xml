@@ -26,7 +26,7 @@
       It demonstrates the SEMANTICS that matter — the publisher doesn't block on the
       consumer, and events buffer while the consumer is down. What a real broker adds
       on top (durability across restarts, cross-process delivery, consumer groups,
-      replay) is covered in the markdown and, in depth, in module 17 (Kafka).
+      replay) is covered in the markdown and, in depth, in module 16 (Kafka, RabbitMQ).
     -->
     <dependencies>
         <dependency>

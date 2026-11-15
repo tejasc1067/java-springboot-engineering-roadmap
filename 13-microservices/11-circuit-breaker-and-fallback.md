@@ -99,7 +99,7 @@ Order matters: a retry should sit *inside* a breaker so that repeated failures (
 - **One shared breaker for all downstreams.** A failure in one dependency trips calls to unrelated healthy ones. One breaker per dependency.
 - **Thresholds tuned by vibes.** Opening on one failure (flaps constantly) or requiring 95% failure (never opens). Set `minimumNumberOfCalls` and a sensible rate over a window.
 - **Wait duration too short.** The breaker re-opens and re-hammers a downstream that hasn't recovered. Give it real time.
-- **Ignoring the open state operationally.** An open breaker is a signal something is down — it should raise an alert (topic 17/module 19), not just silently serve fallbacks forever.
+- **Ignoring the open state operationally.** An open breaker is a signal something is down — it should raise an alert (alerting is module 17), not just silently serve fallbacks forever.
 
 ---
 
