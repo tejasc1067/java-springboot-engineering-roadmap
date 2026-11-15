@@ -197,7 +197,55 @@ GET /actuator/metrics/http.server.requests
 }
 ```
 
-In real deployments you wouldn't read these by hand — a Prometheus, Datadog, or New Relic agent scrapes them. Boot ships `micrometer-core`; add `micrometer-registry-prometheus` to also expose `/actuator/prometheus` in the Prometheus text format. That hook-up is where most observability stacks plug in.
+In real deployments you don't read these by hand — a monitoring system (Prometheus, Datadog, New Relic) pulls them every few seconds. Boot's metrics come from **Micrometer**, a facade like SLF4J but for metrics: you record against Micrometer's API, and a *registry* dependency decides the output format.
+
+### Exposing metrics to Prometheus
+
+Add the Prometheus registry and expose its endpoint:
+
+```xml
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-registry-prometheus</artifactId>
+</dependency>
+```
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+```
+
+`GET /actuator/prometheus` now returns every metric in Prometheus' text format — one line per time series:
+
+```text
+# HELP greetings_sent_total Greetings returned to callers
+# TYPE greetings_sent_total counter
+greetings_sent_total 2.0
+http_server_requests_seconds_count{error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/hello"} 2
+```
+
+The `http_server_requests_*` series are free: Boot times every request and tags it by URI, method, and status. Your own business metrics take three lines:
+
+```java
+public GreetingController(MeterRegistry registry) {
+    this.greetingsSent = Counter.builder("greetings.sent")
+            .description("Greetings returned to callers")
+            .register(registry);
+}
+
+@GetMapping("/hello")
+public String hello() {
+    greetingsSent.increment();
+    return "hello";
+}
+```
+
+Notice the name changed on the way out: Micrometer's `greetings.sent` becomes Prometheus' `greetings_sent_total` (dots → underscores, `_total` added to counters). Dashboards and alerts use the Prometheus name.
+
+Running Prometheus and Grafana, PromQL, gauges vs timers, and which metrics to alert on are module 17. This topic stops at "the app exposes them."
 
 ---
 
@@ -223,6 +271,9 @@ Three rules of thumb:
 - **Forgetting to enable build info and wondering why `/info` is empty.** Add the `build-info` goal to the Spring Boot Maven plugin and rebuild.
 - **A health indicator throwing instead of returning DOWN.** Indicators are called frequently; an unhandled exception bubbles up and breaks `/health` entirely. Catch in the indicator and return `Health.down().withException(e)` so the aggregate stays consistent.
 - **Custom indicators that are too slow.** `/health` is hit every few seconds by the load balancer. An indicator that pings five external services and waits for all of them turns "is this instance up?" into a one-second-latency endpoint. Either cache the result for a few seconds or use a separate health *group* for slow checks.
+- **`/actuator/prometheus` is 404 in your `@SpringBootTest`.** Boot turns metrics export off in tests by default. Add `@AutoConfigureObservability` to the test class.
+- **Searching Prometheus for the Micrometer name.** `greetings.sent` is exported as `greetings_sent_total`. Query the Prometheus name.
+- **Putting unbounded values in tags.** `Counter.builder("orders").tag("userId", id)` creates one time series per user and can exhaust the monitoring system's memory. Tags are for small, fixed sets (status, region, endpoint).
 - **Using `health.show-details: always` in production.** The default is `never`. `when_authorized` is the production-safe middle. `always` reveals the internal component statuses to anyone who can hit the URL.
 
 ---
@@ -233,6 +284,8 @@ Three rules of thumb:
 2. Hit `http://localhost:8080/actuator/health`. Get `{"status":"UP"}`.
 3. Edit `application.yml` to set `show-details: always`. Restart. Re-hit `/actuator/health` — now you see the components.
 4. Add `metrics` to the exposure include list. Restart. Hit `/actuator/metrics`. Pick a meter and drill down: `/actuator/metrics/jvm.memory.used`.
+5. Hit `/hello` a few times, then `/actuator/prometheus`. Find `greetings_sent_total` and the `http_server_requests_seconds_count` line for `uri="/hello"`. Add a `.tag("language", "en")` to the counter and see the label appear.
+6. In `PrometheusEndpointTest`, delete `@AutoConfigureObservability` and run it. Read the 404.
 
 ---
 
@@ -240,7 +293,8 @@ Three rules of thumb:
 
 1. Out of the box, which Actuator endpoints are exposed over HTTP, and what does it take to expose the rest?
 2. You add `spring-boot-starter-data-jpa` and a `DataSource` to your app. `/actuator/health` now reports DOWN even though the app starts. Where is the additional indicator coming from, and how would you investigate the failure?
-3. Why is it dangerous to expose `/actuator/env` on a public-facing port even if you've authenticated the request?
+3. You register `Counter.builder("orders.placed")` and increment it. What name do you search for in Prometheus, and what goes wrong if you add the customer id as a tag?
+4. Why is it dangerous to expose `/actuator/env` on a public-facing port even if you've authenticated the request?
 
 ---
 
@@ -248,14 +302,16 @@ Three rules of thumb:
 
 In reading order:
 
-- `actuator-demo/pom.xml` — adds `spring-boot-starter-actuator` to the standard web + test starters.
+- `actuator-demo/pom.xml` — adds `spring-boot-starter-actuator` and `micrometer-registry-prometheus` to the standard web + test starters.
 - `.../App.java` — `@SpringBootApplication`.
-- `src/main/resources/application.yml` — exposes `health` and `info`; sets `show-details: always` so the test can see the components.
+- `src/main/resources/application.yml` — exposes `health`, `info` and `prometheus`; sets `show-details: always` so the test can see the components.
 - `src/test/java/com/example/HealthEndpointTest.java` — `@SpringBootTest(RANDOM_PORT)` + `TestRestTemplate`; calls `/actuator/health` and asserts `UP`.
+- `.../GreetingController.java` — `/hello` increments a custom Micrometer counter, `greetings.sent`.
+- `src/test/java/com/example/PrometheusEndpointTest.java` — calls `/hello` twice, scrapes `/actuator/prometheus`, asserts `greetings_sent_total 2.0` and the auto-recorded `http_server_requests` series. Needs `@AutoConfigureObservability`.
 
 Run with:
 
 ```bash
-mvn -q test                  # asserts /actuator/health returns 200 + status UP
+mvn -q test                  # asserts /actuator/health is UP and /actuator/prometheus has the custom counter
 mvn -q spring-boot:run       # browse http://localhost:8080/actuator
 ```

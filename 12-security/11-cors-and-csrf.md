@@ -16,7 +16,7 @@ These are the two browser-security features that generate the most copy-pasted, 
 
 ### CORS is enforced by the browser, not your server
 
-Your server just emits `Access-Control-Allow-*` headers; the **browser** decides whether to hand the response to the calling JavaScript. For "non-simple" requests (a JSON `Content-Type`, a custom header, or methods like `PUT`/`DELETE`), the browser first sends a **preflight** `OPTIONS` request asking "may I?", and only proceeds if the answer allows it:
+Your server just emits `Access-Control-Allow-*` headers; the **browser** decides whether to hand the response to the calling JavaScript. For "non-simple" requests (a JSON `Content-Type`, a custom header, or methods like `PUT`/`DELETE`), the browser first sends a **preflight** `OPTIONS` request (module 09, topic 03 shows Spring answering OPTIONS automatically) asking "may I?", and only proceeds if the answer allows it:
 
 ```
 # allowed origin -> browser will let the SPA read the response

@@ -227,6 +227,48 @@ Now `UserService` depends on the abstraction `UserRepository`. The actual implem
 
 ---
 
+## Clean code — SOLID at the line level
+
+SOLID is about how classes relate. Most of the reading you do, though, is inside one method. "Clean code" is the name for the habits that keep a method readable by someone who didn't write it. Four matter most:
+
+1. **Names that say what, not how.** `calc(l, f)` makes the reader open the method. `totalForMember(items)` doesn't.
+2. **No boolean flag arguments.** `calc(items, true)` — true *what*? A flag means the method does two things; split it into two methods so the call site names the choice.
+3. **Named constants, not magic numbers.** `0.15` in the middle of a formula is a rule nobody can find. `MEMBER_DISCOUNT_RATE` is searchable and has one place to change.
+4. **Comments explain why, not what.** A comment restating the code goes stale the first time someone edits the code but not the comment — and then it lies.
+
+The before version, which compiles and runs:
+
+```java
+// calc total w/ 10% discount
+static double calc(List<double[]> l, boolean f) {
+    double t = 0;
+    for (double[] x : l) t += x[0] * x[1];
+    if (f) t = t - t * 0.15;
+    if (t > 100) t = t - 5;
+    return t;
+}
+
+boolean isGuest = true;
+double guestTotal = calc(items, isGuest);   // 89.25 — the guest got the member discount
+```
+
+Two bugs, neither visible from the call site: the caller guessed the flag meant "is guest" (it means "apply member discount"), and the comment says 10% while the code says 15%. The after version, with the same rules:
+
+```java
+static final double MEMBER_DISCOUNT_RATE = 0.10;
+
+static double totalForGuest(List<LineItem> items)  { ... }
+static double totalForMember(List<LineItem> items) { ... }
+
+double guestTotal = totalForGuest(items);   // 100.0
+```
+
+There is nothing to guess and no comment to go stale. Note what *wasn't* added: no interface, no strategy class, no builder. Clean code is mostly renaming and splitting, not more structure.
+
+**Other habits worth having:** methods short enough to fit on one screen; one level of abstraction per method (don't mix "charge the card" with string parsing); return early instead of nesting `if`s three deep; delete dead code instead of commenting it out — git remembers it.
+
+---
+
 ## SOLID in one paragraph
 
 Each class should do one thing (S), be extensible without modification (O), behave consistently when substituted for its parent (L), expose only the methods clients actually need (I), and depend on abstractions rather than concrete implementations (D).
@@ -252,6 +294,7 @@ SOLID is a tool, not a religion. Apply each principle when the cost is low and t
 - **Splitting too eagerly.** A class that does two related things (`UserCreator.create()` and `UserUpdater.update()`) often is fine as one `UserService`. SRP is about reasons-to-change, not literal method counts.
 - **Inheritance + LSP violations.** The most common LSP bug: subclasses that override to throw `UnsupportedOperationException` ("this operation makes no sense for me"). If a subclass refuses to honor the parent's contract, the inheritance is wrong.
 - **DIP without DI.** Declaring interfaces is half the battle. Actually receiving them through constructors (rather than `new`-ing implementations inside) is the other half.
+- **Boolean flag arguments.** `send(msg, true, false)` is unreadable at the call site and easy to call wrong. Split into named methods, or pass an enum.
 - **Treating SOLID as a goal.** The goal is *code that's easy to change safely*. SOLID is one way to get there.
 
 ---
@@ -263,6 +306,8 @@ SOLID is a tool, not a religion. Apply each principle when the cost is low and t
 3. `LiskovViolation_SquareRectangle.java` — the classic LSP failure.
 4. `InterfaceSegregation.java` — fat interface vs. split interfaces.
 5. `DependencyInversion.java` — the Spring pattern of service depending on a repository interface.
+6. `CleanCodeBefore.java` — a flag argument, one-letter names, and a stale comment hide two pricing bugs.
+7. `CleanCodeAfter.java` — the same rules with named methods, a record, and named constants; asserts the correct totals.
 
 ---
 
@@ -271,6 +316,7 @@ SOLID is a tool, not a religion. Apply each principle when the cost is low and t
 1. In `SingleResponsibilityViolation.java`, add a logging requirement. Notice how many places you'd touch in the violating version vs. the fixed version.
 2. In `OpenClosedExample.java`, add a new payment method (`ApplePayPayment`). Confirm the processor doesn't change.
 3. In `DependencyInversion.java`, swap the database-backed repository for the in-memory one in a test. The service class isn't touched.
+4. Run `CleanCodeBefore.java`, then rename `calc`, `l`, `f`, `t` and `x` to what they mean — change nothing else. Count how many of the two bugs become obvious just from the renaming.
 
 ---
 
@@ -279,3 +325,4 @@ SOLID is a tool, not a religion. Apply each principle when the cost is low and t
 1. State each of S, O, L, I, D in one sentence.
 2. Your `OrderService` class has methods `createOrder`, `sendConfirmationEmail`, `generatePdfInvoice`, `chargeCard`. Which SOLID principle is being violated and why?
 3. "Depend on abstractions, not implementations" is the D in SOLID. Give a 3-line example showing the contrast.
+4. A method is called as `export(report, true, false)`. Name two problems with that call, and rewrite the signature so the call site can't be misread.

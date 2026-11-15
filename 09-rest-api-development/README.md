@@ -58,8 +58,8 @@ Topic 14 is API versioning — URI versus header versus media-type — and which
 
 ```text
 01-what-rest-is                            <- REST principles, resources, verbs, idempotency
-02-restcontroller-and-requestmapping       <- @RestController vs @Controller + @ResponseBody
-03-http-verbs-in-spring                    <- @GetMapping/@PostMapping/@PutMapping/@DeleteMapping/@PatchMapping
+02-restcontroller-and-requestmapping       <- @RestController vs @Controller + @ResponseBody; servlets, filters, DispatcherServlet request flow
+03-http-verbs-in-spring                    <- @GetMapping/@PostMapping/@PutMapping/@DeleteMapping/@PatchMapping; free OPTIONS/HEAD, blocked TRACE
 04-path-variables                          <- @PathVariable with type conversion and regex
 05-query-parameters                        <- @RequestParam required/optional/default/collections
 06-request-body-and-jackson                <- @RequestBody, JSON binding, records as DTOs

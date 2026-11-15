@@ -1,6 +1,8 @@
 package com.example.asyncevents;
 
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -16,11 +18,12 @@ import java.util.function.Consumer;
  *
  * What a real broker adds beyond this toy: the queue survives process restarts
  * (durability), works across separate machines, fans out to multiple independent
- * consumer groups, and lets consumers replay history. Those are module 17.
+ * consumer groups, and lets consumers replay history. Those are module 16.
  */
 public class MessageBroker<T> {
 
     private final BlockingQueue<T> queue = new LinkedBlockingQueue<>();
+    private final List<T> deadLetters = new CopyOnWriteArrayList<>();
     private volatile boolean running = false;
     private Thread consumerThread;
 
@@ -34,9 +37,39 @@ public class MessageBroker<T> {
         return queue.size();
     }
 
+    /** Messages that failed every attempt and were parked instead of blocking the queue. */
+    public List<T> deadLetters() {
+        return deadLetters;
+    }
+
+    public boolean consumerAlive() {
+        return consumerThread != null && consumerThread.isAlive();
+    }
+
     /** Start a background consumer that applies {@code handler} to each message, as a
-        separate consumer service would. Messages already queued are drained first. */
+        separate consumer service would. Messages already queued are drained first.
+        No error handling: an exception from the handler kills the consumer thread. */
     public void startConsumer(Consumer<T> handler) {
+        startLoop(handler);
+    }
+
+    /** Like {@link #startConsumer}, but a message that fails {@code maxAttempts} times
+        is moved to the dead-letter list and the consumer moves on to the next one. */
+    public void startConsumerWithDeadLetter(Consumer<T> handler, int maxAttempts) {
+        startLoop(message -> {
+            for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+                try {
+                    handler.accept(message);
+                    return;
+                } catch (RuntimeException e) {
+                    // a real consumer would back off between attempts (topic 10)
+                }
+            }
+            deadLetters.add(message);
+        });
+    }
+
+    private void startLoop(Consumer<T> handler) {
         running = true;
         consumerThread = new Thread(() -> {
             while (running) {

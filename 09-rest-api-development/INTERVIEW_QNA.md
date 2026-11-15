@@ -31,6 +31,8 @@ REST predates JSON. The protocol is content-type-agnostic; JSON is just the domi
 | PUT    | no  | yes |
 | PATCH  | no  | not required |
 | DELETE | no  | yes |
+| HEAD   | yes | yes |
+| OPTIONS| yes | yes |
 
 Why it matters: **idempotent operations are safe to retry** on network failure. After a timeout, the client doesn't know if the request succeeded — for an idempotent verb, retrying is the right call; for a non-idempotent one (POST), retrying might create a duplicate resource. APIs that need retry-safe POST add idempotency keys (a unique client-supplied id the server uses to deduplicate).
 
@@ -281,3 +283,27 @@ This is the most-confused status code pair. Remember:
 - 403 = "I know who you are. You can't have this."
 
 Module 12 covers the security side of how Spring decides which one to return.
+
+---
+
+## 21. Your API has no OPTIONS or HEAD handlers. What happens when a client sends them — and what about TRACE?
+
+Spring MVC answers both without any code from you:
+
+- **OPTIONS** returns `200` with an `Allow` header built from every mapping on that path (`GET,HEAD,PUT,PATCH,DELETE,OPTIONS` for `/api/books/{id}`). Browsers rely on this for CORS preflight before a cross-origin `PUT`/`DELETE`; your CORS config adds the `Access-Control-Allow-*` headers on top.
+- **HEAD** runs your `@GetMapping` method in full and throws the body away. Same status, same headers, no body. So a GET that does a full table scan makes every HEAD health check do the same scan.
+- **TRACE** never reaches Spring. Embedded Tomcat's connector has `allowTrace=false` and returns `405`. TRACE echoes request headers back, so if it were on, a script could read `Cookie`/`Authorization` values that `HttpOnly` hides (Cross-Site Tracing).
+
+A testing gotcha follows from the last point: `MockMvc` bypasses Tomcat, so it cannot verify TRACE is blocked. Use `@SpringBootTest(webEnvironment = RANDOM_PORT)` and a real HTTP client.
+
+---
+
+## 22. Walk a request from the socket to your `@GetMapping` method. Where do filters sit, and why does it matter?
+
+Tomcat accepts the connection and parses the bytes into an `HttpServletRequest`. The request then passes through the **filter chain** — CORS, logging, and all of Spring Security live here — and only then reaches a **servlet**. In Spring Boot that servlet is almost always the `DispatcherServlet`, mapped at `/`. Inside it: a `HandlerMapping` picks the controller method by verb + path (404 / 405 if none), argument resolvers build `@PathVariable` / `@RequestBody` parameters, your method runs, and an `HttpMessageConverter` (Jackson) writes the return value.
+
+Why it matters in practice:
+
+- **Exceptions thrown in a filter never reach `@RestControllerAdvice`.** The advice is part of the `DispatcherServlet`; filters run outside it. A JWT filter that throws produces Boot's default `/error` response, not your error contract — which is why Spring Security has its own `AuthenticationEntryPoint` / `AccessDeniedHandler`.
+- **Security decisions happen before your controller exists for that request.** A 401 from a filter means `HandlerMapping` never ran.
+- **`MockMvc` starts at the `DispatcherServlet`** (with filters added if you ask), and never touches Tomcat — so Tomcat-level behaviour such as rejecting `TRACE` cannot be tested with it.

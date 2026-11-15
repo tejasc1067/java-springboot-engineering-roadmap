@@ -86,6 +86,34 @@ StockResponse stock = RestClient.create()
 
 Both hit the same endpoint. The interface version scales better as the number of remote endpoints grows (one interface method per endpoint, testable, mockable); the inline version is fine for a single call.
 
+### Recognizing `@FeignClient` in existing code
+
+Most microservice codebases written before 2023 use Spring Cloud OpenFeign. It looks almost the same as the HTTP interface:
+
+```java
+@FeignClient(name = "inventory", url = "${inventory.base-url}")
+public interface FeignInventoryClient {
+    @GetMapping("/api/inventory/{sku}")
+    StockResponse getStock(@PathVariable("sku") String sku);
+}
+```
+
+Plus `@EnableFeignClients` on the application class and the `spring-cloud-starter-openfeign` dependency (managed by the Spring Cloud BOM). No `HttpServiceProxyFactory` bean — Feign builds the proxy for you.
+
+The happy path is identical. The differences that bite when you read, write, or migrate Feign code:
+
+| | `@HttpExchange` + `RestClient` | `@FeignClient` |
+|---|---|---|
+| Method annotations | `@GetExchange`, `@PostExchange` (client-only) | `@GetMapping`, `@PostMapping` — the *server* annotations, reused |
+| 404 from downstream | `HttpClientErrorException.NotFound` | `FeignException.NotFound` — not a subclass of the other |
+| Timeout config | on the `RestClient`'s request factory (topic 09) | `spring.cloud.openfeign.client.config.<name>.read-timeout`; default read timeout is **60 s** |
+| Timeout failure | `ResourceAccessException` | `feign.RetryableException` |
+| Dependency | Spring Framework itself | Spring Cloud, feature-frozen |
+
+The exception row is the one that causes incidents. A `catch (HttpClientErrorException.NotFound e)` copied from `RestClient` code compiles fine around a Feign call — and never fires. The 404 escapes as a 500. `FeignClientTest` in the demo proves it.
+
+Use the HTTP interface for new code. When you inherit Feign, keep it — but check every `catch` block and set the timeouts explicitly.
+
 ## Handling the non-happy path
 
 A synchronous call has response codes, and they mean different things:
@@ -123,6 +151,7 @@ The honest trade-off: synchronous calls are simple and give you a fresh, immedia
 - **Creating a new client per request.** `RestClient.create()` inside a controller method on every call spins up connection infrastructure each time and defeats connection pooling (fallacy 7). Build the client/interface **once** as a bean (as the scaffold does) and inject it.
 - **Synchronous calls in a loop (the distributed N+1).** `for (item : items) inventory.getStock(item.sku())` is N sequential network round-trips. Add a batch endpoint (`getStock(List<String> skus)`) and make one call. (Fallacy 2.)
 - **Only handling 2xx.** Not catching 4xx/5xx/timeout means any downstream hiccup becomes an unhandled 500 for your user. Have a plan for all four outcomes above.
+- **Swapping `RestClient` for `@FeignClient` (or back) without rewriting the `catch` blocks.** Each client throws its own exception types; old catches compile and silently stop matching. Grep every call site when you migrate.
 - **Chaining calls deep (A→B→C→D).** Each hop adds latency and a failure point, all on one request's critical path. If you find deep chains, reconsider the boundaries (topic 03) or switch to events (topic 07).
 
 ---
@@ -136,12 +165,14 @@ Two demos: a focused one that isolates the call, and the full two-service scaffo
 1. `synchronous-call-demo/src/main/java/com/example/synccall/InventoryClient.java` — the declarative HTTP interface: the whole remote API as one Java interface.
 2. `synchronous-call-demo/src/main/java/com/example/synccall/InventoryClients.java` — building it two ways: the interface via `HttpServiceProxyFactory` + `RestClient`, and the plain inline `RestClient`.
 3. `synchronous-call-demo/src/test/java/com/example/synccall/SynchronousCallTest.java` — drives both against a stub inventory and shows the 404 → `HttpClientErrorException.NotFound` outcome. (`Tests run: 3` green.)
+4. `synchronous-call-demo/src/main/java/com/example/synccall/FeignInventoryClient.java` + `FeignDemoApp.java` — the same client as a `@FeignClient`, enabled with `@EnableFeignClients`.
+5. `synchronous-call-demo/src/test/java/com/example/synccall/FeignClientTest.java` — same stub: happy path matches, but the 404 is a `FeignException.NotFound` (not `HttpClientErrorException`), and the read timeout comes from Feign's own config. (`Tests run: 3` green.)
 
 **Full end-to-end** — the `order-inventory-system` scaffold, where two real services talk over the network:
 
-4. `order-inventory-system/order-service/src/main/java/com/example/order/InventoryClientConfig.java` — the same wiring as a `@Configuration`/`@Bean`, with the base URL externalized.
-5. `order-inventory-system/order-service/src/main/java/com/example/order/OrderController.java` — calling it in a real flow, and handling the 404 case.
-6. `order-inventory-system/README.md` — run both services and watch the call happen (`201 CONFIRMED` when stock is enough, `409 REJECTED` when it isn't).
+6. `order-inventory-system/order-service/src/main/java/com/example/order/InventoryClientConfig.java` — the same wiring as a `@Configuration`/`@Bean`, with the base URL externalized.
+7. `order-inventory-system/order-service/src/main/java/com/example/order/OrderController.java` — calling it in a real flow, and handling the 404 case.
+8. `order-inventory-system/README.md` — run both services and watch the call happen (`201 CONFIRMED` when stock is enough, `409 REJECTED` when it isn't).
 
 Run the end-to-end version: start `inventory-service` (:8081), then `order-service` (:8080), then:
 
@@ -160,4 +191,5 @@ curl -s -i -X POST localhost:8080/api/orders -H 'Content-Type: application/json'
 
 1. When `order-service` makes a synchronous call to `inventory-service`, what is the order-service thread doing while it waits, and why does that make a *slow* downstream dangerous even when it eventually responds?
 2. Name the four possible outcomes of a synchronous call and what your code should do for each. Which one has no HTTP status code?
-3. Why does the scaffold externalize `inventory.base-url` as a property instead of hardcoding `http://localhost:8081` in the client? What later topic depends on that choice?
+3. You inherit a service using `@FeignClient` and wrap a call in `catch (HttpClientErrorException.NotFound e)`. The downstream returns 404. What does your caller see, and why?
+4. Why does the scaffold externalize `inventory.base-url` as a property instead of hardcoding `http://localhost:8081` in the client? What later topic depends on that choice?

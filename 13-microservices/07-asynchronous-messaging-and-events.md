@@ -2,7 +2,7 @@
 
 A synchronous call (topic 05) couples two services in time: order-service can only get its answer if inventory-service is up *at that instant*, and it blocks a thread waiting. The alternative is **asynchronous messaging** — order-service publishes a message ("an order was placed") to a broker and moves on; other services consume it whenever they're ready. This trades the immediate answer for decoupling: the consumer can be slow, or down, or not exist yet, and the publisher doesn't care. This topic is when that trade is worth making, and the semantics you take on when you make it.
 
-Kafka's internals (partitions, offsets, consumer groups) are module 17. Here we focus on the *pattern* — why you'd choose events over calls, and what "at-least-once" and "eventually consistent" cost you.
+Kafka's internals (partitions, offsets, consumer groups) are module 16. Here we focus on the *pattern* — why you'd choose events over calls, and what "at-least-once" and "eventually consistent" cost you.
 
 ---
 
@@ -77,6 +77,34 @@ Async isn't free — it moves complexity from "handling failure now" to "handlin
 - **Ordering is limited.** Messages aren't globally ordered; at best they're ordered within a partition/key. Don't assume event B (published after A) is processed after A unless you've arranged for it.
 - **Events have contracts too.** An event's schema is an API (topic 06) — adding fields is safe for tolerant consumers, renaming/removing is breaking. Version events the same way you version endpoints.
 
+## Poison messages and dead letters
+
+A **poison message** is one the consumer can never process: a malformed payload, a SKU that doesn't exist, a bug triggered by one specific value. Retrying won't help — it fails the same way every time. With no plan for it, there are two bad outcomes:
+
+1. **The consumer dies.** The handler throws, nothing catches it, the consumer stops. Every good message queued behind the poison one waits forever. The demo's `startConsumer` does exactly this:
+   ```java
+   broker.publish(order1);  broker.publish(poison);  broker.publish(order3);
+   broker.startConsumer(handler);          // handler throws on the poison message
+   // processed == 1, backlog == 1 — order3 is stuck, and nobody was told
+   ```
+2. **The consumer retries forever.** The message goes back to the head of the queue and fails again, in a tight loop. Same result — nothing behind it moves — plus a CPU spike and a flood of identical error logs.
+
+The fix is **bounded retries, then a dead-letter queue (DLQ)**:
+
+```java
+broker.startConsumerWithDeadLetter(handler, 3);
+// poison message: tried 3 times, then moved to broker.deadLetters()
+// order1 and order3: processed normally; the consumer is still alive
+```
+
+A DLQ is just another queue (Kafka: a dead-letter *topic*; RabbitMQ: a dead-letter *exchange*) where failed messages are parked with the error that killed them. Then:
+
+- **Alert on it.** A message in the DLQ is a bug or bad data. If nobody watches the DLQ, it's a silent data-loss bin.
+- **Fix, then replay.** After fixing the consumer bug, move the messages back to the main queue. This is safe only if the consumer is idempotent (topic 19) — some of those messages may have partly succeeded.
+- **Retry only what can succeed.** A timeout calling the email provider is transient — retry with backoff (topic 10). A JSON parse error is permanent — send it straight to the DLQ.
+
+Module 16 does this with real brokers: Spring Kafka's `DefaultErrorHandler` + `DeadLetterPublishingRecoverer`, and RabbitMQ dead-letter exchanges.
+
 ## When to use it / when not to
 
 **Use async messaging when:**
@@ -98,6 +126,7 @@ Most real systems are a mix: synchronous for the authoritative decision on the c
 - **Publishing after the transaction, non-atomically.** order-service commits the order to its DB, then crashes before publishing `OrderPlaced` → the order exists but no one is notified (a lost event). The fix is the transactional outbox (topic 19), not "publish and hope."
 - **Using async where you needed an answer.** Firing an event to "check stock" and then confirming the order anyway is a correctness bug — that check must be synchronous.
 - **Treating eventual consistency as instant.** Reading your own write immediately after an event and expecting the consumer to have processed it. It hasn't yet. Design the UX for the lag.
+- **No dead-letter queue.** One malformed message kills the consumer or loops forever, and every good message behind it stops. Bound the retries and park failures in a DLQ that someone is alerted on.
 - **Unversioned event schemas.** Renaming a field in `OrderPlaced` silently breaks every consumer (topic 06 applies to events verbatim — it's the silent-break demo, over a broker).
 
 ---
@@ -108,18 +137,19 @@ Runnable demo — `07-asynchronous-messaging-and-events/async-events-demo/`. Rea
 
 1. `async-events-demo/src/main/java/com/example/asyncevents/OrderPlacedEvent.java` — an event (past-tense fact) vs a command.
 2. `async-events-demo/src/main/java/com/example/asyncevents/MessageBroker.java` — the in-memory stand-in broker: `publish()` returns immediately; messages buffer until a consumer runs.
-3. `async-events-demo/src/test/java/com/example/asyncevents/AsyncEventsTest.java` — the three behaviours: buffer-while-down, publish-doesn't-block, sync-fails-vs-async-buffers.
+3. `async-events-demo/src/test/java/com/example/asyncevents/AsyncEventsTest.java` — buffer-while-down, publish-doesn't-block, sync-fails-vs-async-buffers; then a poison message killing a consumer with no error handling, and bounded retries + dead-letter keeping the queue moving.
 
-The in-memory broker is deliberately minimal; module 17 (Kafka) is the real thing with durability, consumer groups, and replay.
+The in-memory broker is deliberately minimal; module 16 (Kafka, RabbitMQ) is the real thing with durability, consumer groups, and replay.
 
 ## Try this yourself
 
-1. In `AsyncEventsTest`, add a *second* consumer subscribing to the same events (start two consumers before publishing). With the in-memory queue, each message goes to only one consumer — note that. A real broker's *consumer groups* and *topics* are what give you true fan-out (every service gets every event); reasoning about why the toy can't do that is the lesson (module 17).
-2. Make the consumer throw on the 3rd event, then keep running. Does the event get lost, retried, or block the others? Decide what *you'd want* to happen (dead-letter? retry? skip?) — those are the real delivery-semantics questions a broker forces you to answer.
+1. In `AsyncEventsTest`, add a *second* consumer subscribing to the same events (start two consumers before publishing). With the in-memory queue, each message goes to only one consumer — note that. A real broker's *consumer groups* and *topics* are what give you true fan-out (every service gets every event); reasoning about why the toy can't do that is the lesson (module 16).
+2. In `retriesThenDeadLetterKeepsTheQueueMoving`, make the poison message fail only on its first attempt (a transient error). Confirm it is processed and the DLQ stays empty. Then change `maxAttempts` to 1 and see the same transient failure land in the DLQ — that is the cost of retrying too little.
 3. Sketch (no code) how you'd convert the scaffold's synchronous stock check into an event-driven local read model in order-service: what event would inventory publish, what would order-service store, and what's the consistency window you just introduced?
 
 ## Self-check
 
 1. Give two properties an asynchronous event has that a synchronous call does not, and name one property a synchronous call has that you *lose* by going async.
-2. Why must every message consumer be idempotent? What delivery guarantee makes this non-negotiable, and which later topic builds the mechanism?
-3. In the order/inventory system, which interaction should stay synchronous and which should become events — and what's the consistency trade-off of moving the stock lookup to an event-fed local read model?
+2. A consumer has no error handling and receives one malformed message. What happens to the messages queued behind it? What two things does a dead-letter setup add, and why is replaying from a DLQ only safe with an idempotent consumer?
+3. Why must every message consumer be idempotent? What delivery guarantee makes this non-negotiable, and which later topic builds the mechanism?
+4. In the order/inventory system, which interaction should stay synchronous and which should become events — and what's the consistency trade-off of moving the stock lookup to an event-fed local read model?

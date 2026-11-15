@@ -63,9 +63,9 @@ Topic 12 turns on Actuator so the operations team has health and metrics endpoin
 07-profiles                                 <- application-{profile}.yml; spring.profiles.active
 08-packaging-the-fat-jar                    <- spring-boot-maven-plugin; java -jar; spring-boot:run
 09-embedded-tomcat                          <- port/context-path; GET /hello (REST depth = module 09)
-10-logging                                  <- Logback defaults; logging.level.*; profile-specific
+10-logging                                  <- Logback defaults; logging.level.*; profile-specific; switching to Log4j2
 11-testing-with-spring-test                 <- @SpringBootTest; slice tests; @MockitoBean
-12-actuator                                 <- /health, /info, /metrics; exposure config
+12-actuator                                 <- /health, /info, /metrics, /prometheus; custom Micrometer counter; exposure config
 ```
 
 ```text

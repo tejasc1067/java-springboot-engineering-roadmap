@@ -15,6 +15,7 @@ curl -i http://localhost:8080/api/books        # @RestController, returns JSON
 curl -i http://localhost:8080/api/books/1
 curl -i http://localhost:8080/legacy/books     # @Controller + @ResponseBody, returns JSON
 curl -i http://localhost:8080/broken/books     # @Controller alone, fails (500)
+curl -i http://localhost:8080/raw/books/1      # plain HttpServlet, same JSON written by hand
 ```
 
 The first two return `200 OK` with `Content-Type: application/json` and a JSON body.
@@ -26,5 +27,7 @@ The fourth (`/broken/books`) returns `500` (or a Whitelabel page) because Spring
 ```bash
 mvn -q test
 ```
+
+`ServletFlowTest` starts real Tomcat and shows the request path: a filter (`RequestPathFilter`) runs before both the raw servlet (`RawBookServlet` at `/raw/books/*`) and the `DispatcherServlet` (`/`), and the raw servlet returns the same JSON the controller does — only because it was coded by hand.
 
 `BookControllerTest` uses MockMvc to assert the three controllers' behaviours without starting Tomcat. MockMvc gets a proper introduction in topic 11; treat the assertions as readable English for now.

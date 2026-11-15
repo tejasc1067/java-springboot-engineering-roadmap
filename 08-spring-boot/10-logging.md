@@ -199,6 +199,42 @@ The filename is `logback-spring.xml` (not `logback.xml`) so Boot's profile-aware
 
 This is the escape hatch. 95% of projects don't need it; the property-based config covers them.
 
+## Switching to Log4j2
+
+Your code only ever talks to SLF4J (`LoggerFactory.getLogger(...)`), so swapping Logback for Log4j2 is a pom change, not a code change. Teams do it for Log4j2's async loggers (higher throughput under heavy logging) or because a company standard requires it.
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter</artifactId>   <!-- or -web, whichever you use -->
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>   <!-- removes Logback -->
+        </exclusion>
+    </exclusions>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-log4j2</artifactId>
+</dependency>
+```
+
+`logging.level.*` properties keep working. Custom config moves from `logback-spring.xml` to `log4j2-spring.xml`.
+
+**Forget the exclusion and nothing fails.** SLF4J finds two providers, prints this at startup, and carries on with Logback:
+
+```text
+SLF4J(W): Class path contains multiple SLF4J providers.
+SLF4J(W): Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@...]
+SLF4J(W): Found provider [org.apache.logging.slf4j.SLF4JServiceProvider@...]
+SLF4J(I): Actual provider is of type [ch.qos.logback.classic.spi.LogbackServiceProvider@...]
+```
+
+Your `log4j2-spring.xml` is then silently ignored. Read those warnings, or assert the binding in a test as `log4j2-demo` does.
+
+**Log4j 1.x is different.** It reached end of life in 2015 and has unfixed security vulnerabilities. If a dependency still pulls in `log4j:log4j`, exclude it and add the `log4j-1.2-api` bridge. (Log4Shell, CVE-2021-44228, was in Log4j2 `2.0-beta9` through `2.14.1`, fully fixed in `2.17.1`. Boot's managed versions are long past it — another reason not to pin logging versions yourself.)
+
 ---
 
 ## Common pitfalls
@@ -206,7 +242,7 @@ This is the escape hatch. 95% of projects don't need it; the property-based conf
 - **Using `System.out.println` instead of a logger.** No level, no formatting, no destination control. Always use the logger — even quick debugging that "you'll remove later."
 - **String concatenation inside a debug call.** `log.debug("hello " + expensiveCall())` runs `expensiveCall()` even when DEBUG is off. Use `log.debug("hello {}", expensiveCall())` so it's evaluated lazily. (Better: guard with `if (log.isDebugEnabled())` when the argument is very expensive.)
 - **Creating a logger per instance.** `Logger log = LoggerFactory.getLogger(...)` should be `static final`. One per class. Putting it in a non-static field creates a new logger per object — costs memory and the loggers are interchangeable anyway.
-- **Configuring two implementations.** Adding `log4j-core` *and* leaving Logback in place means SLF4J binds to whichever loads first, which is non-deterministic. Pick one. Boot's default is Logback.
+- **Configuring two implementations.** Adding `spring-boot-starter-log4j2` without excluding `spring-boot-starter-logging` leaves both on the classpath. SLF4J prints a "multiple SLF4J providers" warning and keeps Logback, so your Log4j2 config does nothing. Exclude one.
 - **`logback.xml` instead of `logback-spring.xml`.** Both files work, but `logback.xml` is loaded before Spring is initialized — `<springProfile>` and `<springProperty>` tags don't work. Use `logback-spring.xml` when you need profile-aware logging config.
 - **Logging sensitive data.** Stack traces are fine; request bodies, passwords, and tokens are not. Set log levels for security-sensitive packages explicitly to suppress accidental detail.
 
@@ -218,6 +254,7 @@ This is the escape hatch. 95% of projects don't need it; the property-based conf
 2. Run `mvn -q spring-boot:run`. Read the printed line from `LoggingService`. Only INFO and above show.
 3. Run `mvn -q spring-boot:run -Dspring-boot.run.arguments=--logging.level.com.example=DEBUG`. Watch the DEBUG line appear.
 4. Add `logging.file.name: logs/demo.log` to `application.yml` and run again. The console still logs *and* a file appears at `logs/demo.log`.
+5. In `log4j2-demo/pom.xml`, delete the `<exclusions>` block and run `mvn test`. Read the `SLF4J(W)` lines and see `slf4jIsNowBackedByLog4j2` fail: Logback won.
 
 ---
 
@@ -225,7 +262,8 @@ This is the escape hatch. 95% of projects don't need it; the property-based conf
 
 1. Why is `log.debug("user {} signed in", user)` better than `log.debug("user " + user + " signed in")` even when DEBUG is enabled — and what additional cost the second form pays when DEBUG is disabled?
 2. You want DEBUG in dev and WARN in prod, both for `com.acme.payments`. What's the cleanest way to do this without writing any XML?
-3. You have a `logback.xml` in `src/main/resources/` and your `<springProfile>` tags don't apply. What's the one-word fix to the filename, and why?
+3. You add `spring-boot-starter-log4j2` and a `log4j2-spring.xml`, but your Log4j2 pattern never shows up. Nothing failed at startup. What did you forget, and which startup line would have told you?
+4. You have a `logback.xml` in `src/main/resources/` and your `<springProfile>` tags don't apply. What's the one-word fix to the filename, and why?
 
 ---
 
@@ -239,6 +277,8 @@ In reading order:
 - `src/main/resources/application.yml` — sets the application name; leaves levels at default.
 - `src/test/java/com/example/DefaultLevelTest.java` — `OutputCaptureExtension` asserts INFO appears, DEBUG does not (the default level).
 - `.../DebugLevelTest.java` — `@TestPropertySource` raises `com.example` to DEBUG; asserts both appear.
+- `log4j2-demo/pom.xml` — the same app with Logback excluded and `spring-boot-starter-log4j2` added. `LoggingService` is unchanged.
+- `log4j2-demo/.../Log4j2SwitchTest.java` — asserts SLF4J is now bound to Log4j2 and the same INFO/DEBUG behaviour holds.
 
 Run with:
 

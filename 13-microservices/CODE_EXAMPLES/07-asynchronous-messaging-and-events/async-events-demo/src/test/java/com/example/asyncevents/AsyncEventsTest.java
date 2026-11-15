@@ -94,4 +94,58 @@ class AsyncEventsTest {
         broker.publish(new OrderPlacedEvent(1L, "SKU-BOOK", 1));
         assertThat(broker.backlog()).isEqualTo(1);
     }
+
+    @Test
+    void aPoisonMessageWithNoErrorHandlingKillsTheConsumer() throws InterruptedException {
+        MessageBroker<OrderPlacedEvent> broker = new MessageBroker<>();
+        AtomicInteger processed = new AtomicInteger();
+        broker.publish(new OrderPlacedEvent(1L, "SKU-BOOK", 1));
+        broker.publish(new OrderPlacedEvent(2L, "SKU-POISON", 1)); // a message the consumer can never handle
+        broker.publish(new OrderPlacedEvent(3L, "SKU-PEN", 1));
+
+        broker.startConsumer(e -> {
+            if (e.sku().equals("SKU-POISON")) {
+                throw new IllegalArgumentException("cannot parse " + e.sku());
+            }
+            processed.incrementAndGet();
+        });
+        waitUntilDead(broker);
+
+        // One bad message, and a perfectly good one behind it is stuck forever.
+        assertThat(processed.get()).isEqualTo(1);
+        assertThat(broker.backlog()).isEqualTo(1);
+    }
+
+    @Test
+    void retriesThenDeadLetterKeepsTheQueueMoving() throws InterruptedException {
+        MessageBroker<OrderPlacedEvent> broker = new MessageBroker<>();
+        AtomicInteger poisonAttempts = new AtomicInteger();
+        CountDownLatch goodOnes = new CountDownLatch(2);
+        broker.publish(new OrderPlacedEvent(1L, "SKU-BOOK", 1));
+        broker.publish(new OrderPlacedEvent(2L, "SKU-POISON", 1));
+        broker.publish(new OrderPlacedEvent(3L, "SKU-PEN", 1));
+
+        broker.startConsumerWithDeadLetter(e -> {
+            if (e.sku().equals("SKU-POISON")) {
+                poisonAttempts.incrementAndGet();
+                throw new IllegalArgumentException("cannot parse " + e.sku());
+            }
+            goodOnes.countDown();
+        }, 3);
+
+        assertThat(goodOnes.await(2, TimeUnit.SECONDS)).isTrue();
+        assertThat(poisonAttempts.get()).isEqualTo(3);                      // bounded retries, not forever
+        assertThat(broker.deadLetters()).extracting(OrderPlacedEvent::orderId)
+                .containsExactly(2L);                                       // parked for a human to inspect
+        assertThat(broker.consumerAlive()).isTrue();
+        broker.stopConsumer();
+    }
+
+    private static void waitUntilDead(MessageBroker<?> broker) throws InterruptedException {
+        long deadline = System.currentTimeMillis() + 2_000;
+        while (broker.consumerAlive() && System.currentTimeMillis() < deadline) {
+            Thread.sleep(10);
+        }
+        assertThat(broker.consumerAlive()).isFalse();
+    }
 }

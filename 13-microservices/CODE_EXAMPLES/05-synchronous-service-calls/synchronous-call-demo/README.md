@@ -12,13 +12,18 @@ interface the scaffold uses. It shows:
 - a downstream `404` surfacing as `HttpClientErrorException.NotFound` (one of the four
   outcomes every synchronous call must handle).
 
+`FeignClientTest` calls the same stub through `@FeignClient` (Spring Cloud OpenFeign),
+the older declarative client common in existing microservices. The happy path is the
+same; the 404 arrives as `FeignException.NotFound` instead, and the read timeout is set
+through `spring.cloud.openfeign.client.config.inventory.read-timeout`.
+
 ## Run
 
 ```bash
 mvn -q test
 ```
 
-All three tests pass; no other service needs to be running.
+All six tests pass; no other service needs to be running.
 
 ## The full end-to-end version
 

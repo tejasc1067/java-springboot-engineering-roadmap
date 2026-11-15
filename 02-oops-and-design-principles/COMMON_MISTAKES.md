@@ -400,3 +400,40 @@ class C implements A, B {
     @Override public void op() { A.super.op(); }
 }
 ```
+
+---
+
+## Clean code
+
+### 31. Boolean flag arguments
+
+```java
+double calc(List<double[]> items, boolean f) { ... if (f) t = t - t * 0.15; ... }
+
+boolean isGuest = true;
+calc(items, isGuest);   // the flag means "apply member discount" — the guest gets it
+```
+
+The call site can't say what `true` means, so callers guess. The compiler is happy with either guess.
+
+**Fix:** one method per meaning, so the call site names the choice:
+```java
+totalForGuest(items);
+totalForMember(items);
+```
+If there are more than two cases, pass an enum (`PricingTier.MEMBER`), not more booleans.
+
+### 32. A comment that restates the code
+
+```java
+// apply 10% discount
+total = total * (1 - 0.15);
+```
+
+Someone changed the rate and not the comment. Now one of them is wrong, and the reader can't tell which.
+
+**Fix:** let a name carry the fact, and keep comments for *why*:
+```java
+static final double MEMBER_DISCOUNT_RATE = 0.15;   // raised from 0.10 for the 2026 loyalty programme
+total = total * (1 - MEMBER_DISCOUNT_RATE);
+```

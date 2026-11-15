@@ -70,6 +70,64 @@ You added Jackson to your classpath the moment you added `spring-boot-starter-we
 
 ---
 
+## Under the hood: servlets and the `DispatcherServlet`
+
+You will see the word "servlet" in stack traces, test names (`MockMvc` "drives the `DispatcherServlet`"), and every Spring Security doc. Here is what it means.
+
+A **servlet** is the Java standard (Jakarta Servlet API) for "code that handles an HTTP request." A servlet container — embedded Tomcat, in Spring Boot — owns the socket, parses the raw HTTP, and calls a servlet's `doGet` / `doPost` / ... with a request and response object. Before Spring MVC, you wrote servlets directly:
+
+```java
+public class RawBookServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        long id;
+        try {
+            id = Long.parseLong(req.getPathInfo().substring(1));   // parse "/1" yourself
+        } catch (RuntimeException e) {
+            resp.sendError(400, "id must be a number");          // pick the status yourself
+            return;
+        }
+        // ...look it up, 404 if missing...
+        resp.setContentType("application/json");                   // set headers yourself
+        resp.getWriter().write("{\"id\":1,\"title\":\"Effective Java\",\"author\":\"Bloch\"}"); // write JSON yourself
+    }
+}
+```
+
+That is `BookController.one(...)` with nothing done for you.
+
+Spring MVC is **one servlet** — the `DispatcherServlet` — that Boot registers at `/`. Every request it receives goes through the same steps:
+
+```text
+HTTP request
+   │
+   ▼
+Tomcat ── parses bytes into HttpServletRequest
+   │
+   ▼
+Filter chain ── logging, CORS, Spring Security (module 12) — run before ANY servlet
+   │
+   ▼
+DispatcherServlet
+   ├─ HandlerMapping      which controller method matches this verb + path?   (no match → 404, wrong verb → 405)
+   ├─ argument resolvers  @PathVariable, @RequestParam, @RequestBody → Java objects
+   ├─ your controller method runs
+   └─ HttpMessageConverter  return value → JSON (Jackson)
+   │
+   ▼
+HTTP response
+```
+
+Everything this module teaches — path variables, JSON bodies, validation, `ResponseEntity`, exception handlers — is one of the `DispatcherServlet`'s steps. `@RestController` is how you plug a method into the middle of it.
+
+The demo registers `RawBookServlet` at `/raw/books/*` beside the `DispatcherServlet`, plus a filter that stamps an `X-Passed-Filter` header. `ServletFlowTest` shows:
+
+- `GET /raw/books/1` and `GET /api/books/1` return the same JSON — one hand-written, one generated.
+- Both carry `X-Passed-Filter`: filters run before whichever servlet handles the request.
+- `POST /raw/books/1` is `405` only because `HttpServlet`'s default `doPost` says so; anything else the raw servlet does, you coded by hand.
+
+You will not write raw servlets in this roadmap. You will write **filters** (module 12) and read stack traces full of `DispatcherServlet`, `FilterChain`, and `HttpServlet.service` — now you know where each sits.
+
 ## Three forms — pick the right one
 
 **1. `@RestController`** — what you want 99% of the time for JSON APIs.
@@ -148,6 +206,7 @@ The second form is how `/users` and `/order` end up in the same service (see top
 - **Forgetting `@ResponseBody` on a `@Controller`** — Spring treats the return value as a view name. Use `@RestController` for JSON.
 - **Repeating the base path on every method.** Lift it to a class-level `@RequestMapping`.
 - **Mixing trailing slashes.** `/api/books` and `/api/books/` are treated as different paths since Spring Boot 3.0 (the `trailing-slash-match` was removed for security reasons). Pick one — usually no trailing slash — and stick to it.
+- **Expecting a filter to see controller exceptions as JSON.** A filter runs *outside* the `DispatcherServlet`, so an exception thrown in a filter never reaches `@ExceptionHandler` / `@RestControllerAdvice` (module 11). Handle it in the filter, or let Spring Security's own entry points do it (module 12).
 - **One giant controller for the whole API.** One controller per top-level resource: `BookController`, `AuthorController`, `ReviewController`. Keep them small.
 
 ---
@@ -162,7 +221,9 @@ The demo project is `CODE_EXAMPLES/02-restcontroller-and-requestmapping/restcont
    curl -i http://localhost:8080/api/books/1
    curl -i http://localhost:8080/legacy/books
    curl -i http://localhost:8080/broken/books
+   curl -i http://localhost:8080/raw/books/1
    ```
+   `/raw/books/1` returns the same JSON as `/api/books/1` — from a hand-written servlet. Both responses carry `X-Passed-Filter: true`.
    Compare the response of `/api/books` (200, JSON) and `/broken/books` (500 or whitelabel page).
 
 2. Delete the `@ResponseBody` from one method in `LongFormBookController` and re-run. Confirm it now returns a Whitelabel 500 instead of JSON.
@@ -176,9 +237,14 @@ The demo project is `CODE_EXAMPLES/02-restcontroller-and-requestmapping/restcont
 3. **`LongFormBookController.java`** — `@Controller` + `@ResponseBody` on every method. Equivalent, verbose.
 4. **`BrokenController.java`** — `@Controller` without `@ResponseBody`. Demonstrates the failure mode.
 5. **`BookControllerTest.java`** — MockMvc assertions that prove the three styles behave differently. Test 11 unpacks MockMvc; treat the asserts as readable English for now.
+6. **`RawBookServlet.java`** — the same endpoint written as a plain servlet: parsing, status, headers and JSON by hand.
+7. **`ServletConfig.java`** — registers the raw servlet at `/raw/books/*`, beside the `DispatcherServlet` at `/`.
+8. **`RequestPathFilter.java`** — a filter that stamps `X-Passed-Filter` on every response.
+9. **`ServletFlowTest.java`** — real embedded Tomcat: same JSON from both servlets, the filter runs before both, the raw servlet only does what it was coded to do.
 
 ## Self-check
 
 1. What does `@RestController` collapse into, and what would you have to write instead if you used `@Controller`?
 2. Why is class-level `@RequestMapping("/api/books")` better than putting the full path on every method?
-3. A `@Controller` method (no `@ResponseBody`) returns the string `"books/list"`. What does Spring try to do with that string, and what happens in a Spring Boot app with no template engine on the classpath?
+3. Put these in the order a request meets them: your controller method, a servlet filter, Tomcat, `HttpMessageConverter`, `HandlerMapping`. Which of them would you need to write yourself in a raw servlet?
+4. A `@Controller` method (no `@ResponseBody`) returns the string `"books/list"`. What does Spring try to do with that string, and what happens in a Spring Boot app with no template engine on the classpath?

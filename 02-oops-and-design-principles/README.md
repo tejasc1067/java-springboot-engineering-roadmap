@@ -55,7 +55,7 @@ Topic 14 (SOLID) is the bridge into Spring: every Spring pattern you'll later le
 11-association-aggregation-composition       ← relationships
 12-final-keyword-in-oop
 13-immutability
-14-solid-principles                          ← design for change
+14-solid-principles                          ← design for change; clean code (names, flag arguments, constants, comments)
 ```
 
 ## How to run the code

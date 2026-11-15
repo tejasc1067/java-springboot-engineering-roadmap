@@ -13,6 +13,10 @@ Kafka/RabbitMQ so `mvn test` runs anywhere.
   have blocked ~600ms.
 - **sync fails when the downstream is down; async buffers** — the direct call throws
   immediately, the published event waits in the queue for delivery.
+- **a poison message kills a consumer with no error handling** — the good message
+  queued behind it is stuck.
+- **bounded retries + dead-letter keep the queue moving** — the poison message is tried
+  3 times, parked in `deadLetters()`, and the consumer carries on.
 
 ## Run
 
@@ -20,9 +24,9 @@ Kafka/RabbitMQ so `mvn test` runs anywhere.
 mvn -q test
 ```
 
-## What a real broker adds (module 17)
+## What a real broker adds (module 16)
 
 This in-memory queue is lost on restart, is single-process, and has one consumer.
 A real broker (Kafka/RabbitMQ) adds durability across restarts, cross-machine
 delivery, fan-out to multiple independent consumer groups, and replay of history —
-covered in module 17.
+covered in module 16.

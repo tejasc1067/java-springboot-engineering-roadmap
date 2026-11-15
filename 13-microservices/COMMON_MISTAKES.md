@@ -324,3 +324,32 @@ Deploying "add a field to the order" requires, in lockstep:
 **What goes wrong:** the whole justification for microservices is independent deployability. If a routine change forces a coordinated, all-at-once release of several services — because they share a database, share DTO classes as a compile dependency, or form a synchronous call chain with no tolerance for version skew — you have a distributed monolith: microservices' operational cost with a monolith's coupling, and none of the benefit. It's the default outcome of splitting without discipline.
 
 **Fix:** enforce independence deliberately — private databases (mistake 4), additive/versioned contracts and tolerant readers (mistakes 10–11), async where coupling isn't needed (mistake 9), and each service releasable on its own. If you can't deploy one service without the others, the split isn't paying for itself — consider whether those pieces should be one service (topic 03).
+
+---
+
+## 17. Switching HTTP clients but keeping the old `catch` blocks
+
+```java
+// Migrated from RestClient to @FeignClient; the try/catch was left as it was
+try {
+    stock = feignInventory.getStock(sku);
+} catch (HttpClientErrorException.NotFound e) {   // RestClient's exception type
+    return ResponseEntity.badRequest().build();
+}
+```
+
+**What goes wrong:** it compiles, and every test that only covers the happy path passes. But Feign throws `FeignException.NotFound`, which is not an `HttpClientErrorException`. The catch never matches, the 404 escapes, and the caller gets a `500` for what should be a `400`. The timeout changes too: the `RestClient` request-factory timeout no longer applies, and Feign's default read timeout is 60 seconds.
+
+**Fix:** treat a client swap as a rewrite of every call site's error handling and timeout config, and keep a test for the 404 path.
+
+```java
+} catch (FeignException.NotFound e) {
+    return ResponseEntity.badRequest().build();
+}
+```
+
+```yaml
+spring.cloud.openfeign.client.config.inventory:
+  connect-timeout: 500
+  read-timeout: 2000
+```

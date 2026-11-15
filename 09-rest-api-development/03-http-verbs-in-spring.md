@@ -129,6 +129,37 @@ Some APIs skip PATCH entirely and use PUT for both replacement and "I'm sending 
 
 ---
 
+## The other three verbs: OPTIONS, HEAD, TRACE
+
+HTTP defines three more verbs you will never write a handler for, but your API answers them anyway.
+
+| Verb | What it asks | Who answers in Spring |
+|------|--------------|-----------------------|
+| `OPTIONS` | "Which verbs does this URL support?" | Spring MVC, automatically, from your mappings |
+| `HEAD` | "Give me GET's status and headers, no body" | Spring MVC, by running your `@GetMapping` and dropping the body |
+| `TRACE` | "Echo my request back to me" | Nobody — embedded Tomcat rejects it with `405` |
+
+**OPTIONS.** Spring reads every mapping on the path and returns them in the `Allow` header:
+
+```http
+OPTIONS /api/books/1
+
+HTTP/1.1 200
+Allow: GET,HEAD,PUT,PATCH,DELETE,OPTIONS
+```
+
+`POST` is missing because `POST` is mapped on `/api/books`, not `/api/books/1`. You will meet OPTIONS again in module 12 (topic 11): browsers send an OPTIONS **preflight** before a cross-origin `PUT` or `DELETE`, and CORS config decides the answer.
+
+The same `Allow` header comes back on a `405 Method Not Allowed` — call `POST /api/books/1` and Spring tells you which verbs would have worked.
+
+**HEAD.** Every `@GetMapping` also answers HEAD. Your handler method runs in full; the response body is discarded. Clients use it to check "does this exist / has it changed / how big is it" without downloading it. Consequence: a slow GET is an equally slow HEAD.
+
+**TRACE.** TRACE echoes the incoming request, headers included. If a page script can make the browser send TRACE, it can read the `Cookie` and `Authorization` headers that `HttpOnly` was supposed to hide — an attack called Cross-Site Tracing. Embedded Tomcat ships with `allowTrace=false`, so TRACE gets `405` before Spring is involved. Leave it that way.
+
+`OptionsHeadTraceTest` proves all of this against a real embedded Tomcat. It has to: `MockMvc` skips Tomcat, so a MockMvc TRACE test would not see Tomcat's block.
+
+---
+
 ## Where it pays off
 
 The CRUD shape above is the foundation of every Spring Boot REST API. Once you have it:
@@ -150,6 +181,7 @@ This topic's demo is the simplest possible version. Each later topic upgrades on
 - **Wrapping GET in POST to send a body.** Tempting when you have a complex filter. Use query parameters (topic 05); or, if the filter genuinely cannot fit in a URL, accept that `POST /searches` is the right shape for that endpoint and document it.
 - **Confusing PUT and PATCH.** If your "update" endpoint requires the client to send every field, that's PUT. If it accepts a subset, that's PATCH. Picking the wrong one will surprise consumers.
 - **Forgetting that DELETE is idempotent.** Calling DELETE on an already-deleted resource is fine — return 204 (or 404, depending on your taste). Topic 08 has the decision tree.
+- **Expensive work in a GET handler.** HEAD runs the same method. A load balancer health check that sends HEAD to a GET doing a full table scan pays for the scan every time.
 - **GETs with side effects.** Never. Crawlers, prefetchers, and proxies all assume GET is safe. A GET that mutates state will eventually fire when you don't expect.
 
 ---
@@ -172,6 +204,9 @@ The demo project is `CODE_EXAMPLES/03-http-verbs-in-spring/http-verbs-demo`.
         -H "Content-Type: application/json" \
         -d '{"title":"EJ3"}'
    curl -i -X DELETE http://localhost:8080/api/books/1
+   curl -i -X OPTIONS http://localhost:8080/api/books/1
+   curl -I http://localhost:8080/api/books
+   curl -i -X TRACE http://localhost:8080/api/books
    ```
 
 2. Watch what PATCH does when you send only `{"title": ...}` — the `author` stays. Then watch PUT erase `author` if you omit it from the body.
@@ -184,9 +219,11 @@ The demo project is `CODE_EXAMPLES/03-http-verbs-in-spring/http-verbs-demo`.
 2. **`Book.java`** — the record we move over the wire.
 3. **`BookController.java`** — the full CRUD using all five verbs.
 4. **`BookControllerTest.java`** — MockMvc walks through each verb.
+5. **`OptionsHeadTraceTest.java`** — real embedded Tomcat: OPTIONS `Allow` header, HEAD with no body, `405` on an unmapped verb, TRACE blocked.
 
 ## Self-check
 
-1. Which two of GET, POST, PUT, PATCH, DELETE are idempotent? Which is also safe?
+1. Which three of GET, POST, PUT, PATCH, DELETE are idempotent? Which of those is also safe?
 2. You have an `Order` resource with 20 fields. The client wants to update one field (`status`). PUT or PATCH, and why?
-3. A client times out on `POST /api/orders`. They retry the same request. What can go wrong, and what would make the retry safe?
+3. You never wrote an OPTIONS or HEAD handler. What does `OPTIONS /api/books/1` return, and why is a slow `GET` also a slow `HEAD`?
+4. A client times out on `POST /api/orders`. They retry the same request. What can go wrong, and what would make the retry safe?
