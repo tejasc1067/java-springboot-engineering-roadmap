@@ -26,8 +26,9 @@ This module replaces that ceremony with **JPA** (Jakarta Persistence API), **Hib
 - [ ] Replace `ddl-auto: create-drop` with Flyway and explain why every production app does this.
 - [ ] Write a `@DataJpaTest` that boots only the persistence slice and uses `TestEntityManager` to set up data.
 - [ ] List the top JPA pitfalls (lazy loading after the transaction ends, dirty-checking surprises, batch insert without `hibernate.jdbc.batch_size`) and the fix for each.
+- [ ] Name the four NoSQL families, decide embed vs reference for a document relationship, and argue when a relational database is still the right choice.
 
-If you can do all fourteen, the module worked.
+If you can do all fifteen, the module worked.
 
 ## Prerequisites
 
@@ -56,6 +57,8 @@ Topic 13 is testing with `@DataJpaTest` — a focused slice that boots only JPA,
 
 Topic 14 is a catalog of the bugs JPA users hit most often, with the cause and the fix for each.
 
+Topic 15 steps outside the relational model: the NoSQL families, embedding vs referencing in a document database, and when *not* to leave PostgreSQL.
+
 ```text
 01-what-jpa-hibernate-spring-data-are       <- three-layer mental model; markdown-only
 02-entities-and-id-generation               <- @Entity, @Id, @GeneratedValue, @Column, @Table
@@ -71,6 +74,7 @@ Topic 14 is a catalog of the bugs JPA users hit most often, with the cause and t
 12-flyway-migrations                        <- V1__init.sql, ddl-auto debate
 13-testing-with-datajpatest                 <- slice test, TestEntityManager, embedded H2
 14-common-jpa-pitfalls                      <- LazyInitializationException, batch inserts, flush
+15-nosql-and-when-to-use-it                 <- document/key-value/wide-column/graph, embed vs reference, when to stay relational
 ```
 
 ```text
