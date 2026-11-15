@@ -163,7 +163,7 @@ Reach for **something else** when:
 - You need **streaming** or **bidirectional** communication (push from server to client) — WebSockets or Server-Sent Events.
 - You need **typed schemas with code generation** for many languages — gRPC.
 - The frontend wants to **shape the response** (pick which fields) — GraphQL.
-- You're modelling **events**, not resource state — Kafka topics or an event-driven design (module 17).
+- You're modelling **events**, not resource state — Kafka topics or an event-driven design (module 13, topic 07 for the pattern; module 16 for Kafka itself).
 
 REST is a good fit for "client wants to read or modify a record." It is a worse fit for "server wants to push live updates to many subscribers."
 

@@ -121,7 +121,7 @@ If those eight feel comfortable, move to module 13 (Microservices), where these 
 - **No full OAuth2 authorization-server build.** You will *use* an identity provider (topics 09–10) and validate its tokens; you will not build the provider itself. Running your own authorization server (Spring Authorization Server) is a specialized task beyond a backend fundamentals roadmap.
 - **No SAML, LDAP, or Kerberos.** Enterprise SSO protocols are real but niche for someone learning backend fundamentals; OAuth2/OIDC is the modern default and the one worth your time first.
 - **No secrets-management infrastructure.** The module says *don't hardcode secrets* and reads them from configuration/environment, but Vault, AWS Secrets Manager, and KMS are cloud/ops topics the roadmap deliberately leaves out.
-- **No rate limiting, WAF, or DDoS defense.** These are edge/infra concerns, not application authentication and authorization. Some are touched on in module 19 (observability) and belong to a separate ops roadmap.
+- **No rate limiting, WAF, or DDoS defense.** These are edge/infra concerns, not application authentication and authorization. Application-level rate limiting is covered in module 13 (topic 12) and module 15 (Redis-backed); WAF and DDoS defense belong to a separate ops roadmap.
 - **No reactive / WebFlux security.** The roadmap is servlet-stack throughout; the reactive `SecurityWebFilterChain` is analogous but out of scope.
 </content>
 </invoke>

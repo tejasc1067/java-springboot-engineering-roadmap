@@ -78,7 +78,7 @@ log.error("Unhandled exception [traceId={}]", traceId, ex);   // full detail in 
 problem.setProperty("traceId", traceId);                       // opaque handle in the response
 ```
 
-Now a user can report "traceId abc-123" and you can find the exact stack trace in your logs — without ever putting it on the wire. In a real system the trace id usually comes from your tracing framework (module 19); here it's a `UUID`.
+Now a user can report "traceId abc-123" and you can find the exact stack trace in your logs — without ever putting it on the wire. In a real system the trace id usually comes from your tracing framework (module 13, topic 17; module 17 goes deeper); here it's a `UUID`.
 
 ---
 
