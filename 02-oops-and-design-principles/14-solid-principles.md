@@ -303,7 +303,7 @@ SOLID is a tool, not a religion. Apply each principle when the cost is low and t
 
 1. `SingleResponsibilityViolation.java` — God class doing four jobs. Followed by `SingleResponsibilityFixed.java`.
 2. `OpenClosedExample.java` — adding new payment methods without modifying the processor.
-3. `LiskovViolation_SquareRectangle.java` — the classic LSP failure.
+3. `LiskovViolation.java` — the classic LSP failure: `Square extends Rectangle`.
 4. `InterfaceSegregation.java` — fat interface vs. split interfaces.
 5. `DependencyInversion.java` — the Spring pattern of service depending on a repository interface.
 6. `CleanCodeBefore.java` — a flag argument, one-letter names, and a stale comment hide two pricing bugs.

@@ -25,7 +25,7 @@ class Square extends Rectangle {
     }
 }
 
-public class LiskovViolation_SquareRectangle {
+public class LiskovViolation {
 
     // Method written against Rectangle — should work for ANY Rectangle subtype.
     static void resizeAndCheck(Rectangle r) {

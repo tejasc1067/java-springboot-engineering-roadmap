@@ -2,7 +2,7 @@
 
 Java is fundamentally an object-oriented language. The Spring ecosystem you'll meet in modules 07-10 assumes you can think in objects, model relationships, design interfaces, and reason about coupling. This module builds that thinking.
 
-By the end you won't just know "what an `abstract class` is." You'll know when to reach for one vs. an interface, when inheritance is the wrong tool, and what "good" object-oriented design looks like in real backend code.
+By the end you won't just know "what an `abstract class` is." You'll know when to reach for one vs. an interface, when inheritance is the wrong tool, and what "good" object-oriented design looks like in real backend code. You'll also know the nine design patterns Spring is built from, each one learned as the bug it prevents.
 
 ## Who this is for
 
@@ -44,11 +44,13 @@ Topics 10–13 cover the things every Java class secretly does (`Object` methods
 
 Topic 14 (SOLID) is the bridge into Spring: every Spring pattern you'll later learn assumes you've internalized these five principles.
 
-Topic 15 covers the creational design patterns — singleton, factory method, builder — each shown first as the bug it prevents. Spring's container is built from these patterns.
+Topics 15–17 are design patterns, three per topic, each shown first as the bug it prevents:
 
-Topic 16 covers the structural patterns — adapter, decorator, proxy — the three ways one object wraps another. The proxy is how Spring adds `@Transactional` and AOP to your beans.
+- **15 creational** (singleton, factory method, builder) — how objects get created. Spring's container is one big factory of singletons.
+- **16 structural** (adapter, decorator, proxy) — how one object wraps another. The proxy is how Spring adds `@Transactional` and AOP to your beans.
+- **17 behavioral** (strategy, template method, observer) — how objects split up work. `JdbcTemplate` is a template method; `@EventListener` is the observer pattern.
 
-Topic 17 covers the behavioral patterns — strategy, template method, observer — which Spring's `JdbcTemplate` and application events are built on.
+You will meet all nine again, by name, in modules 07–13.
 
 ```text
 01-classes-and-objects                       ← the foundation

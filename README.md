@@ -35,7 +35,7 @@ Before you start, install the JDK and IntelliJ — see [`SETUP.md`](SETUP.md).
 
 ### If you already code in another language (frontend, data, QA, devops...)
 
-You can skim modules 01–02 quickly. Start seriously at **`03a-java-language-depth/`** and work through 03a → 03b → 03c → 03d to ground yourself in Java's type system, functional features, concurrency, and JVM model, then continue. Expect ~3–4 months at 10 hrs/week.
+You can skim modules 01–02 quickly, except module 02's topics 14–17 (SOLID and design patterns): Spring's proxies, templates, and events are built on them. Start seriously at **`03a-java-language-depth/`** and work through 03a → 03b → 03c → 03d to ground yourself in Java's type system, functional features, concurrency, and JVM model, then continue. Expect ~3–4 months at 10 hrs/week.
 
 ### If you know Java but not backend specifically
 
@@ -74,7 +74,7 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 
 ```
 01-java-fundamentals                          ← ✓ done
-02-oops-and-design-principles                 ← ✓ done
+02-oops-and-design-principles                 ← ✓ done   (OOP pillars, SOLID, clean code, creational/structural/behavioral patterns)
 03a-java-language-depth                       ← ✓ done   (exceptions, generics, collections)
 03b-modern-java-and-functional                ← ✓ done   (lambdas, streams, Optional)
 03c-concurrency                               ← ✓ done   (threads, sync, executors, futures)
