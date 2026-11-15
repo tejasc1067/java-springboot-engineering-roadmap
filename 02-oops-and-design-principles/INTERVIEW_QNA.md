@@ -215,4 +215,23 @@ Over-engineering. Five tiny interfaces and seven classes for what could be one f
 47. **What's an anonymous class?** A class defined and instantiated inline, often used before lambdas existed for one-off implementations.
 48. **What's pass-by-value vs pass-by-reference in Java?** Java is always pass-by-value. For object types, the value passed is the reference (not a copy of the object).
 49. **Can `equals()` and `hashCode()` be different methods on different classes?** Yes — they only need to be consistent with each other within a class.
-50. **What's a record's "compact constructor"?** A constructor form that doesn't redeclare the parameters; runs after Java assigns the fields, used mostly for validation.
+50. **What's a record's "compact constructor"?** A constructor form that doesn't redeclare the parameters; its body runs *before* Java assigns the fields (the assignment happens implicitly at the end), so it's used to validate or normalize the parameters.
+
+---
+
+## Design patterns
+
+### Q51. Write a thread-safe singleton in Java. Why is the obvious lazy version not thread-safe?
+
+The obvious version is `if (instance == null) instance = new X(); return instance;` — a check-then-act. Two threads can both see `null` before either finishes `new X()`, so both create one; with a slow constructor, ten simultaneous callers can create ten. The simplest correct version is an enum: `enum X { INSTANCE; }`. The JVM initializes a class exactly once and makes other threads wait, so `INSTANCE` is created once. A `private static class Holder { static final X INSTANCE = new X(); }` gives the same guarantee for a normal class. Double-checked locking also works, but only with a `volatile` field — which is the part people forget.
+
+The follow-up worth raising yourself: in a Spring app you don't write singletons at all. Beans are singletons by default, and the container injects them, so you get one instance without global access and can swap a fake in tests.
+
+### Q52. What is a factory method, and what can `Integer.valueOf(5)` do that `new Integer(5)` can't?
+
+A factory method is a method that creates and returns an object, so callers don't call `new` themselves and don't need to know which class they get. `Integer.valueOf` can **return a cached instance** (it keeps -128..127), which `new` never can — that's why `Integer.valueOf(127) == Integer.valueOf(127)` is `true` but the same comparison with 128 is `false`. Other things factory methods can do: **return a subtype or hidden class** (`List.of` returns a JDK-internal immutable list), **have a descriptive name** (`LocalDate.of`, `Duration.ofSeconds`), and **validate before creating** (`LocalDate.of(2026, 2, 30)` throws). In application code the main win is putting a "which implementation?" decision in one place instead of copying a `switch` into every caller.
+
+### Q53. When would you use a builder instead of a constructor? What should `build()` do?
+
+When a constructor has many parameters — especially several of the same type, or many optional ones. `new UserAccount(email, name, true, false, false)` compiles whichever order the booleans are in; a builder names each value (`.emailVerified(true)`), so they can't be swapped. Required values go in the `builder(...)` call so they can't be omitted; optional ones get safe defaults. `build()` is where all validation happens, once, before the object exists — then it calls a `private` constructor of an immutable class. A builder whose `build()` only copies fields adds a class and prevents none of the bugs. Don't use one for two or three parameters of different types; a constructor or record is clearer.
+

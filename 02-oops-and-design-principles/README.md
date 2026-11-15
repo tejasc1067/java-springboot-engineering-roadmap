@@ -22,6 +22,7 @@ Concrete outcomes. Check each off as you go.
 - [ ] Make a class immutable and explain three things you had to do beyond just adding `final`.
 - [ ] Define each SOLID principle in one sentence and recognize when code violates one.
 - [ ] Recognize "this looks like inheritance but should be composition" in code review.
+- [ ] Explain why a lazy singleton isn't thread-safe, and choose between a factory method, a builder, and a plain constructor for a given class.
 
 ## Prerequisites
 
@@ -41,6 +42,8 @@ Topics 10–13 cover the things every Java class secretly does (`Object` methods
 
 Topic 14 (SOLID) is the bridge into Spring: every Spring pattern you'll later learn assumes you've internalized these five principles.
 
+Topic 15 covers the creational design patterns — singleton, factory method, builder — each shown first as the bug it prevents. Spring's container is built from these patterns.
+
 ```text
 01-classes-and-objects                       ← the foundation
 02-constructors
@@ -56,6 +59,7 @@ Topic 14 (SOLID) is the bridge into Spring: every Spring pattern you'll later le
 12-final-keyword-in-oop
 13-immutability
 14-solid-principles                          ← design for change; clean code (names, flag arguments, constants, comments)
+15-creational-patterns                       ← singleton, factory method, builder
 ```
 
 ## How to run the code
@@ -89,5 +93,6 @@ Before moving on to module 03a (Java language depth), you should be able to answ
 3. A teammate adds a setter to a class declared `final` with all `final` fields, "for flexibility." Why is this a contradiction?
 4. Walk through what happens if you override `equals()` but not `hashCode()`. What breaks, specifically?
 5. Define each of S, O, L, I, D in one sentence. Then point to a real Java library/framework that obeys each one.
+6. A `UserAccount` constructor takes five parameters, three of them `boolean`. What bug is waiting to happen, and which pattern prevents it?
 
-If those are easy, you're ready. If any feel shaky, the corresponding topic is 03, 04 (or 11), 13, 10, and 14.
+If those are easy, you're ready. If any feel shaky, the corresponding topic is 03, 04 (or 11), 13, 10, 14, and 15.

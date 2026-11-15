@@ -437,3 +437,41 @@ Someone changed the rate and not the comment. Now one of them is wrong, and the 
 static final double MEMBER_DISCOUNT_RATE = 0.15;   // raised from 0.10 for the 2026 loyalty programme
 total = total * (1 - MEMBER_DISCOUNT_RATE);
 ```
+
+---
+
+## Creational patterns
+
+### 33. Lazy singleton without thread safety
+
+```java
+static ConfigLoader getInstance() {
+    if (instance == null) {
+        instance = new ConfigLoader();
+    }
+    return instance;
+}
+```
+
+Two threads can both see `null` and both create an instance. `15-creational-patterns/SingletonBroken.java` gets 10 instances from 10 threads.
+
+**Fix:** use an enum, which the JVM initializes exactly once:
+```java
+enum ConfigLoader { INSTANCE; }
+```
+In Spring code, don't write a singleton at all — make it a bean.
+
+### 34. Several parameters of the same type in one constructor
+
+```java
+new UserAccount("bob@example.com", "Bob", true, false, false);
+// meant emailVerified = true; position 3 is admin
+```
+
+It compiles in any order. Bob is now an administrator.
+
+**Fix:** a builder with named setters and validation in `build()`:
+```java
+UserAccount.builder("bob@example.com").displayName("Bob").emailVerified(true).build();
+```
+
