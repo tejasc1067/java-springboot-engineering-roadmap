@@ -155,7 +155,7 @@ class UserController {
 }
 ```
 
-**Decorator pattern (composition + interface):**
+**Decorator pattern (composition + interface; full treatment in topic 16):**
 ```java
 class CachingUserRepository implements UserRepository {
     private final UserRepository delegate;     // wraps another repository

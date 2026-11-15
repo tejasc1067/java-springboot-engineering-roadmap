@@ -475,3 +475,40 @@ It compiles in any order. Bob is now an administrator.
 UserAccount.builder("bob@example.com").displayName("Bob").emailVerified(true).build();
 ```
 
+---
+
+## Structural patterns
+
+### 35. Calling a vendor SDK directly from many places
+
+```java
+acme.makePayment(customerId, amountInCents / 100.0);   // one caller converts
+acme.makePayment(customerId, amountInCents);           // another forgets: $19.99 becomes $1999.00
+```
+
+It compiles because `long` widens to `double`. `16-structural-patterns/DirectVendorCallsBroken.java` charges the customer 100 times over.
+
+**Fix:** one adapter implements your own interface and does the conversion once:
+```java
+class AcmePaymentAdapter implements PaymentGateway {
+    public void charge(String customerId, long amountInCents) {
+        int status = acme.makePayment(customerId, amountInCents / 100.0);
+        if (status != 0) throw new PaymentFailedException("code " + status);
+    }
+}
+```
+
+### 36. Calling a proxied method on `this`
+
+```java
+@Service
+class OrderService {
+    public void placeOrder(Order o) { saveAudit(o); }      // this.saveAudit(o)
+    @Transactional public void saveAudit(Order o) { ... }   // no transaction
+}
+```
+
+Spring's transaction logic lives in a proxy in front of the bean. `this` is the real object, so the self-call skips the proxy. No error; the annotation just does nothing. `16-structural-patterns/ProxySelfInvocationBroken.java` shows the same thing with a plain JDK proxy.
+
+**Fix:** move `saveAudit` into another `@Service` and inject it, so the call goes through that bean's proxy.
+

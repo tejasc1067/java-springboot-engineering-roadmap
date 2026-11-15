@@ -149,7 +149,7 @@ Naming pays off when the same pointcut is referenced from multiple advices.
 
 ## What Spring AOP can and cannot do
 
-Spring AOP works by wrapping the bean in a proxy. That has two consequences worth remembering:
+Spring AOP works by wrapping the bean in a proxy (the proxy pattern, built by hand with `java.lang.reflect.Proxy` in module 02, topic 16). That has two consequences worth remembering:
 
 1. **Only public methods on Spring-managed beans are intercepted.**
    A `private` method, a static call, or a method on an object you `new`'d yourself — none of those go through the proxy and none of them get advised.

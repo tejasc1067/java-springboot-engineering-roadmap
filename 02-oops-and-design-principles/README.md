@@ -23,6 +23,7 @@ Concrete outcomes. Check each off as you go.
 - [ ] Define each SOLID principle in one sentence and recognize when code violates one.
 - [ ] Recognize "this looks like inheritance but should be composition" in code review.
 - [ ] Explain why a lazy singleton isn't thread-safe, and choose between a factory method, a builder, and a plain constructor for a given class.
+- [ ] Tell an adapter, a decorator, and a proxy apart, and explain why a self-call skips a Spring proxy.
 
 ## Prerequisites
 
@@ -44,6 +45,8 @@ Topic 14 (SOLID) is the bridge into Spring: every Spring pattern you'll later le
 
 Topic 15 covers the creational design patterns — singleton, factory method, builder — each shown first as the bug it prevents. Spring's container is built from these patterns.
 
+Topic 16 covers the structural patterns — adapter, decorator, proxy — the three ways one object wraps another. The proxy is how Spring adds `@Transactional` and AOP to your beans.
+
 ```text
 01-classes-and-objects                       ← the foundation
 02-constructors
@@ -60,6 +63,7 @@ Topic 15 covers the creational design patterns — singleton, factory method, bu
 13-immutability
 14-solid-principles                          ← design for change; clean code (names, flag arguments, constants, comments)
 15-creational-patterns                       ← singleton, factory method, builder
+16-structural-patterns                       ← adapter, decorator, proxy
 ```
 
 ## How to run the code
@@ -94,5 +98,6 @@ Before moving on to module 03a (Java language depth), you should be able to answ
 4. Walk through what happens if you override `equals()` but not `hashCode()`. What breaks, specifically?
 5. Define each of S, O, L, I, D in one sentence. Then point to a real Java library/framework that obeys each one.
 6. A `UserAccount` constructor takes five parameters, three of them `boolean`. What bug is waiting to happen, and which pattern prevents it?
+7. A method calls another method in the same class, and the second method's `@Transactional` does nothing. Why?
 
-If those are easy, you're ready. If any feel shaky, the corresponding topic is 03, 04 (or 11), 13, 10, 14, and 15.
+If those are easy, you're ready. If any feel shaky, the corresponding topic is 03, 04 (or 11), 13, 10, 14, 15, and 16.
