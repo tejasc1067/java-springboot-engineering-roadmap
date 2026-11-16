@@ -202,7 +202,7 @@ Decorator and proxy look identical in code. The difference is the job. A decorat
 ## Common pitfalls
 
 - **A decorator that doesn't forward every method.** It silently drops behaviour. If `PriceService` gains `priceInCurrency(...)` and the decorator implements it as `return 0;`, the wrapped service is never asked. Forward to `delegate` in every method you don't change.
-- **A self-call to a proxied method.** `this.method()` skips the proxy, so `@Transactional`, `@Async`, and `@Cacheable` do nothing. Move the method to another bean.
+- **A self-call to a proxied method.** `this.method()` skips the proxy, so `@Transactional`, `@Async`, and `@Cacheable` do nothing. Move the method to another bean. Module 15 topic 02 shows it with `@Cacheable` ([`15-caching-and-redis/02-spring-cache-abstraction.md`](../15-caching-and-redis/02-spring-cache-abstraction.md)).
 - **Leaking the vendor's types through the adapter.** If `PaymentGateway.charge` returns the vendor's `AcmeResponse`, every caller depends on the vendor again. Return your own types.
 - **Stacking decorators in the wrong order.** Logging outside caching logs every request, and logging inside it logs only misses. Decide which you need and write the order on purpose.
 

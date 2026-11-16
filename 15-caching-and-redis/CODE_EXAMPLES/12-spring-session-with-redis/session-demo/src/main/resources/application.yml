@@ -1,0 +1,7 @@
+server:
+  servlet:
+    session:
+      timeout: 15m   # also the session's TTL in Redis
+
+app:
+  instance-name: local

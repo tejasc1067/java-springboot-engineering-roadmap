@@ -176,6 +176,8 @@ mongo.updateFirst(
 
 **Fix 2: optimistic locking.** Add a `@Version Long version;` field to `Order`, as in JPA. A save with an outdated version then throws `OptimisticLockingFailureException` instead of silently overwriting. Use this when you really do need to replace the whole document.
 
+Module 15 has the same lesson for Redis (topic 06, atomic `INCR`), and topic 09 explains why a version check or a unique constraint usually beats a distributed lock.
+
 ---
 
 ## Transactions

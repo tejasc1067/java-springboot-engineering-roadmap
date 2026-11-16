@@ -161,12 +161,13 @@ You don't need to memorize this list. You need to recognize the pattern: there i
 | `spring-boot-starter-test`             | full test stack                                                    | 08, 09 |
 | `spring-boot-starter-web`              | embedded Tomcat + Spring MVC + Jackson                             | 09     |
 | `spring-boot-starter-validation`       | jakarta.validation + Hibernate Validator                           | 09     |
-| `spring-boot-starter-actuator`         | health, info, metrics endpoints                                    | 12     |
+| `spring-boot-starter-actuator`         | health, info, metrics endpoints                                    | 08     |
 | `spring-boot-starter-data-jpa`         | Hibernate, Spring Data JPA, JDBC pool                              | 10     |
 | `spring-boot-starter-security`         | Spring Security, login, password encoding                          | 12     |
 | `spring-boot-starter-jdbc`             | JDBC template + HikariCP (without JPA)                             | 10     |
-| `spring-boot-starter-amqp`             | RabbitMQ client + Spring AMQP                                      | 17     |
-| `spring-boot-starter-cache`            | Spring's `@Cacheable` plumbing                                     | future |
+| `spring-boot-starter-amqp`             | RabbitMQ client + Spring AMQP                                      | 16     |
+| `spring-boot-starter-cache`            | Spring's `@Cacheable` plumbing                                     | 15     |
+| `spring-boot-starter-data-redis`       | Lettuce Redis client + Spring Data Redis                           | 15     |
 | `spring-boot-starter-mail`             | JavaMail integration                                               | future |
 
 Whatever third-party library you need, search Maven Central for `spring-boot-starter-<thing>`. If it exists, use it — that's the curated set.

@@ -88,7 +88,7 @@ public String whoRunsMeViaSelfCall() {
 }
 ```
 
-`selfInvocation_skipsTheProxy_andRunsOnTheCallersThread`: the "async" method runs on the test thread. This is the same self-invocation bug as `@Transactional` (module 02 topic 16, module 07 topic 10). Only calls that come *through the proxy* are intercepted.
+`selfInvocation_skipsTheProxy_andRunsOnTheCallersThread`: the "async" method runs on the test thread. This is the same self-invocation bug as `@Transactional` (module 02 topic 16, module 07 topic 10) and `@Cacheable` (module 15 topic 02). Only calls that come *through the proxy* are intercepted.
 
 **Fix:** call it from another bean. `ReportCaller` injects `ReportService` and calls `reports.whoRunsMe()`, which goes through the proxy and onto a `report-` thread (`callingFromAnotherBean_goesThroughTheProxy`). The same applies to `private` methods: the proxy can't intercept them, so `@Async` on a private method never works.
 
@@ -215,7 +215,7 @@ spring:
 digests sent: 2
 ```
 
-**Fix:** only one instance may run each scheduled run. The usual way is a **lock in a shared database**. Before doing the work, the job inserts a row such as `daily-digest:2026-11-16` into a table with a unique key. Exactly one instance's insert succeeds, and the others skip. `ClaimedDigestJob` does this with an in-memory stand-in (`JobClaims`), and `claimingTheRun_letsOnlyOneInstanceSend` shows 1 digest sent. In real projects use **ShedLock**: annotate the method with `@SchedulerLock(name = "dailyDigest")`, and it keeps the lock row in your existing database for you.
+**Fix:** only one instance may run each scheduled run. The usual way is a **lock in a shared database**. Before doing the work, the job inserts a row such as `daily-digest:2026-11-16` into a table with a unique key. Exactly one instance's insert succeeds, and the others skip. `ClaimedDigestJob` does this with an in-memory stand-in (`JobClaims`), and `claimingTheRun_letsOnlyOneInstanceSend` shows 1 digest sent. In real projects use **ShedLock**: annotate the method with `@SchedulerLock(name = "dailyDigest")`, and it keeps the lock row in your existing database for you. A lock you build yourself in Redis is harder to get right than it looks; module 15 topic 09 shows why.
 
 Other options: run scheduled jobs in a separate single-instance worker application, or move the schedule outside the app (Kubernetes, introduced in module 14, has a CronJob resource for this). Whichever you choose, make the job **idempotent** (module 13 topic 19), so that if it does run twice after a crash or a retry, nothing is sent twice.
 

@@ -72,7 +72,7 @@ Two chains, one per strategy:
 
 The decision that matters most for backend APIs is **session vs stateless**, and it turns on scaling and clients:
 
-- **Sessions don't scale for free.** "Remember alice" lives in *one* server's memory. Behind a load balancer, request two may hit a different server that never heard of her. You then need **sticky sessions** (pin a user to one server) or a **shared session store** (Redis — module 15 covers Spring Session with Redis) — extra infrastructure. Stateless auth sidesteps this entirely: any server can verify a token, so you scale horizontally by just adding servers.
+- **Sessions don't scale for free.** "Remember alice" lives in *one* server's memory. Behind a load balancer, request two may hit a different server that never heard of her. You then need **sticky sessions** (pin a user to one server) or a **shared session store** (Redis — [module 15 topic 12](../15-caching-and-redis/12-spring-session-with-redis.md) covers Spring Session with Redis) — extra infrastructure. Stateless auth sidesteps this entirely: any server can verify a token, so you scale horizontally by just adding servers.
 - **Non-browser clients don't want cookies.** Mobile apps and other services deal in tokens far more naturally than cookie jars.
 
 ---

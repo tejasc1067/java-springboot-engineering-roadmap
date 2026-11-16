@@ -163,6 +163,8 @@ Spring AOP works by wrapping the bean in a proxy (the proxy pattern, built by ha
    ```
    When `place()` calls `logAndCreate()`, the call uses `this.logAndCreate()` — it bypasses the proxy. The aspect doesn't fire on `logAndCreate()`. If you need the inner method advised, you have to call it through the proxy (inject the service into itself) or split the methods across classes.
 
+   Spring's `@Transactional`, `@Async`, and `@Cacheable` are built on the same proxies, so they fail on self-calls the same way. Module 15 topic 02 demonstrates it with `@Cacheable`.
+
 If neither limitation is acceptable, full AspectJ load-time weaving exists. It's a separate setup with separate trade-offs and is rarely needed in standard backend code.
 
 ## When AOP earns its keep

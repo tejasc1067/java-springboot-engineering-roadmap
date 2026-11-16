@@ -67,6 +67,7 @@ The outbox guarantees the event is published **at-least-once** — the relay may
 - **The outbox: whenever a service must publish an event as part of committing a change.** It's the standard, correct way to avoid the dual-write problem. Simpler than it looks — one extra table and a poller.
 - **You may not need the outbox** if the event isn't critical to lose (rare — usually it is), or if your platform provides transactional messaging / CDC out of the box (e.g. Debezium tailing the DB log is an outbox relay you don't write). But *never* rely on a bare dual write for an event that matters.
 - **Don't reach for a distributed transaction (2PC) to solve the dual write.** The outbox is the microservices answer precisely because it keeps everything in one local transaction (topic 18).
+- **Don't replace an idempotency key with a distributed lock.** A lock with a lease can briefly have two holders ([module 15 topic 09](../15-caching-and-redis/09-distributed-locks.md)); a unique constraint can't be inserted twice.
 
 ## Common pitfalls
 

@@ -1,0 +1,12 @@
+spring:
+  cache:
+    cache-names: prices        # created at startup, so its metrics are registered too
+    caffeine:
+      spec: maximumSize=10000,expireAfterWrite=10m,recordStats
+  datasource:
+    # Named in-memory database: every app context in this JVM connects to the same one,
+    # like several instances of a service sharing one real database.
+    url: jdbc:h2:mem:shop;DB_CLOSE_DELAY=-1
+  sql:
+    init:
+      mode: always

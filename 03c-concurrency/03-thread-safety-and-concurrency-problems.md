@@ -139,7 +139,7 @@ The safest shared variable is one that isn't actually shared. Keep state inside 
 
 ## Common pitfalls
 
-- **`volatile` on a counter.** Doesn't fix `count++`. Use `AtomicInteger`.
+- **`volatile` on a counter.** Doesn't fix `count++`. Use `AtomicInteger`. The same lost update happens across machines when several app instances read a shared counter, add one, and write it back; module 15 topic 06 shows it with Redis and the one-command fix, `INCR`.
 - **Holding a lock across a network call.** Deadlocks the whole service when the network is slow.
 - **Different lock orders in different methods.** Establish one canonical order and document it.
 - **Catching `InterruptedException` and swallowing it.** Either propagate it or re-set the flag (`Thread.currentThread().interrupt()`). Lost interrupts cause threads that should stop to keep running.

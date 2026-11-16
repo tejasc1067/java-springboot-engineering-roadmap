@@ -140,7 +140,7 @@ What to remember:
 
 - **Bound the cache size**. Unbounded = memory leak.
 - **Bound the entry TTL**. Stale data is a bug source.
-- **Pick the right library**. Caffeine is the modern standard for in-process caches.
+- **Pick the right library**. Caffeine is the modern standard for in-process caches (module 15 topic 05).
 - **Don't cache mutable shared state without invariants** — invalidation is the hard part.
 
 ---

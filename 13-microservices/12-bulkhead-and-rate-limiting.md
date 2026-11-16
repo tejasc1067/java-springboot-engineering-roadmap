@@ -60,7 +60,7 @@ They are complementary, not alternatives, and compose in layers on a single call
 ## When to use it / when not to
 
 - **Bulkhead**: when one dependency's slowness could starve the threads other work needs — especially when a *non-critical* dependency shares a pool with a *critical* one. Size each dependency's bulkhead to its importance.
-- **Rate limiter**: when a downstream (or a third party) has a capacity or quota you must respect, or when you want to protect a downstream from your own bursts. At the *edge*, to throttle clients.
+- **Rate limiter**: when a downstream (or a third party) has a capacity or quota you must respect, or when you want to protect a downstream from your own bursts. At the *edge*, to throttle clients. An in-process limiter like this one counts per instance: with N instances the real limit is N times the configured one. For a per-client limit that must hold across instances, see [module 15 topic 10](../15-caching-and-redis/10-redis-rate-limiting.md).
 - **Not a substitute for a circuit breaker.** A bulkhead limits how many can wait on a broken downstream, but it won't *stop* calling a dead one — you still want a breaker for that. Use them together.
 - **Don't over-constrain.** A bulkhead of 1 or a rate limit far below real demand turns a resilience tool into an outage of your own making. Size from real concurrency/throughput, not fear.
 
