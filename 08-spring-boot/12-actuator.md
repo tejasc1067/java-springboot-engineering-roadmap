@@ -136,10 +136,12 @@ management:
     health:
       group:
         readiness:
-          include: db, redis        # don't take traffic until DB and Redis are up
+          include: readinessState, db, redis   # don't take traffic until DB and Redis are up
         liveness:
-          include: ping             # liveness is just "JVM responding"
+          include: livenessState               # never a dependency: a DB blip would restart every pod
 ```
+
+`include` replaces the group's members, so keep Boot's state indicators (`readinessState`, `livenessState`) in the list. Without `readinessState`, readiness stays UP while the app is still warming up or already shutting down ([module 17 topic 08](../17-observability/08-liveness-and-readiness.md)).
 
 In containers these endpoints get callers: a Docker `HEALTHCHECK` polls `/actuator/health` (module 14 topic 09), and Kubernetes probes call `/actuator/health/liveness` and `/readiness` (topic 12). Outside Kubernetes the two probe endpoints return 404 unless you set `management.endpoint.health.probes.enabled=true`.
 
@@ -247,7 +249,7 @@ public String hello() {
 
 Notice the name changed on the way out: Micrometer's `greetings.sent` becomes Prometheus' `greetings_sent_total` (dots → underscores, `_total` added to counters). Dashboards and alerts use the Prometheus name.
 
-Running Prometheus and Grafana, PromQL, gauges vs timers, and which metrics to alert on are module 17. This topic stops at "the app exposes them."
+Running Prometheus and Grafana, PromQL, gauges vs timers, and which metrics to alert on are module 17. This topic stops at "the app exposes them." Module 17 [topic 03](../17-observability/03-micrometer-metrics.md) covers meter types and the high-cardinality tag, [topic 04](../17-observability/04-prometheus-and-promql.md) runs a real Prometheus against this endpoint, and [topic 05](../17-observability/05-grafana-dashboards.md) builds the dashboard.
 
 ---
 
@@ -270,6 +272,7 @@ Three rules of thumb:
 ## Common pitfalls
 
 - **Exposing `*` in production.** `management.endpoints.web.exposure.include: "*"` is fine in dev. In production it leaks `/env` and `/heapdump`. Be explicit about the list.
+- **`/actuator/prometheus` returns 404 in `@SpringBootTest`.** Spring Boot tests switch metrics export off; add `@AutoConfigureObservability` ([module 17 topic 04](../17-observability/04-prometheus-and-promql.md)).
 - **Forgetting to enable build info and wondering why `/info` is empty.** Add the `build-info` goal to the Spring Boot Maven plugin and rebuild.
 - **A health indicator throwing instead of returning DOWN.** Indicators are called frequently; an unhandled exception bubbles up and breaks `/health` entirely. Catch in the indicator and return `Health.down().withException(e)` so the aggregate stays consistent.
 - **Custom indicators that are too slow.** `/health` is hit every few seconds by the load balancer. An indicator that pings five external services and waits for all of them turns "is this instance up?" into a one-second-latency endpoint. Either cache the result for a few seconds or use a separate health *group* for slow checks.

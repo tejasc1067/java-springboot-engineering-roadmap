@@ -92,7 +92,7 @@ Each module ends with a **checkpoint** — a handful of questions you should be 
 14-containers-and-docker                      ← ✓ done   (images & layers, multi-stage & layered Dockerfiles, config & secrets, networks, volumes, compose, healthchecks & graceful shutdown, hardening, Testcontainers, Kubernetes basics)
 15-caching-and-redis                          ← ✓ done   (cost of caching, Spring Cache, cache-aside & write patterns, TTL & eviction, Caffeine, Redis data types, Redis cache & serialization, stampede/penetration/avalanche, distributed locks & fencing, rate limiting, pub/sub & streams, Spring Session)
 16-messaging-kafka-and-rabbitmq               ← ✓ done   (queue vs log, Kafka partitions/offsets/consumer groups, producer acks & idempotence, ordering & keys, delivery semantics & transactions, retries & dead-letter topics, idempotent consumers, schemas & evolution, RabbitMQ exchanges & Spring AMQP, choosing a broker, testing)
-17-observability                              ← planned  (structured logs, Micrometer metrics, Prometheus & Grafana, OpenTelemetry tracing, probes, SLOs & alerting)
+17-observability                              ← ✓ done   (logs vs metrics vs traces, structured JSON logs & MDC, Micrometer & cardinality, Prometheus & PromQL, Grafana RED/USE dashboards, OpenTelemetry tracing & propagation, log-trace correlation, liveness/readiness, SLOs & burn-rate alerts)
 18-system-design-basics                       ← planned  (scale & availability, stateless services, load balancing, CDN, replication, sharding, CAP, a design walkthrough)
 ```
 

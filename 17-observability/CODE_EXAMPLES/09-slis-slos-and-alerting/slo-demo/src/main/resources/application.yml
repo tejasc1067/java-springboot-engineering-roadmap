@@ -1,0 +1,11 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    distribution:
+      # Adds an exact 300 ms histogram bucket (le="0.3") to http.server.requests, so the latency SLO
+      # can count "fast" requests. Without it there are no _bucket series at all.
+      slo:
+        http.server.requests: 300ms

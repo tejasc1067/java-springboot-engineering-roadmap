@@ -1,0 +1,10 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    distribution:
+      # Publish http_server_requests_seconds_bucket{le=...} so Prometheus can compute percentiles
+      percentiles-histogram:
+        http.server.requests: true

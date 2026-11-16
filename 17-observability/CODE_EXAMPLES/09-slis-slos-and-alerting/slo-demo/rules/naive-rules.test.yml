@@ -1,0 +1,30 @@
+# The same 2-minute blip as scenario 4 in slo-rules.test.yml, against the naive "any 5xx" alert.
+# This test PASSES, which is the problem: it proves the naive alert pages someone for the blip.
+#
+# Samples every 15s here (a typical scrape interval). A [1m] range needs at least two samples inside it,
+# so with one sample a minute rate(...[1m]) returns nothing at all in Prometheus 3.
+
+rule_files:
+  - naive-rules.yml
+
+evaluation_interval: 15s
+
+tests:
+  - interval: 15s
+    input_series:
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="200"}'
+        values: '0+250x1680'
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="500"}'
+        values: '0x1439 75 150 225 300 375 450 525 600 600x239'
+    alert_rule_test:
+      - eval_time: 361m
+        alertname: OrdersAnyServerError
+        exp_alerts:
+          - exp_labels:
+              severity: page
+            exp_annotations:
+              summary: orders returned a 5xx
+      # Three minutes later it has resolved itself. Someone was woken up with nothing to do.
+      - eval_time: 364m
+        alertname: OrdersAnyServerError
+        exp_alerts: []

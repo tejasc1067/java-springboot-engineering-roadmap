@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: order-service
+logging:
+  structured:
+    format:
+      console: ecs   # one JSON object per line, Elastic Common Schema field names (logstash and gelf also built in)

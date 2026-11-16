@@ -1,0 +1,10 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    distribution:
+      # http_server_requests_seconds_bucket, for the p95/p99 panels
+      percentiles-histogram:
+        http.server.requests: true

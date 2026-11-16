@@ -106,7 +106,7 @@ Six fields:
 | `:`                         | separator                                           |
 | `the normal operational line`| your message                                       |
 
-In a real terminal the level is color-coded. The format is set by `logging.pattern.console` (and `.file` for files); the defaults are intentional and read well at scale — don't customize them unless you have a specific reason.
+In a real terminal the level is color-coded. The format is set by `logging.pattern.console` (and `.file` for files); the defaults are intentional and read well at scale — don't customize them unless you have a specific reason. With tracing on, Boot adds a `[traceId-spanId]` section after the thread name ([module 17 topic 07](../17-observability/07-correlating-logs-and-traces.md)), and for log aggregation one property switches to JSON lines: `logging.structured.format.console=ecs` ([module 17 topic 02](../17-observability/02-structured-logging.md)).
 
 ---
 

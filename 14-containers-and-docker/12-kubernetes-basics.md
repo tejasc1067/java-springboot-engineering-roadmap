@@ -104,7 +104,7 @@ spec:
 | **readiness** | "Can you take traffic right now?" | The pod is taken **out of the Service** until it passes again. Nothing is restarted. |
 | **liveness** | "Are you stuck beyond repair?" | The container is **restarted**. |
 
-Use readiness for "warming up" or "my database is unreachable right now", and liveness only for "this JVM is wedged". A liveness probe that checks the database restarts every pod whenever the database blips, which turns a database problem into a full outage.
+Use readiness for "warming up" or "my database is unreachable right now", and liveness only for "this JVM is wedged". A liveness probe that checks the database restarts every pod whenever the database blips, which turns a database problem into a full outage. [Module 17 topic 08](../17-observability/08-liveness-and-readiness.md) simulates these probes against a Spring Boot app: the restart storm, startup probes, and the health-group settings that silently break readiness.
 
 ### The Service
 

@@ -1,0 +1,139 @@
+# Unit tests for slo-rules.yml, run with: promtool test rules slo-rules.test.yml
+# Traffic in every scenario: 1,000 requests a minute. Counter series use promtool's
+# expanding notation: '0+950x120' means start at 0 and add 950 every minute, 120 times.
+
+rule_files:
+  - slo-rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  # 1. Healthy: 0.05% errors, half the budget (0.1%). Nobody should be woken up.
+  - interval: 1m
+    input_series:
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="200"}'
+        values: '0+999.5x480'
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="500"}'
+        values: '0+0.5x480'
+    promql_expr_test:
+      - expr: orders:http_errors:ratio_rate1h
+        eval_time: 7h
+        exp_samples:
+          - labels: 'orders:http_errors:ratio_rate1h'
+            value: 0.0005
+    alert_rule_test:
+      - eval_time: 7h
+        alertname: OrdersErrorBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 7h
+        alertname: OrdersErrorBudgetSlowBurn
+        exp_alerts: []
+
+  # 2. A bad deploy: 5% errors (burn rate 50). At this pace the month's budget is gone in 14 hours.
+  - interval: 1m
+    input_series:
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="200"}'
+        values: '0+950x120'
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="500"}'
+        values: '0+50x120'
+    alert_rule_test:
+      - eval_time: 65m
+        alertname: OrdersErrorBudgetFastBurn
+        exp_alerts:
+          - exp_labels:
+              severity: page
+            exp_annotations:
+              summary: orders is burning its error budget 14x too fast (2% of the month's budget per hour)
+      - eval_time: 65m
+        alertname: OrdersErrorBudgetSlowBurn
+        exp_alerts:
+          - exp_labels:
+              severity: page
+            exp_annotations:
+              summary: orders is burning its error budget 6x too fast (5% of the month's budget per 6 hours)
+
+  # 3. A slow leak: 0.8% errors (burn rate 8). Not urgent this minute, but the budget is gone in under 4 days.
+  #    Only the slow-burn alert catches it.
+  - interval: 1m
+    input_series:
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="200"}'
+        values: '0+992x480'
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="500"}'
+        values: '0+8x480'
+    alert_rule_test:
+      - eval_time: 2h
+        alertname: OrdersErrorBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 2h
+        alertname: OrdersErrorBudgetSlowBurn
+        exp_alerts:
+          - exp_labels:
+              severity: page
+            exp_annotations:
+              summary: orders is burning its error budget 6x too fast (5% of the month's budget per 6 hours)
+
+  # 4. A blip: six healthy hours, then 2 minutes where 300 requests a minute fail (a pod restarting),
+  #    then healthy again. 600 failed requests is 1.4% of the month's budget: not worth a page.
+  - interval: 1m
+    input_series:
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="200"}'
+        values: '0+1000x420'
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="500"}'
+        values: '0x359 300 600 600x59'
+    promql_expr_test:
+      # The short window sees the blip clearly...
+      - expr: orders:http_errors:ratio_rate5m > 0.1
+        eval_time: 363m
+        exp_samples:
+          - labels: 'orders:http_errors:ratio_rate5m'
+            value: 0.10714285714285714
+    alert_rule_test:
+      # ...but the long window doesn't, and both must agree.
+      - eval_time: 363m
+        alertname: OrdersErrorBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 370m
+        alertname: OrdersErrorBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 380m
+        alertname: OrdersErrorBudgetSlowBurn
+        exp_alerts: []
+
+  # 5. Recovery: 5% errors for 70 minutes, then the fix is deployed. The fast-burn alert stops within
+  #    minutes, because its 5m window is clean. The slow-burn alert follows when its 30m window is.
+  - interval: 1m
+    input_series:
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="200"}'
+        values: '0+950x70 66500+1000x50'
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="500"}'
+        values: '0+50x70 3500x50'
+    alert_rule_test:
+      - eval_time: 80m
+        alertname: OrdersErrorBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 80m
+        alertname: OrdersErrorBudgetSlowBurn
+        exp_alerts:
+          - exp_labels:
+              severity: page
+            exp_annotations:
+              summary: orders is burning its error budget 6x too fast (5% of the month's budget per 6 hours)
+      - eval_time: 105m
+        alertname: OrdersErrorBudgetSlowBurn
+        exp_alerts: []
+
+  # 6. Latency: 20% of requests take longer than 300 ms (the SLO allows 1%).
+  - interval: 1m
+    input_series:
+      - series: 'http_server_requests_seconds_count{job="orders", uri="/orders/{id}", status="200"}'
+        values: '0+1000x120'
+      - series: 'http_server_requests_seconds_bucket{job="orders", uri="/orders/{id}", status="200", le="0.3"}'
+        values: '0+800x120'
+    alert_rule_test:
+      - eval_time: 65m
+        alertname: OrdersLatencyBudgetFastBurn
+        exp_alerts:
+          - exp_labels:
+              severity: page
+            exp_annotations:
+              summary: orders requests are slower than 300 ms 14x more often than the latency SLO allows

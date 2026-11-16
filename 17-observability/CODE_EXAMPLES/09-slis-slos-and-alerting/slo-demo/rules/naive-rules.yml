@@ -1,0 +1,10 @@
+# The alert many teams start with: page on any server error.
+groups:
+  - name: orders-naive
+    rules:
+      - alert: OrdersAnyServerError
+        expr: sum(rate(http_server_requests_seconds_count{job="orders", status=~"5.."}[1m])) > 0
+        labels:
+          severity: page
+        annotations:
+          summary: orders returned a 5xx

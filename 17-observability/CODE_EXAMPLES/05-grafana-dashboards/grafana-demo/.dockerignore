@@ -1,0 +1,6 @@
+target/
+dashboards/
+grafana/
+prometheus/
+*.md
+demo.sh

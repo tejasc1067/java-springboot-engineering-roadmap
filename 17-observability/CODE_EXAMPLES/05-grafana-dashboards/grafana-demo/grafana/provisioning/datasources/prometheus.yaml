@@ -1,0 +1,11 @@
+# Grafana reads this at startup: the datasource exists without clicking through the UI.
+apiVersion: 1
+datasources:
+  - name: Prometheus
+    uid: prometheus          # dashboards refer to the datasource by this uid
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: 2s       # = scrape_interval; Grafana uses it to compute $__rate_interval

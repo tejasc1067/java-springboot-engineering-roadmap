@@ -90,7 +90,7 @@ public String whoRunsMeViaSelfCall() {
 
 `selfInvocation_skipsTheProxy_andRunsOnTheCallersThread`: the "async" method runs on the test thread. This is the same self-invocation bug as `@Transactional` (module 02 topic 16, module 07 topic 10) and `@Cacheable` (module 15 topic 02). Only calls that come *through the proxy* are intercepted.
 
-**Fix:** call it from another bean. `ReportCaller` injects `ReportService` and calls `reports.whoRunsMe()`, which goes through the proxy and onto a `report-` thread (`callingFromAnotherBean_goesThroughTheProxy`). The same applies to `private` methods: the proxy can't intercept them, so `@Async` on a private method never works.
+**Fix:** call it from another bean. `ReportCaller` injects `ReportService` and calls `reports.whoRunsMe()`, which goes through the proxy and onto a `report-` thread (`callingFromAnotherBean_goesThroughTheProxy`). The same applies to `private` methods: the proxy can't intercept them, so `@Async` on a private method never works. Also note that the `report-` thread doesn't inherit the caller's MDC or trace: log lines from it have no request id unless the executor has a `TaskDecorator`, such as `ContextPropagatingTaskDecorator` ([module 17 topic 06](../17-observability/06-opentelemetry-tracing.md)).
 
 ### 3. Exceptions from `void` methods vanish
 

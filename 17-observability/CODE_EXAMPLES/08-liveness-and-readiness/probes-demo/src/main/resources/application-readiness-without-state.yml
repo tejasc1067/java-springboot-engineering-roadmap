@@ -1,0 +1,7 @@
+# The mistake: listing only the dependency, which silently drops readinessState from the group.
+management:
+  endpoint:
+    health:
+      group:
+        readiness:
+          include: database

@@ -1,0 +1,9 @@
+# The mistake: the database check in the liveness group. A database outage now means "restart me".
+management:
+  endpoint:
+    health:
+      group:
+        liveness:
+          include: livenessState, database
+        readiness:
+          include: readinessState

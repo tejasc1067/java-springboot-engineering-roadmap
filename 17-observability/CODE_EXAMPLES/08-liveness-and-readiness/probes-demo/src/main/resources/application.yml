@@ -1,0 +1,16 @@
+management:
+  endpoint:
+    health:
+      # Kubernetes turns these on automatically. Anywhere else /liveness and /readiness are 404 without this.
+      probes:
+        enabled: true
+      show-components: always
+      group:
+        # Keep readinessState in the list: it is what goes OUT_OF_SERVICE during startup and shutdown.
+        readiness:
+          include: readinessState, database
+        # Configuring a group at all replaces Boot's built-in probe group, and a group with no "include"
+        # contains EVERY indicator. So once you touch liveness, list its member explicitly.
+        liveness:
+          include: livenessState
+          show-components: always

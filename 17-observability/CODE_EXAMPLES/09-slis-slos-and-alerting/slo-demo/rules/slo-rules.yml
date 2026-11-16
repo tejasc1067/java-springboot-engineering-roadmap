@@ -1,0 +1,88 @@
+# SLOs for the orders service, over a 30-day window:
+#   availability: 99.9% of requests are not 5xx   -> error budget 0.1%
+#   latency:      99%   of requests finish < 300ms -> latency budget 1%
+#
+# The metric comes from Spring Boot (Micrometer + micrometer-registry-prometheus):
+#   http_server_requests_seconds_count{status="503", uri="/orders/{id}", ...}
+#   http_server_requests_seconds_bucket{le="0.3", ...}  only exists if 300ms is a bucket boundary:
+#   management.metrics.distribution.slo.http.server.requests=300ms
+# The job label is added by Prometheus when it scrapes the app.
+
+groups:
+  - name: orders-slo-recording
+    rules:
+      # SLI: the fraction of requests that failed, over several windows.
+      - record: orders:http_errors:ratio_rate5m
+        expr: |
+          sum(rate(http_server_requests_seconds_count{job="orders", status=~"5.."}[5m]))
+          /
+          sum(rate(http_server_requests_seconds_count{job="orders"}[5m]))
+      - record: orders:http_errors:ratio_rate30m
+        expr: |
+          sum(rate(http_server_requests_seconds_count{job="orders", status=~"5.."}[30m]))
+          /
+          sum(rate(http_server_requests_seconds_count{job="orders"}[30m]))
+      - record: orders:http_errors:ratio_rate1h
+        expr: |
+          sum(rate(http_server_requests_seconds_count{job="orders", status=~"5.."}[1h]))
+          /
+          sum(rate(http_server_requests_seconds_count{job="orders"}[1h]))
+      - record: orders:http_errors:ratio_rate6h
+        expr: |
+          sum(rate(http_server_requests_seconds_count{job="orders", status=~"5.."}[6h]))
+          /
+          sum(rate(http_server_requests_seconds_count{job="orders"}[6h]))
+
+      # SLI: the fraction of requests slower than 300 ms (1 - fast / all).
+      - record: orders:http_slow:ratio_rate5m
+        expr: |
+          1 - (
+            sum(rate(http_server_requests_seconds_bucket{job="orders", le="0.3"}[5m]))
+            /
+            sum(rate(http_server_requests_seconds_count{job="orders"}[5m]))
+          )
+      - record: orders:http_slow:ratio_rate1h
+        expr: |
+          1 - (
+            sum(rate(http_server_requests_seconds_bucket{job="orders", le="0.3"}[1h]))
+            /
+            sum(rate(http_server_requests_seconds_count{job="orders"}[1h]))
+          )
+
+  - name: orders-slo-alerts
+    rules:
+      # Burn rate 14.4 for 1 hour spends 2% of a 30-day budget (14.4 x 1h / 720h).
+      # The 5m window makes the alert stop soon after the problem stops.
+      - alert: OrdersErrorBudgetFastBurn
+        expr: |
+          orders:http_errors:ratio_rate1h > (14.4 * 0.001)
+          and
+          orders:http_errors:ratio_rate5m > (14.4 * 0.001)
+        for: 2m
+        labels:
+          severity: page
+        annotations:
+          summary: orders is burning its error budget 14x too fast (2% of the month's budget per hour)
+
+      # Burn rate 6 for 6 hours spends 5% of the budget (6 x 6h / 720h).
+      - alert: OrdersErrorBudgetSlowBurn
+        expr: |
+          orders:http_errors:ratio_rate6h > (6 * 0.001)
+          and
+          orders:http_errors:ratio_rate30m > (6 * 0.001)
+        for: 15m
+        labels:
+          severity: page
+        annotations:
+          summary: orders is burning its error budget 6x too fast (5% of the month's budget per 6 hours)
+
+      - alert: OrdersLatencyBudgetFastBurn
+        expr: |
+          orders:http_slow:ratio_rate1h > (14.4 * 0.01)
+          and
+          orders:http_slow:ratio_rate5m > (14.4 * 0.01)
+        for: 2m
+        labels:
+          severity: page
+        annotations:
+          summary: orders requests are slower than 300 ms 14x more often than the latency SLO allows

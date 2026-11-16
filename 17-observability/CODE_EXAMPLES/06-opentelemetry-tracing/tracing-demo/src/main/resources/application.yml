@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: tracing-demo
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0      # default is 0.1: only 1 trace in 10 would be exported
+  observations:
+    annotations:
+      enabled: true         # turns on @Observed

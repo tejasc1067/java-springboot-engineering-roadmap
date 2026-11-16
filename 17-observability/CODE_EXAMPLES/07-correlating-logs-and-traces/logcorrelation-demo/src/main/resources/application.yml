@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: orders
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    baggage:
+      remote-fields: customerId        # sent to other services in a "customerId" header
+      correlation:
+        fields: customerId             # copied into the MDC, so it appears in log lines
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true    # histogram buckets: exemplars are attached to them
