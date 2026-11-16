@@ -12,7 +12,7 @@ Everything in this module so far has been relational: tables, foreign keys, join
 
 - **The data is naturally a nested blob.** A product with 40 optional attributes that differ per category (a laptop has RAM, a shirt has a size) becomes either 40 mostly-null columns or an awkward attribute table.
 - **The screen reads one thing, always whole.** An order page shows the order, its items, and the shipping address. Relationally that's a join across three or four tables on every page view.
-- **Scale beyond one machine's writes.** A relational database scales reads well (replicas, module 18), but splitting *writes* across many machines is hard. Some NoSQL databases are built to do that from day one.
+- **Scale beyond one machine's writes.** A relational database scales reads well (replicas, [module 18 topic 06](../18-system-design-basics/06-replication-and-read-replicas.md)), but splitting *writes* across many machines is hard. Some NoSQL databases are built to do that from day one.
 - **The question is "what's under this key?" and nothing else.** A session, a cache entry, a rate-limit counter. A full SQL engine is more than the job needs.
 
 NoSQL databases trade away some of the relational guarantees (joins, schemas, multi-row transactions) to be better at one of these.

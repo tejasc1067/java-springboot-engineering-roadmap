@@ -109,5 +109,5 @@ If those eleven feel comfortable, move to module 16, where Kafka and RabbitMQ ta
 
 - **No managed cloud caches.** ElastiCache, Memorystore, and Azure Cache are Redis with a vendor's operations around it. They belong in a cloud roadmap.
 - **No Redis operations.** Cluster sharding, Sentinel failover, persistence tuning, and memory policies get a paragraph where they matter to a developer, not a section.
-- **No HTTP and CDN caching.** `Cache-Control`, ETags, and CDNs are covered in module 18 topic 05.
+- **No HTTP and CDN caching.** `Cache-Control`, ETags, and CDNs are covered in [module 18 topic 05](../18-system-design-basics/05-cdn-and-edge-caching.md).
 - **No JPA second-level cache.** Hibernate's L2 cache is a separate mechanism with its own pitfalls. The application-level caching here is what most teams use.

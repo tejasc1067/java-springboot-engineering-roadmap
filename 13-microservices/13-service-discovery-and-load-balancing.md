@@ -36,7 +36,7 @@ This is **client-side discovery** — the caller queries the registry and picks 
 
 ## Load balancing: which of the instances?
 
-When `getInstances("inventory-service")` returns *three* instances, you don't want to hammer the first one — you want to spread calls. That's client-side **load balancing**, and Spring Cloud LoadBalancer does it. The demo proves the core behavior with `RoundRobinLoadBalancer`:
+When `getInstances("inventory-service")` returns *three* instances, you don't want to hammer the first one — you want to spread calls. That's client-side **load balancing** (the server-side kind, a proxy in front of the instances, is [module 18 topic 04](../18-system-design-basics/04-load-balancing.md)), and Spring Cloud LoadBalancer does it. The demo proves the core behavior with `RoundRobinLoadBalancer`:
 
 ```java
 // two live instances of inventory-service (what the registry would report)

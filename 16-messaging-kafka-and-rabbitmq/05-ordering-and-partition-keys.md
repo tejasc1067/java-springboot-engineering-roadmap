@@ -87,7 +87,7 @@ partitionFor(key, 3) != partitionFor(key, 6)    // true for 507 of 1,000 order i
 
 Kafka lets you add partitions to a topic (never remove them), but it doesn't move existing records. An order whose key moved has its old events on the old partition and its new events on the new one. For a while, two consumers hold events for the same order, and they can be read out of order: the exact bug the key was meant to prevent.
 
-So pick the partition count up front with room to grow. When you really must change it, create a new topic with more partitions and migrate to it deliberately, rather than adding partitions to a live keyed topic.
+So pick the partition count up front with room to grow. When you really must change it, create a new topic with more partitions and migrate to it deliberately, rather than adding partitions to a live keyed topic. This is the `hash % N` problem databases have too; [module 18 topic 07](../18-system-design-basics/07-partitioning-and-sharding.md) shows how consistent hashing limits it.
 
 ---
 

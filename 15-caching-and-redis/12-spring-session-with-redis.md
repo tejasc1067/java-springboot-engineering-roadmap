@@ -111,7 +111,7 @@ The load balancer remembers which instance served a browser and keeps sending it
 - Load spreads unevenly: a busy user stays on one instance, and new instances get only new users.
 - It ties correctness to a load-balancer setting that someone can change without knowing.
 
-Sticky sessions are acceptable as a performance optimisation on top of a shared store, not as a substitute for one.
+Sticky sessions are acceptable as a performance optimisation on top of a shared store, not as a substitute for one. [Module 18 topic 04](../18-system-design-basics/04-load-balancing.md) simulates both costs: after a scale-out the new instance gets none of the existing users, and a dead instance logs out everyone pinned to it.
 
 ### No session at all: stateless tokens
 

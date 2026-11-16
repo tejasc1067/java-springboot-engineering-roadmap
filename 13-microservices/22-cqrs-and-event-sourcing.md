@@ -56,7 +56,7 @@ commands.deposit("acc-1", 10_000);           // the command succeeded
 summaries.find("acc-1").balanceCents();      // 0 - the projection hasn't run yet
 ```
 
-The user deposits money, the page reloads from the read model, and the money "isn't there". They deposit again. This is eventual consistency (topic 07) showing up on your own screen, and it's the most common CQRS complaint.
+The user deposits money, the page reloads from the read model, and the money "isn't there". They deposit again. This is eventual consistency (topic 07) showing up on your own screen, and it's the most common CQRS complaint. A read replica behind its database leader causes the same symptom one level down ([module 18 topic 06](../18-system-design-basics/06-replication-and-read-replicas.md)).
 
 ### Fixed: read your own writes
 

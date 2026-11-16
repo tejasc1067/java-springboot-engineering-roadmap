@@ -147,6 +147,8 @@ Redisson isn't managed by Spring Boot, so the demo pins its version (`org.rediss
 
 ### One Redis, or several? (Redlock)
 
+Why a lock needs a consistent store, and what a network partition does to one that stays available, is [module 18 topic 08](../18-system-design-basics/08-cap-and-consistency-models.md).
+
 Everything above uses a single Redis. If that Redis fails over to a replica, a lock written just before the failure may not have reached the replica, and a second client can take it. **Redlock** is an algorithm that takes the lock on a majority of several independent Redis servers to survive that. It's controversial: Martin Kleppmann's essay "How to do distributed locking" argues that because of pauses and clock jumps it still can't guarantee safety, and that if you need correctness you need fencing tokens anyway, at which point a single Redis is enough. For a backend engineer the practical summary is:
 
 - If a duplicate run only costs **efficiency** (a report generated twice, a cache warmed twice), a single-Redis lock is fine.

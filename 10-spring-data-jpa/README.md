@@ -138,7 +138,7 @@ If those eight feel comfortable, move to module 11, where the entities you have 
 
 - **No exception handling for repository errors.** When `findById` returns `Optional.empty()`, the demos let the call site decide. Mapping that to a 404 with a `@ControllerAdvice` is module 11.
 - **No security.** Row-level filtering, ownership checks, `@PreAuthorize` on repository methods — all module 12.
-- **No multi-datasource, no read replicas, no sharding.** One H2 database per demo. Real production setups (write-primary + read-replica, sharded tables) are covered as architecture in module 18 (system design basics).
+- **No multi-datasource, no read replicas, no sharding.** One H2 database per demo. Real production setups (write-primary + read-replica, sharded tables) are covered as architecture in module 18: [replication](../18-system-design-basics/06-replication-and-read-replicas.md) and [sharding](../18-system-design-basics/07-partitioning-and-sharding.md).
 - **No reactive persistence.** No R2DBC, no `ReactiveCrudRepository`. The roadmap is servlet-stack throughout.
 - **No jOOQ, no MyBatis.** They are valid choices in real systems. The module teaches JPA as the dominant Spring Boot persistence layer, plus Spring Data JDBC (topic 17) as the lighter alternative. Plain `JdbcTemplate` appears only as what Spring Data JDBC runs underneath and as a test helper.
 - **No other NoSQL clients.** Topic 15 surveys key-value, wide-column, and graph stores; only MongoDB gets a demo here. Redis gets its own module (15, caching and Redis).

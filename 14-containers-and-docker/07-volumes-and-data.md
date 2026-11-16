@@ -111,7 +111,7 @@ Topic 08 uses both: a named volume for Postgres's data, and a read-only bind mou
 ## When to use it / when not to
 
 - **Databases, message brokers, anything stateful:** a named volume, always.
-- **Your Spring Boot app:** no volume. Keep the app **stateless** (module 18). Uploaded files go to object storage or a database, logs go to stdout (module 17), and sessions go to Redis (module 15). Then any container can be replaced, and you can run several.
+- **Your Spring Boot app:** no volume. Keep the app **stateless** ([module 18 topic 03](../18-system-design-basics/03-stateless-services.md)). Uploaded files go to object storage or a database, logs go to stdout (module 17), and sessions go to Redis (module 15). Then any container can be replaced, and you can run several.
 - **Production databases:** often not in a container you manage at all, but a managed database service. Volumes are perfect for development and testing. Running a database in production also means backups, upgrades, and replication, which a volume alone doesn't give you.
 
 **A volume is not a backup.** `docker compose down -v`, `docker volume rm`, or `prune` deletes it as quickly as the container. Back up with the database's own tool (`pg_dump`).

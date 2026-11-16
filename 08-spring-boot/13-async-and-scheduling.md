@@ -207,7 +207,7 @@ spring:
 
 ## Broken: every instance runs the job
 
-`@Scheduled` runs inside **each running copy** of your app. Run 3 instances behind a load balancer (module 18) and your 7am "send the daily digest" job sends 3 digests to every customer.
+`@Scheduled` runs inside **each running copy** of your app. Run 3 instances behind a load balancer ([module 18 topic 04](../18-system-design-basics/04-load-balancing.md)) and your 7am "send the daily digest" job sends 3 digests to every customer.
 
 `DigestJobTest.scheduledJob_runsOnEveryInstance` starts the same app twice in one JVM, as two instances. Both send:
 

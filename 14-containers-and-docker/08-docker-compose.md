@@ -166,7 +166,7 @@ PASS: after down -v + up, the database starts empty
 
 - **Local development:** start the app's dependencies (Postgres, Redis in module 15, Kafka in module 16) with one command, identical for every developer.
 - **Demos and tests on one machine:** this module's demos, a manual end-to-end check.
-- **Small single-server deployments**, if you accept that one machine is a single point of failure (module 18).
+- **Small single-server deployments**, if you accept that one machine is a single point of failure ([module 18 topic 02](../18-system-design-basics/02-scalability-availability-reliability.md)).
 
 **Not for:** running across several machines, restarting failed containers on another host, or rolling updates without downtime. That's an orchestrator's job (Kubernetes, topic 12). For tests that need a real database, prefer Testcontainers (topic 11), which starts containers from inside the test, so `mvn test` needs nothing started beforehand.
 
