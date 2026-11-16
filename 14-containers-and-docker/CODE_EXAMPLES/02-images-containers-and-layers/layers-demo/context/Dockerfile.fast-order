@@ -1,0 +1,8 @@
+# FIXED ORDER: copy what rarely changes (the dependency list) first, do the slow step,
+# then copy what changes often (your code). Editing greeting.txt no longer re-runs the slow step.
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY deps.list .
+RUN sleep 5 && echo "dependencies installed" > deps-installed.txt
+COPY greeting.txt .
+CMD ["cat", "greeting.txt"]

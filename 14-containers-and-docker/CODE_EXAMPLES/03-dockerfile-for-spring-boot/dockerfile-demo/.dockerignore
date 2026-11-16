@@ -1,0 +1,8 @@
+# Files that never belong in the build context: build output, IDE files, VCS history, local secrets.
+target/
+.git/
+.idea/
+*.iml
+.vscode/
+.env
+*.log

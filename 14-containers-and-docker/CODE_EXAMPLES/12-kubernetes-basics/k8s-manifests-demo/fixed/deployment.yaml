@@ -1,0 +1,50 @@
+# Keep 2 copies (pods) of the orders app running. If one dies, Kubernetes starts a replacement.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: orders              # which pods this Deployment manages...
+  template:
+    metadata:
+      labels:
+        app: orders            # ...must match the labels its pods get
+    spec:
+      containers:
+        - name: orders
+          image: roadmap14/orders:1.0.0      # a pinned tag, never :latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: orders-config
+          env:
+            # The password comes from a Secret, created outside Git:
+            #   kubectl create secret generic orders-db --from-literal=password='...'
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: orders-db
+                  key: password
+          resources:
+            requests:            # what the scheduler reserves for this pod
+              cpu: "250m"
+              memory: "512Mi"
+            limits:              # the ceiling: above the memory limit the container is killed
+              memory: "768Mi"
+          # Liveness: "is the process stuck?" Failing it RESTARTS the container.
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          # Readiness: "can it take traffic right now?" Failing it only REMOVES the pod from the Service.
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 5

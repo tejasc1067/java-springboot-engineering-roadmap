@@ -1,0 +1,24 @@
+# BROKEN: short-form depends_on. Compose starts db first, then app straight away -
+# it waits for the db CONTAINER to start, not for Postgres inside it to be ready.
+name: roadmap14-08-race
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: notes
+      POSTGRES_USER: notes
+      POSTGRES_PASSWORD: dev-only-password
+    volumes:
+      # A database that takes 10 s to become ready. Without it this race rarely shows on a fast laptop -
+      # which is exactly why it ships to production and fails on the first slow start.
+      - ./slow-init.sql:/docker-entrypoint-initdb.d/slow-init.sql:ro
+
+  app:
+    image: roadmap14-08-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/notes
+      SPRING_DATASOURCE_USERNAME: notes
+      SPRING_DATASOURCE_PASSWORD: dev-only-password
+    depends_on:
+      - db

@@ -1,0 +1,11 @@
+# One stable name and address ("orders:80") in front of however many pods are ready right now.
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders
+spec:
+  selector:
+    app: orders                # send traffic to pods with this label
+  ports:
+    - port: 80                 # what callers use: http://orders
+      targetPort: 8080         # where the app listens inside the pod

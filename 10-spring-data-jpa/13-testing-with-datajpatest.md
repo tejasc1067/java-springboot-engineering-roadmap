@@ -109,7 +109,7 @@ class BookRepositoryAgainstRealDbTest { ... }
 
 When to do this: when your queries use vendor-specific SQL (JSON columns in Postgres, full-text search functions, vendor-specific dialect quirks) that H2 doesn't faithfully replicate. The cost is needing a real database available in CI.
 
-A middle path: **Testcontainers**. A library that spins up a real Postgres / MySQL in a Docker container for the test run. You get the real dialect *and* isolation. Outside the scope of this module — module 14 (containers & Docker) covers it, including a query that passes on H2 and fails on real Postgres. Every serious Java backend team uses it.
+A middle path: **Testcontainers**. A library that spins up a real Postgres / MySQL in a Docker container for the test run. You get the real dialect *and* isolation. Outside the scope of this module — module 14 topic 11 covers it, including a native query that passes on H2 (even in `MODE=PostgreSQL`) and fails on real Postgres. With Testcontainers' `@ServiceConnection`, the `replace = NONE` above isn't needed: `@DataJpaTest` keeps a database the test itself provides. Every serious Java backend team uses it.
 
 ---
 

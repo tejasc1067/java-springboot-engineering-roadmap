@@ -1,0 +1,4 @@
+app:
+  name: app
+other:
+  url: http://localhost:8080

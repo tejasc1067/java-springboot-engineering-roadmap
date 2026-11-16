@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders
+spec:
+  selector:
+    app: order-service         # BUG: no pod has this label
+  ports:
+    - port: 80
+      targetPort: 8081         # BUG: the app listens on 8080

@@ -93,5 +93,5 @@ If those four feel comfortable, move to module 07 (Spring Core), where the depen
 
 - **No Spring testing.** `@SpringBootTest`, `MockMvc`, `@DataJpaTest`, `@MockBean` all live in module 08. Everything here is plain Java so you learn the testing ideas without also learning a framework.
 - **No integration tests.** Tests here never touch a real database, network, or filesystem. Talking to a real database in a test is a different skill (and module).
-- **No Testcontainers, no CI.** Testing against a real database in a container is module 14 (containers & Docker). Running tests automatically on every push (CI) is outside this roadmap's scope.
+- **No Testcontainers, no CI.** Testing against a real database in a container is module 14, topic 11 (Testcontainers). Running tests automatically on every push (CI) is outside this roadmap's scope.
 - **No mutation testing or advanced Mockito** (mocking statics, `BDDMockito`). Mentioned once, not taught — you can read them later.

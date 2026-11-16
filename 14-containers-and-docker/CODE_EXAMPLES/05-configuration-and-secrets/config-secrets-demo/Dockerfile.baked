@@ -1,0 +1,17 @@
+# BROKEN: three ways secrets end up inside an image. Anyone who can pull the image can read them.
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+
+# 1. ENV: stored in the image config. `docker image inspect` prints it.
+ENV SPRING_DATASOURCE_PASSWORD=Sup3rS3cret-from-env
+
+# 2. A build ARG used in a RUN: recorded in the image history, value included.
+ARG NPM_TOKEN
+RUN echo "pretend this downloads something with $NPM_TOKEN" > /dev/null
+
+# 3. A copied file, "deleted" in the next layer. The delete hides it; the earlier layer still contains it.
+COPY baked-secrets/application-secrets.yml /app/application-secrets.yml
+RUN rm /app/application-secrets.yml
+
+COPY target/app.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

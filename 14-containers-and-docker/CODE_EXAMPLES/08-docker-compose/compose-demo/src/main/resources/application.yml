@@ -1,0 +1,6 @@
+# No database address here on purpose: it differs per environment, so compose.yaml passes it in
+# as SPRING_DATASOURCE_URL / _USERNAME / _PASSWORD (topic 05).
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update   # keeps the demo short; real apps use Flyway (module 10, topic 12)

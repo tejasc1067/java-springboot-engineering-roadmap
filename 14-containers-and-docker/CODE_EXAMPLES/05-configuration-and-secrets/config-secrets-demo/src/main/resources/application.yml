@@ -1,0 +1,4 @@
+# Safe defaults, packaged in the jar. No secrets here.
+app:
+  greeting: hello from the defaults
+  mode: development

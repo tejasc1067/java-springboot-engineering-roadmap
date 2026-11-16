@@ -1,0 +1,7 @@
+# BROKEN ORDER: everything is copied first, so ANY file change invalidates the slow step below it.
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY . .
+# Stands in for "download all the dependencies" (mvn dependency:go-offline, npm install...): slow.
+RUN sleep 5 && echo "dependencies installed" > deps-installed.txt
+CMD ["cat", "greeting.txt"]

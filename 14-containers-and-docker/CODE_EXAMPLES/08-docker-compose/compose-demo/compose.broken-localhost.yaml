@@ -1,0 +1,26 @@
+# BROKEN: the JDBC URL that works when you run the app on your laptop.
+# Inside the app container, "localhost" is the app container itself - Postgres isn't there.
+name: roadmap14-08-localhost
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: notes
+      POSTGRES_USER: notes
+      POSTGRES_PASSWORD: dev-only-password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U notes -d notes"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  app:
+    image: roadmap14-08-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/notes
+      SPRING_DATASOURCE_USERNAME: notes
+      SPRING_DATASOURCE_PASSWORD: dev-only-password
+    depends_on:
+      db:
+        condition: service_healthy

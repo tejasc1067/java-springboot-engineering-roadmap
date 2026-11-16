@@ -1,0 +1,10 @@
+server:
+  shutdown: graceful            # the default since Spring Boot 3.4; written out so you can see it
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 20s   # how long to wait for in-flight requests (default 30s)
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true           # adds /actuator/health/liveness and /readiness (topic 12, Kubernetes)

@@ -96,7 +96,7 @@ Highest priority. Use this for ad-hoc per-run activation.
 SPRING_PROFILES_ACTIVE=prod java -jar myapp.jar
 ```
 
-The relaxed-binding rules from topic 05 apply: dotted property -> upper-snake env var.
+The relaxed-binding rules from topic 05 apply: dotted property -> upper-snake env var. In a container you pass the same variable with `docker run -e SPRING_PROFILES_ACTIVE=prod` (module 14 topic 05).
 
 ### 3. In `application.yml`
 

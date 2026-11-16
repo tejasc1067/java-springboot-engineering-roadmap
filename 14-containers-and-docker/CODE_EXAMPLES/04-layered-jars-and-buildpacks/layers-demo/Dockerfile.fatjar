@@ -1,0 +1,6 @@
+# The usual first Dockerfile (topic 03): one layer holding the whole 20 MB fat jar.
+# Change one line of code and this entire layer is new.
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY target/app.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

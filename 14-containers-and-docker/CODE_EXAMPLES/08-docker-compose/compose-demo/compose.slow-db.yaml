@@ -1,0 +1,6 @@
+# Overlay: makes the db slow to become ready. Use with the working file to show it still waits correctly:
+#   docker compose -f compose.yaml -f compose.slow-db.yaml up -d --wait
+services:
+  db:
+    volumes:
+      - ./slow-init.sql:/docker-entrypoint-initdb.d/slow-init.sql:ro

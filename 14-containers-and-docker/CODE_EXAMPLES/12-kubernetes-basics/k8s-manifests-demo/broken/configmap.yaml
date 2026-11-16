@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orders-config
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://orders-db:5432/orders"
+  SPRING_DATASOURCE_USERNAME: "orders"
+  SPRING_DATASOURCE_PASSWORD: "s3cr3t-prod-password"   # BUG: a password in a ConfigMap, committed to Git

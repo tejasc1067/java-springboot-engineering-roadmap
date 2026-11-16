@@ -1,0 +1,44 @@
+# The working setup: app + Postgres, started with one command.
+#   docker compose up -d --wait     start both, return when both are healthy
+#   docker compose down             stop and remove the containers (the volume and its data stay)
+#   docker compose down -v          ...and delete the volume too
+name: roadmap14-08
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: notes
+      POSTGRES_USER: notes
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-dev-only-password}   # from the shell or a .env file (topic 05)
+    volumes:
+      - db-data:/var/lib/postgresql/data                       # survives 'down' (topic 07)
+    healthcheck:
+      # Healthy = accepts connections over TCP. Checking TCP skips the temporary
+      # socket-only server the image runs while it initialises a new database.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U notes -d notes"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  app:
+    build: .
+    image: roadmap14-08-app
+    ports:
+      - "14008:8080"
+    environment:
+      # "db" is the service name above. Compose's network turns it into the container's address (topic 06).
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/notes
+      SPRING_DATASOURCE_USERNAME: notes
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-dev-only-password}
+    depends_on:
+      db:
+        condition: service_healthy   # wait until the healthcheck passes, not just until the container starts
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:8080/notes"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  db-data:

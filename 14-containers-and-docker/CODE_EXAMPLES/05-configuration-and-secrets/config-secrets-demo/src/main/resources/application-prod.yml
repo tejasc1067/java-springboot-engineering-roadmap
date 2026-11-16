@@ -1,0 +1,3 @@
+# Non-secret production settings may live in the jar. Passwords may not.
+app:
+  mode: production

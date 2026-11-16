@@ -141,6 +141,8 @@ management:
           include: ping             # liveness is just "JVM responding"
 ```
 
+In containers these endpoints get callers: a Docker `HEALTHCHECK` polls `/actuator/health` (module 14 topic 09), and Kubernetes probes call `/actuator/health/liveness` and `/readiness` (topic 12). Outside Kubernetes the two probe endpoints return 404 unless you set `management.endpoint.health.probes.enabled=true`.
+
 ---
 
 ## `/actuator/info`

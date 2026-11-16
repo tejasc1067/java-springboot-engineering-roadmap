@@ -71,7 +71,7 @@ For a microservice, tests stack roughly like this — many cheap ones, few expen
 
 - **Unit tests** — pure logic, no I/O (`OrderService` decision branches with a mocked client). Milliseconds, run constantly.
 - **Service / component tests** — *this* topic. One service in isolation, its downstreams stubbed (WireMock). Exercises the real HTTP client and the real controller/service wiring without needing the rest of the system. Fast enough to run on every change, real enough to catch integration bugs a mock hides.
-- **Integration tests** — the service against a real dependency it *owns*, usually its database via Testcontainers (a real H2/Postgres in a container). A handful, because they're slower.
+- **Integration tests** — the service against a real dependency it *owns*, usually its database via Testcontainers (a real PostgreSQL in a container; H2 is neither a container nor PostgreSQL, and module 14 topic 11 shows a query that passes on one and fails on the other). A handful, because they're slower.
 - **End-to-end tests** — the whole system, all services up. The fewest: slow, flaky, expensive to maintain. Enough to smoke-test critical journeys, not your primary coverage.
 
 The service test is the sweet spot for microservices: it's where you get confidence that `order-service` talks to `inventory-service` correctly, without paying for the whole system to be running.
@@ -87,7 +87,7 @@ That's the ceiling of isolation testing, and it's exactly the gap **contract tes
 - **Stub the downstream for essentially every test of a service that calls another.** It's the default way to test a microservice: fast, isolated, and it exercises the real client. WireMock (or Spring Cloud Contract's WireMock, or MockWebServer) is the standard tool.
 - **Use a mock (not a stub) for the pure-logic branches** where no HTTP is involved — it's lighter and clearer. Reserve WireMock for the calls that actually cross the wire.
 - **Keep a few real integration/end-to-end tests**, but don't make them your default — they're slow and flaky, so they earn their place only for critical paths and for the wiring a stub can't reach (real serialization against a real service, real DB).
-- **Don't stub your own database.** A stub is for a *remote service* you don't own in this test. Your service's own database is an integration concern — use Testcontainers (topic mentions it, module 14 goes deeper), not a hand-rolled HTTP stub.
+- **Don't stub your own database.** A stub is for a *remote service* you don't own in this test. Your service's own database is an integration concern — use Testcontainers (module 14 topic 11 covers it), not a hand-rolled HTTP stub.
 
 ## Common pitfalls
 

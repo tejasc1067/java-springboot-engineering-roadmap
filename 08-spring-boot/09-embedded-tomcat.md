@@ -94,6 +94,8 @@ A handful of others worth knowing:
 - `server.compression.enabled: true` — gzip responses above a threshold.
 - `server.error.include-stacktrace: never` — production safety; do not leak stack traces in error responses.
 
+Stopping the server matters too: since Spring Boot 3.4 the embedded server shuts down gracefully by default (`server.shutdown=graceful`), finishing in-flight requests before exiting. Module 14 topic 09 shows a request surviving `docker stop`, and what breaks it.
+
 Module 09 covers error responses, content negotiation, and the rest of the HTTP-shaped config in detail.
 
 ---

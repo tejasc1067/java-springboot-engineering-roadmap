@@ -111,6 +111,8 @@ The thumb rule: **the more "external" or "specific" a source, the higher it rank
 
 This is called **relaxed binding**. The same value is reachable as `app.message`, `APP_MESSAGE`, `app_message`, `app-message` — Boot canonicalizes them. The point is so that property files can use the conventional dotted form while environment variables (which on most shells can't contain dots) can still set them.
 
+In a container this is how one image is configured differently per environment: `docker run -e APP_MESSAGE=...`, `--env-file`, or Compose `environment:`. Module 14 topic 05 also reads secrets from mounted files with `spring.config.import=configtree:/run/secrets/`.
+
 ---
 
 ## Reading a property — three styles
