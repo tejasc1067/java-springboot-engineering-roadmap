@@ -1,0 +1,15 @@
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- The embedded brokers and the clients log hundreds of lines at INFO. Keep only real problems. -->
+    <logger name="org.apache.kafka" level="ERROR"/>
+    <logger name="kafka" level="ERROR"/>
+    <logger name="state.change.logger" level="OFF"/>
+    <logger name="org.apache.kafka.raft" level="OFF"/>
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

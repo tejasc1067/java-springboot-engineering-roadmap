@@ -29,7 +29,7 @@ Two things matter in practice:
 
 ## Part 2 — The transactional outbox: publish reliably
 
-A service often must do two things atomically: commit a business change *and* publish an event about it (topic 07). The naive way is a **dual write** — commit to the database, then publish to the broker:
+A service often must do two things atomically: commit a business change *and* publish an event about it (topic 07). The naive way is a **dual write** — commit to the database, then publish to the broker (and even the publish alone can fail silently if its result is ignored, module 16 [topic 03](../16-messaging-kafka-and-rabbitmq/03-spring-kafka-producer.md)):
 
 ```java
 orderRepository.save(order);   // write #1: the database
@@ -75,7 +75,7 @@ The outbox guarantees the event is published **at-least-once** — the relay may
 - **A fresh idempotency key per retry** — every attempt looks new, so nothing is deduplicated. Generate the key once per logical request and reuse it.
 - **Idempotency keys only in memory** — lost on restart, not shared across instances. Persist them (a table / unique constraint).
 - **Bare dual write for a critical event** — the lost/phantom-event bug. Use the outbox.
-- **Forgetting consumers must be idempotent** — the outbox (and any broker) is at-least-once, so a consumer that isn't idempotent acts twice on a redelivered event. Both halves are required.
+- **Forgetting consumers must be idempotent** — the outbox (and any broker) is at-least-once, so a consumer that isn't idempotent acts twice on a redelivered event. Both halves are required. Module 16 [topic 08](../16-messaging-kafka-and-rabbitmq/08-idempotent-consumers.md) shows it with a Kafka listener, including why a check-then-insert without a unique constraint still double-applies.
 - **Never cleaning up the outbox / processed-keys tables** — they grow forever. Archive or purge published outbox rows and old keys.
 
 ---

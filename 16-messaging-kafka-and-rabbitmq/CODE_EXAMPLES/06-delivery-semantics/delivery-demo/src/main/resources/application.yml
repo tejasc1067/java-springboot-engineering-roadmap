@@ -1,0 +1,7 @@
+spring:
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      isolation-level: read_committed
+    # ExactlyOnceTest adds spring.kafka.producer.transaction-id-prefix, which turns on Kafka transactions:
+    # Boot creates a KafkaTransactionManager and the listener container runs every delivery in a transaction.

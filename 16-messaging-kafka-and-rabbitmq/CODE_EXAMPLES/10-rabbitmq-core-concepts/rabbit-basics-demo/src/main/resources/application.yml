@@ -1,0 +1,6 @@
+spring:
+  rabbitmq:
+    # The broker confirms each publish once it has routed it, so a test can wait for that before
+    # checking queue depths. Topic 11 covers confirms properly.
+    publisher-confirm-type: simple
+    publisher-returns: true

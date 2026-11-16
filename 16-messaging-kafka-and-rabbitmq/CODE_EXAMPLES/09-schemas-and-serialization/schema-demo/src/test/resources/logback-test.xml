@@ -1,0 +1,10 @@
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder><pattern>%-5level %logger{30} - %msg%n</pattern></encoder>
+    </appender>
+    <!-- The embedded broker and clients log every config value at INFO; keep only warnings and errors. -->
+    <root level="WARN"><appender-ref ref="CONSOLE"/></root>
+    <logger name="org.apache.kafka" level="ERROR"/>
+    <logger name="kafka" level="ERROR"/>
+    <logger name="org.apache.zookeeper" level="ERROR"/>
+</configuration>

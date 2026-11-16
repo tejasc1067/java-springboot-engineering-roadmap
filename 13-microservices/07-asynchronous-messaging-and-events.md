@@ -73,9 +73,9 @@ Async isn't free — it moves complexity from "handling failure now" to "handlin
 
 - **Eventual consistency.** After `OrderPlaced` is published, the warehouse doesn't know *yet* — there's a window where the order exists but shipping hasn't seen it. The system is correct *eventually*, not instantly. Your UX and your data model must tolerate that window (topic 18 goes deep on this with sagas).
 - **At-least-once delivery.** Real brokers guarantee a message is delivered *at least* once, not *exactly* once — on retries or consumer restarts, the same event can arrive twice. So **every consumer must be idempotent**: processing `OrderPlaced` twice must not send two emails or reserve stock twice. This is why topic 19 (idempotency) is a required companion to messaging, not optional.
-- **"Exactly-once" is mostly a myth.** You approximate it with at-least-once delivery + idempotent consumers, not with a magic broker setting. Design for duplicates.
-- **Ordering is limited.** Messages aren't globally ordered; at best they're ordered within a partition/key. Don't assume event B (published after A) is processed after A unless you've arranged for it.
-- **Events have contracts too.** An event's schema is an API (topic 06) — adding fields is safe for tolerant consumers, renaming/removing is breaking. Version events the same way you version endpoints.
+- **"Exactly-once" is mostly a myth.** You approximate it with at-least-once delivery + idempotent consumers, not with a magic broker setting. Design for duplicates. Module 16 [topic 06](../16-messaging-kafka-and-rabbitmq/06-delivery-semantics.md) shows each guarantee with real offset commits, and [topic 08](../16-messaging-kafka-and-rabbitmq/08-idempotent-consumers.md) builds the idempotent consumer.
+- **Ordering is limited.** Messages aren't globally ordered; at best they're ordered within a partition/key. Don't assume event B (published after A) is processed after A unless you've arranged for it (partition keys, module 16 [topic 05](../16-messaging-kafka-and-rabbitmq/05-ordering-and-partition-keys.md)).
+- **Events have contracts too.** An event's schema is an API (topic 06) — adding fields is safe for tolerant consumers, renaming/removing is breaking. Version events the same way you version endpoints. Module 16 [topic 09](../16-messaging-kafka-and-rabbitmq/09-schemas-and-serialization.md) covers event schemas and compatibility.
 
 ## Poison messages and dead letters
 
@@ -103,7 +103,7 @@ A DLQ is just another queue (Kafka: a dead-letter *topic*; RabbitMQ: a dead-lett
 - **Fix, then replay.** After fixing the consumer bug, move the messages back to the main queue. This is safe only if the consumer is idempotent (topic 19) — some of those messages may have partly succeeded.
 - **Retry only what can succeed.** A timeout calling the email provider is transient — retry with backoff (topic 10). A JSON parse error is permanent — send it straight to the DLQ.
 
-Module 16 does this with real brokers: Spring Kafka's `DefaultErrorHandler` + `DeadLetterPublishingRecoverer`, and RabbitMQ dead-letter exchanges.
+Module 16 does this with real brokers: Spring Kafka's `DefaultErrorHandler` + `DeadLetterPublishingRecoverer` ([topic 07](../16-messaging-kafka-and-rabbitmq/07-retries-and-dead-letter-topics.md)), and RabbitMQ dead-letter exchanges ([topic 11](../16-messaging-kafka-and-rabbitmq/11-spring-amqp.md)).
 
 ## When to use it / when not to
 
@@ -139,7 +139,7 @@ Runnable demo — `07-asynchronous-messaging-and-events/async-events-demo/`. Rea
 2. `async-events-demo/src/main/java/com/example/asyncevents/MessageBroker.java` — the in-memory stand-in broker: `publish()` returns immediately; messages buffer until a consumer runs.
 3. `async-events-demo/src/test/java/com/example/asyncevents/AsyncEventsTest.java` — buffer-while-down, publish-doesn't-block, sync-fails-vs-async-buffers; then a poison message killing a consumer with no error handling, and bounded retries + dead-letter keeping the queue moving.
 
-The in-memory broker is deliberately minimal; module 16 (Kafka, RabbitMQ) is the real thing with durability, consumer groups, and replay.
+The in-memory broker is deliberately minimal; module 16 (Kafka, RabbitMQ) is the real thing with durability, consumer groups, and replay. Its [topic 01](../16-messaging-kafka-and-rabbitmq/01-why-message-brokers.md) starts by contrasting this queue with Kafka's log, and [topic 12](../16-messaging-kafka-and-rabbitmq/12-kafka-vs-rabbitmq-vs-sqs.md) helps you choose a broker.
 
 ## Try this yourself
 

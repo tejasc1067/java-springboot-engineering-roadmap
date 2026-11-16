@@ -1,0 +1,6 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <root level="WARN"/>
+    <!-- Every failed delivery logs a warning with a stack trace; the poison-message test fails hundreds of times. -->
+    <logger name="org.springframework.amqp.rabbit.listener" level="OFF"/>
+</configuration>

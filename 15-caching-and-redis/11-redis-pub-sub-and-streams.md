@@ -127,7 +127,7 @@ The message isn't lost, but it isn't retried by itself either. Something has to 
 - **On start-up, a consumer reads its own pending entries** by reading from id `0` instead of `>` (`restartedConsumer_readsItsOwnPendingMessagesFirst`). That covers "the consumer restarted".
 - **A periodic job claims entries idle for too long** with `XCLAIM` (or `XAUTOCLAIM`, which finds and claims in one command). That covers "the consumer died and isn't coming back". Use a real minimum idle time, such as a minute, so you don't take work from a consumer that is only slow; the test uses zero to stay fast.
 
-Each pending entry also counts its deliveries. An entry delivered 5 times that still fails is a **poison message**: move it to a separate "dead letter" stream and acknowledge it, instead of retrying forever. Module 16 covers dead-letter handling properly.
+Each pending entry also counts its deliveries. An entry delivered 5 times that still fails is a **poison message**: move it to a separate "dead letter" stream and acknowledge it, instead of retrying forever. Module 16 covers dead-letter handling properly ([topic 07](../16-messaging-kafka-and-rabbitmq/07-retries-and-dead-letter-topics.md)).
 
 ### At-least-once means handlers must be idempotent
 
@@ -148,7 +148,7 @@ Spring Data Redis also has a `StreamMessageListenerContainer` that runs the `XRE
 | Replay old messages | no | yes, by id | yes (Kafka); no (RabbitMQ, once consumed) |
 | Good for | cache invalidation, live notifications | modest work queues when you already run Redis | high volume, long retention, many teams |
 
-Streams are a reasonable work queue for moderate volume when Redis is already in your stack. Their limits are that everything lives in memory and durability depends on how Redis persistence (RDB snapshots, the AOF log) and replication are configured: a failover can lose the last writes. When messages are your system's backbone, high-volume, kept for days, read by many teams, use a broker built for it (module 16).
+Streams are a reasonable work queue for moderate volume when Redis is already in your stack. Their limits are that everything lives in memory and durability depends on how Redis persistence (RDB snapshots, the AOF log) and replication are configured: a failover can lose the last writes. When messages are your system's backbone, high-volume, kept for days, read by many teams, use a broker built for it (module 16; [topic 12](../16-messaging-kafka-and-rabbitmq/12-kafka-vs-rabbitmq-vs-sqs.md) compares Kafka, RabbitMQ, SQS, and Redis Streams).
 
 ---
 

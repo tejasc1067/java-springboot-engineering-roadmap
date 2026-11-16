@@ -166,6 +166,7 @@ You don't need to memorize this list. You need to recognize the pattern: there i
 | `spring-boot-starter-security`         | Spring Security, login, password encoding                          | 12     |
 | `spring-boot-starter-jdbc`             | JDBC template + HikariCP (without JPA)                             | 10     |
 | `spring-boot-starter-amqp`             | RabbitMQ client + Spring AMQP                                      | 16     |
+| `spring-kafka` (no starter needed)     | `KafkaTemplate`, `@KafkaListener`; Boot auto-configures it         | 16     |
 | `spring-boot-starter-cache`            | Spring's `@Cacheable` plumbing                                     | 15     |
 | `spring-boot-starter-data-redis`       | Lettuce Redis client + Spring Data Redis                           | 15     |
 | `spring-boot-starter-mail`             | JavaMail integration                                               | future |

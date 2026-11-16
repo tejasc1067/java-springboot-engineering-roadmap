@@ -1,0 +1,7 @@
+spring:
+  rabbitmq:
+    # Every send gets a confirm (ack or nack) from the broker, and unroutable messages come back.
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
