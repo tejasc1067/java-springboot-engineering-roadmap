@@ -102,7 +102,7 @@ Output looks like (trimmed):
 [INFO]    org.slf4j:slf4j-simple:jar:2.0.13:runtime
 ```
 
-Five jars. You declared two (jackson-databind and slf4j-simple). The other three came in transitively.
+Five jars. You declared three (jackson-databind, slf4j-api, and slf4j-simple). The other two came in transitively.
 
 Or get the dependency *tree* (showing who pulled in what):
 
@@ -115,9 +115,11 @@ mvn dependency:tree
 [INFO] +- com.fasterxml.jackson.core:jackson-databind:jar:2.16.1:compile
 [INFO] |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.16.1:compile
 [INFO] |  \- com.fasterxml.jackson.core:jackson-core:jar:2.16.1:compile
+[INFO] +- org.slf4j:slf4j-api:jar:2.0.13:compile
 [INFO] \- org.slf4j:slf4j-simple:jar:2.0.13:runtime
-[INFO]    \- org.slf4j:slf4j-api:jar:2.0.13:runtime
 ```
+
+`slf4j-simple` depends on `slf4j-api` too, but Maven already has it from your direct declaration, so the tree shows it once. Why declare `slf4j-api` at all, if `slf4j-simple` brings it? Because a dependency pulled in *by* a `runtime`-scope dependency is runtime-only as well. Remove the `slf4j-api` declaration and `mvn compile` fails with `package org.slf4j does not exist`: your code imports `org.slf4j.Logger`, and at compile time nothing put that jar on the classpath. The rule: **declare what your code imports**, even if something else happens to bring it in. Topic 05 covers scopes properly.
 
 These two commands — `dependency:list` and `dependency:tree` — are your friends. Topic 09 uses them to resolve real conflicts.
 
@@ -173,7 +175,8 @@ The default — Maven Central — is always implied; you don't need to declare i
 `CODE_EXAMPLES/04-dependencies-and-maven-central/deps-demo/` is a real Maven project that:
 
 - Adds `jackson-databind` (compile scope).
-- Adds `slf4j-simple` (runtime scope — picked up here as a preview; full scope coverage in topic 05).
+- Adds `slf4j-api` (compile scope — the logging API your code imports).
+- Adds `slf4j-simple` (runtime scope — the implementation that actually prints; full scope coverage in topic 05).
 - Has one Java file that serializes a `Map` to JSON and logs the result.
 
 ### `pom.xml` (the part that matters)
@@ -184,6 +187,11 @@ The default — Maven Central — is always implied; you don't need to declare i
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
         <version>2.16.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>2.0.13</version>
     </dependency>
     <dependency>
         <groupId>org.slf4j</groupId>
